@@ -2,9 +2,12 @@
  * 配置类，用于app配置，存放常量
  **/
 class Config {
-  static bool DEBUG = true;
+  static const bool DEBUG = true;
 
-  /// ////////////////////////////////////常量/////////////////// ///
+  /// ////////////////////////////////////常量/////////////////// //
 
-  static const SCREEN_WIDTH = 360;
+  //设计稿基准宽度
+  static const int DESIGN_WIDTH = 360;
 }
+
+
