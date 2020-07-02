@@ -23,6 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "hint_input_password" : MessageLookupByLibrary.simpleMessage("请输入密码"),
     "hint_input_username" : MessageLookupByLibrary.simpleMessage("请输入用户名"),
-    "login" : MessageLookupByLibrary.simpleMessage("登录")
+    "login" : MessageLookupByLibrary.simpleMessage("登录"),
+    "search_website_content" : MessageLookupByLibrary.simpleMessage("搜索站内内容")
   };
 }

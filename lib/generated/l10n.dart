@@ -62,6 +62,16 @@ class S {
       args: [],
     );
   }
+
+  /// `搜索站内内容`
+  String get search_website_content {
+    return Intl.message(
+      '搜索站内内容',
+      name: 'search_website_content',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
