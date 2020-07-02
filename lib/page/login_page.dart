@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/styles.dart';
@@ -25,7 +28,7 @@ class _LoginPageState extends State<LoginPage> with LoginState {
         leading: IconButton(
             icon: Icon(Icons.arrow_back,size: ScreenUtil().setWidth(20),),
             onPressed: () {
-              Navigator.of(context).pop();
+              exit(0);
             }),
       ),
       body: GestureDetector(

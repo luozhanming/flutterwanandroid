@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:wanandroid/common/router/routes_util.dart';
 import 'package:wanandroid/generated/l10n.dart';
+import 'package:wanandroid/page/home_page.dart';
 import 'package:wanandroid/page/login_page.dart';
 import 'package:wanandroid/redux/app_redux.dart';
 
@@ -26,9 +26,18 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
             GlobalMaterialLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate
           ],
-          supportedLocales: [const Locale("zh","CN"),...S.delegate.supportedLocales],
-          onGenerateRoute: Routes.getInstance().getRouter().generator,
-          home: LoginPage(),
+          supportedLocales: [
+            const Locale("zh", "CN"),
+            ...S.delegate.supportedLocales
+          ],
+          theme: ThemeData(
+
+          ),
+          routes: {
+            "/":(context){
+              return HomePage();
+            }
+          },
         ));
   }
 }
