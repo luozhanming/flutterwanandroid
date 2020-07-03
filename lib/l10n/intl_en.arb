@@ -2,5 +2,9 @@
   "login": "Login",
   "hint_input_username": "请输入用户名",
   "hint_input_password": "请输入密码",
-  "search_website_content": "搜索站内内容"
+  "search_website_content": "搜索站内内容",
+  "home": "首页",
+  "tixi": "体系",
+  "gongzonghao": "公众号",
+  "navigation": "导航"
 }

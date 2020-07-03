@@ -72,6 +72,46 @@ class S {
       args: [],
     );
   }
+
+  /// `首页`
+  String get home {
+    return Intl.message(
+      '首页',
+      name: 'home',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `体系`
+  String get tixi {
+    return Intl.message(
+      '体系',
+      name: 'tixi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `公众号`
+  String get gongzonghao {
+    return Intl.message(
+      '公众号',
+      name: 'gongzonghao',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导航`
+  String get navigation {
+    return Intl.message(
+      '导航',
+      name: 'navigation',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
