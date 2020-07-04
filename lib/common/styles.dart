@@ -7,5 +7,5 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
  * */
 class TextStyles {
   static TextStyle titleTextStyle =
-      TextStyle(fontSize: ScreenUtil().setWidth(20), color: Colors.white);
+      TextStyle(fontSize: ScreenUtil().setWidth(10), color: Colors.white);
 }

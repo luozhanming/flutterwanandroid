@@ -38,7 +38,6 @@ class _LoginPageState extends State<LoginPage> with LoginState {
         },
         child: Stack(
           children: [
-            Container(),
             Center(
               child: Card(
                 color: Theme.of(context).cardColor,

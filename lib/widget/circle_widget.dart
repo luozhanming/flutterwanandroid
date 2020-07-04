@@ -17,7 +17,8 @@ class OvalWidget extends StatelessWidget {
       this.borderWidth = 2,
       this.boarderColor = Colors.white,
       @required this.width,
-      @required this.height});
+      @required this.height})
+      : assert(borderWidth < width / 2);
 
   @override
   Widget build(BuildContext context) {
