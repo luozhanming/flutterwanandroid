@@ -6,6 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
  * 字体样式
  * */
 class TextStyles {
-  static TextStyle titleTextStyle =
-      TextStyle(fontSize: ScreenUtil().setWidth(10), color: Colors.white);
+  static const  TextStyle titleTextStyle =
+      TextStyle(fontSize:18.0, color: Colors.white);
 }

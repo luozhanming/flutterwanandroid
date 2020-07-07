@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 import 'package:wanandroid/generated/l10n.dart';
+import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home_page.dart';
-import 'package:wanandroid/page/login_page.dart';
 import 'package:wanandroid/redux/app_redux.dart';
 
 class FlutterReduxApp extends StatefulWidget {
@@ -17,27 +18,25 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreProvider<AppState>(
-        store: store,
-        child: MaterialApp(
-          localizationsDelegates: [
-            S.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate
-          ],
-          supportedLocales: [
-            const Locale("zh", "CN"),
-            ...S.delegate.supportedLocales
-          ],
-          theme: ThemeData(
+    return MaterialApp(
+            localizationsDelegates: [
+              S.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate
+            ],
+            supportedLocales: [
+              const Locale("zh","CN"),
+              ...S.delegate.supportedLocales
+            ],
+            locale: context.select<GlobalState,Locale>((value) => value.locale),
+            theme: context.select<GlobalState,ThemeData>((value) => value.themeData),
+            routes: {
+              "/":(context){
+                return HomePage();
+              }
+            },
 
-          ),
-          routes: {
-            "/":(context){
-              return HomePage();
-            }
-          },
-        ));
+    );
   }
 }
