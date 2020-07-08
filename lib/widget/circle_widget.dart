@@ -22,17 +22,14 @@ class OvalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: Container(
-        width: this.width,
-        height: this.height,
-        color: boarderColor,
-        child: Padding(
-          padding: EdgeInsets.all(borderWidth),
-          child: ClipOval(
-            child: child,
-          ),
-        ),
+    return Container(
+      decoration: ShapeDecoration(shape: CircleBorder(
+        side: BorderSide(color: boarderColor,width: borderWidth)
+      )),
+      width: this.width,
+      height: this.height,
+      child: ClipOval(
+        child: child,
       ),
     );
   }
