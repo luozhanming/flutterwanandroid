@@ -27,7 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home" : MessageLookupByLibrary.simpleMessage("首页"),
     "login" : MessageLookupByLibrary.simpleMessage("Login"),
     "navigation" : MessageLookupByLibrary.simpleMessage("导航"),
-    "search_website_content" : MessageLookupByLibrary.simpleMessage("搜索站内内容"),
+    "search_website_content" : MessageLookupByLibrary.simpleMessage("search"),
     "tixi" : MessageLookupByLibrary.simpleMessage("体系")
   };
 }

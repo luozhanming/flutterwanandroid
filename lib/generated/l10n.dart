@@ -63,10 +63,10 @@ class S {
     );
   }
 
-  /// `搜索站内内容`
+  /// `search`
   String get search_website_content {
     return Intl.message(
-      '搜索站内内容',
+      'search',
       name: 'search_website_content',
       desc: '',
       args: [],
