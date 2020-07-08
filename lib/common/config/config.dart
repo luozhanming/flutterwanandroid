@@ -8,6 +8,9 @@ class Config {
 
   //设计稿基准宽度
   static const int DESIGN_WIDTH = 360;
+
+
+  static const String PATH_IMAGE = "static/images/";
 }
 
 

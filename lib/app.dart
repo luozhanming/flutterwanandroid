@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
-import 'package:wanandroid/page/home_page.dart';
+import 'file:///D:/AndroidProject/flutterwanandroid/lib/page/home/home_page.dart';
 import 'package:wanandroid/redux/app_redux.dart';
 
 class FlutterReduxApp extends StatefulWidget {
