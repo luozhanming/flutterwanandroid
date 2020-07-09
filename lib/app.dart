@@ -5,8 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
-import 'file:///D:/AndroidProject/flutterwanandroid/lib/page/home/home_page.dart';
+import 'package:wanandroid/page/home/home_page.dart';
+
 import 'package:wanandroid/redux/app_redux.dart';
+
+import 'package:battery/battery.dart';
 
 class FlutterReduxApp extends StatefulWidget {
   @override
@@ -36,7 +39,6 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
                 return HomePage();
               }
             },
-
     );
   }
 }

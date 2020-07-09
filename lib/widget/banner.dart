@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:collection';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,7 +9,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class BannerView extends StatefulWidget {
   List<BannerItem> items;
 
-  BannerView({this.items});
+  final bool canLoop;
+
+  final Duration duration;
+
+  final int initPos;
+
+  BannerView(
+      {this.items,
+      this.canLoop = true,
+      this.duration = const Duration(seconds: 5),
+      this.initPos = 0});
 
   @override
   _BannerState createState() => _BannerState();
@@ -13,20 +27,64 @@ class BannerView extends StatefulWidget {
 
 class _BannerState extends State<BannerView> {
   String _msg = "";
-  int _curPos=0;
+  //实际banner的真实元素位置
+  int _curPos = 0;
+  Timer _loopTimer;
+  PageController _pageController;
+
+  Queue<BannerItem> tempItems =Queue();
+
+  @override
+  void initState() {
+    super.initState();
+    _curPos = widget.initPos;
+    //文本初始化
+    _msg = widget.items != null && widget.items.length > 0
+        ?  widget.items[_curPos].message
+        : "";
+    if (widget.canLoop) {
+      _loopTimer = Timer.periodic(widget.duration, (timer) {
+        log("BannerView loop", name: "BannerView");
+        int curPagePos = _pageController.page.toInt();
+        _pageController.animateToPage(curPagePos+1,
+            duration: Duration(milliseconds: 200), curve: Curves.linear);
+      });
+    }
+    _pageController = PageController(initialPage: _curPos+1);
+
+    //为item指定真实位置
+    //初始化副本items
+    int len = widget.items.length;
+    tempItems.add(widget.items[len-1]);
+    for (int i = 0; i < len; i++) {
+      widget.items[i].realPos = i;
+      tempItems.add(widget.items[i]);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _loopTimer?.cancel();
+    _pageController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> widgets = [];
     List<Widget> circles = [];
-    if (widget.items != null && widget.items.isNotEmpty) {
-      for (int i = 0, len = widget.items.length; i < len; i++) {
-        BannerItem item = widget.items[i];
+    if (tempItems != null && tempItems.isNotEmpty) {
+      List<BannerItem> items = tempItems.toList();
+      for (int i = 0, len = items.length; i < len; i++) {
+        BannerItem item = items[i];
         widgets.add(Image(
           image: item.image,
           fit: BoxFit.cover,
         ));
-
+      }
+    }
+    if (widget.items != null && widget.items.isNotEmpty) {
+      for (int i = 0, len = widget.items.length; i < len; i++) {
         circles.add(SizedBox(
           width: ScreenUtil().setWidth(10),
           height: ScreenUtil().setWidth(10),
@@ -34,7 +92,7 @@ class _BannerState extends State<BannerView> {
             decoration: ShapeDecoration(
                 shape: CircleBorder(
                     side: BorderSide(
-                        color:_curPos==i?Colors.yellow:Colors.white,
+                        color: _curPos == i ? Colors.yellow : Colors.white,
                         width: ScreenUtil().setWidth(5)))),
           ),
         ));
@@ -42,10 +100,7 @@ class _BannerState extends State<BannerView> {
           padding: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
         ));
       }
-
     }
-
-
 
     return Container(
       decoration: ShapeDecoration(
@@ -57,23 +112,42 @@ class _BannerState extends State<BannerView> {
       ),
       child: ClipRRect(
         borderRadius:
-            BorderRadius.all(Radius.circular(ScreenUtil().setWidth(4))),
+            BorderRadius.all(Radius.circular(ScreenUtil().setWidth(2))),
         child: Stack(
           children: <Widget>[
             PageView(
-              controller: PageController(initialPage: _curPos),
+              controller: _pageController,
               onPageChanged: (i) {
-                String message = widget.items[i].message;
+                int flag = 0;
                 setState(() {
-                  _msg = message;
-                  _curPos = i;
+                  _curPos = tempItems.toList()[i].realPos;
+                  _msg = widget.items != null && widget.items.length > 0
+                      ?  widget.items[_curPos].message
+                      : "";
+                  int length = tempItems.length;
+                  if (i == length - 1) {   //滑到最后一个
+                    tempItems.removeFirst();
+                    tempItems.addLast(tempItems.first);
+                    flag = -1;
+                //    _pageController.jumpToPage(i-1);
+                  }else if(i==0){   //滑到第一个
+                    tempItems.removeLast();
+                    tempItems.addFirst(tempItems.last);
+                    flag = 1;
+                 //   _pageController.jumpToPage(i+1);
+                  }
                 });
+                if(flag>0)
+                  _pageController.jumpToPage(i+1);
+                else if(flag<0){
+                  _pageController.jumpToPage(i-1);
+                }
               },
               scrollDirection: Axis.horizontal,
               children: widgets,
             ),
             Align(
-              alignment: Alignment.bottomCenter,
+              alignment: Alignment.bottomLeft,
               child: Container(
                 height: ScreenUtil().setWidth(20),
                 color: Color.fromARGB(128, 0, 0, 0),
@@ -95,6 +169,7 @@ class _BannerState extends State<BannerView> {
                     Align(
                         alignment: Alignment.centerRight,
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: circles,
                         ))
                   ],
@@ -113,5 +188,7 @@ class BannerItem {
 
   final String message;
 
-  const BannerItem(this.image, {this.message = ""});
+  int realPos = -1;
+
+  BannerItem(this.image, {this.message = ""});
 }

@@ -21,7 +21,8 @@ class _HomeSegmentState extends State<HomeSegment> {
               height: ScreenUtil().setWidth(200),
               child: BannerView(items: [
                 BannerItem(NetworkImage("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1644792247,4040788430&fm=26&gp=0.jpg"),message: "sdfsdfsdf"),
-                BannerItem(NetworkImage("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1644792247,4040788430&fm=26&gp=0.jpg"))
+                BannerItem(NetworkImage("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1080328241,2319486276&fm=26&gp=0.jpg")),
+                BannerItem(NetworkImage("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1644792247,4040788430&fm=26&gp=0.jpg"),message: "sdfsdfsdf"),
               ],
               ))
         ],
