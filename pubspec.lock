@@ -322,6 +322,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.1"
+  flutterview:
+    dependency: "direct main"
+    description:
+      path: flutter_view
+      relative: true
+    source: path
+    version: "0.0.1"
   front_end:
     dependency: transitive
     description:

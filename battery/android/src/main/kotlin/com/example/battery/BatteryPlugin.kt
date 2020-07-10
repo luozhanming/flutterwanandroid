@@ -31,7 +31,6 @@ class BatteryPlugin: FlutterPlugin {
     val battery = Battery(applicationContext)
     val methodHandler = BatteryMethodHandler(battery)
     channel.setMethodCallHandler(methodHandler)
-    eventChannel.setStreamHandler()
   }
 
   // This static function is optional and equivalent to onAttachedToEngine. It supports the old
