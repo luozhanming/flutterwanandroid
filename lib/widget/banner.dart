@@ -7,7 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BannerView extends StatefulWidget {
-  List<BannerItem> items;
+
+  final List<BannerItem> items;
 
   final bool canLoop;
 
@@ -15,11 +16,17 @@ class BannerView extends StatefulWidget {
 
   final int initPos;
 
+  final Color borderColor;
+
+  final double borderWidth;
+
   BannerView(
       {this.items,
       this.canLoop = true,
       this.duration = const Duration(seconds: 5),
-      this.initPos = 0});
+      this.initPos = 0,
+      this.borderColor = Colors.transparent,
+      this.borderWidth =0});
 
   @override
   _BannerState createState() => _BannerState();
@@ -97,7 +104,7 @@ class _BannerState extends State<BannerView> {
           ),
         ));
         circles.add(Padding(
-          padding: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
+          padding: EdgeInsets.only(left: ScreenUtil().setWidth(8)),
         ));
       }
     }
@@ -108,7 +115,7 @@ class _BannerState extends State<BannerView> {
             borderRadius:
                 BorderRadius.all(Radius.circular(ScreenUtil().setWidth(6))),
             side: BorderSide(
-                width: ScreenUtil().setWidth(4), color: Colors.yellow)),
+                width: widget.borderWidth, color: widget.borderColor)),
       ),
       child: ClipRRect(
         borderRadius:

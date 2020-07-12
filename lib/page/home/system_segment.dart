@@ -1,6 +1,7 @@
 
 
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:battery/battery.dart';
@@ -29,14 +30,16 @@ class _SystemSegmentState extends State<SystemSegment> {
 //      }
 //    );
   return Center(
-    child: Container(
-      width: ScreenUtil().setWidth(320),
-      height: ScreenUtil().setWidth(200),
-      child: AndroidView(
-        viewType: "flutterview",
-        creationParams: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1644792247,4040788430&fm=26&gp=0.jpg",
-      ),
-    ),
+    child:  InputChip(
+       avatar: CircleAvatar(
+         backgroundColor: Colors.grey.shade800,
+         child: Text('AB'),
+       ),
+       label: Text('Aaron Burr'),
+       onPressed: () {
+         print('I am the one thing in life.');
+       }
+     )
   );
   }
 

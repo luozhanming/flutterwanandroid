@@ -37,11 +37,12 @@ class _HomePageState extends State<HomePage> {
     ScreenUtil.init(context, width: Config.DESIGN_WIDTH);
     return ChangeNotifierProvider<_HomeViewModel>(
       create: (context) => mViewModel,
-      builder: (context,child)=>Scaffold(
+      builder: (context, child) => Scaffold(
         drawerScrimColor: Colors.transparent,
-        drawer:Text("sdfsdfsdfsdfsdfsdfsdfsdf") ,
+        drawer: Text("sdfsdfsdfsdfsdfsdfsdfsdf"),
         appBar: PreferredSize(
-          preferredSize: Size(ScreenUtil().setWidth(Config.DESIGN_WIDTH),ScreenUtil().setWidth(40)),
+          preferredSize: Size(ScreenUtil().setWidth(Config.DESIGN_WIDTH),
+              ScreenUtil().setWidth(40)),
           child: AppBar(
             leading: Center(),
             flexibleSpace: Padding(
@@ -49,10 +50,13 @@ class _HomePageState extends State<HomePage> {
               child: Center(
                 child: Row(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
-                    Builder(  //将context范围缩到Scaffold
-                      builder:(context)=> InkWell(
-                        onTap: (){
+                    Padding(
+                        padding:
+                            EdgeInsets.only(left: ScreenUtil().setWidth(8))),
+                    Builder(
+                      //将context范围缩到Scaffold
+                      builder: (context) => InkWell(
+                        onTap: () {
                           Scaffold.of(context).openDrawer();
                         },
                         child: OvalWidget(
@@ -64,18 +68,22 @@ class _HomePageState extends State<HomePage> {
                             )),
                       ),
                     ),
-                    Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
+                    Padding(
+                        padding:
+                            EdgeInsets.only(left: ScreenUtil().setWidth(8))),
                     Expanded(
                       child: InkWell(
                         splashColor: Colors.transparent,
                         highlightColor: Colors.black54,
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(ScreenUtil().setWidth(3))),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(ScreenUtil().setWidth(3))),
                         onTap: () {
-                          context.read<GlobalState>().setTheme(ThemeData(backgroundColor: Colors.green));
+                          context.read<GlobalState>().setTheme(
+                              ThemeData(primaryColor: Colors.green));
                         },
                         child: Container(
-                          margin: EdgeInsets.only(right: ScreenUtil().setWidth(8)),
+                          margin:
+                              EdgeInsets.only(right: ScreenUtil().setWidth(8)),
                           height: ScreenUtil().setWidth(26),
                           decoration: BoxDecoration(
                               color: Colors.black26,
@@ -87,21 +95,33 @@ class _HomePageState extends State<HomePage> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: ScreenUtil().setWidth(6)),
-                                  child: Icon(Icons.search,size: ScreenUtil().setWidth(20)
-                                    ,color:context.select<GlobalState,ThemeData>((value) => value.themeData).primaryTextTheme.title.color),
+                                  padding: EdgeInsets.only(
+                                      left: ScreenUtil().setWidth(6)),
+                                  child: Icon(Icons.search,
+                                      size: ScreenUtil().setWidth(20),
+                                      color: context
+                                          .select<GlobalState, ThemeData>(
+                                              (value) => value.themeData)
+                                          .primaryTextTheme
+                                          .title
+                                          .color),
                                 ),
                               ),
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: ScreenUtil().setWidth(4)),
+                                  padding: EdgeInsets.only(
+                                      left: ScreenUtil().setWidth(4)),
                                   child: Text(
                                     S.of(context).search_website_content,
                                     style: TextStyle(
-                                      fontSize: ScreenUtil().setSp(14),
-                                      color:context.select<GlobalState,ThemeData>((value) => value.themeData).primaryTextTheme.title.color
-                                    ),
+                                        fontSize: ScreenUtil().setSp(14),
+                                        color: context
+                                            .select<GlobalState, ThemeData>(
+                                                (value) => value.themeData)
+                                            .primaryTextTheme
+                                            .title
+                                            .color),
                                   ),
                                 ),
                               )
@@ -113,34 +133,35 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-            ),//// AppBar是固定56高度的
+            ), //// AppBar是固定56高度的
           ),
         ),
-        bottomNavigationBar:  Consumer<_HomeViewModel>(
-          builder: (context,value,child)=>FFNavigationBar(
-              selectedIndex: value.selectedIndex,
-              theme: FFNavigationBarTheme(
+        bottomNavigationBar: Consumer<_HomeViewModel>(
+          builder: (context, value, child) => FFNavigationBar(
+            selectedIndex: value.selectedIndex,
+            theme: FFNavigationBarTheme(
                 showSelectedItemShadow: false,
-                  barHeight: ScreenUtil().setWidth(36),
-                  itemWidth: ScreenUtil().setWidth(30)),
-              items: getNavigationBarItems(),
-              onSelectTab: (index) {
-                value.changeSelectedIndex(index);
-              },
-            ),
+                barHeight: ScreenUtil().setWidth(36),
+                itemWidth: ScreenUtil().setWidth(30)),
+            items: getNavigationBarItems(),
+            onSelectTab: (index) {
+              value.changeSelectedIndex(index);
+            },
+          ),
         ),
-      body: Builder(builder: (context){
-        int selecteIndex = context.select<_HomeViewModel,int>((value) => value.selectedIndex);
-        if(selecteIndex==0){
-          return AnimatedSwitcher(
+        body: Builder(builder: (context) {
+          int selecteIndex = context
+              .select<_HomeViewModel, int>((value) => value.selectedIndex);
+          if (selecteIndex == 0) {
+            return AnimatedSwitcher(
               child: HomeSegment(),
-            duration:const Duration(milliseconds: 300),
-          );
-        }else return AnimatedSwitcher(
-            duration:const Duration(milliseconds: 300),
-            child: SystemSegment()
-        );
-      }),
+              duration: const Duration(milliseconds: 300),
+            );
+          } else
+            return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: SystemSegment());
+        }),
       ),
     );
   }
@@ -159,7 +180,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _HomeViewModel extends BaseViewModel{
+class _HomeViewModel extends BaseViewModel {
   int selectedIndex;
 
   void dispose() {

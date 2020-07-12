@@ -14,7 +14,7 @@ mixin Env {
  * */
 class DevEnv with Env {
   @override
-  String get baseUrl => "https://www.wanandroid.com";
+  String get baseUrl => "https://www.wanandroid.com/";
 
   @override
   String get envName => "Dev";
