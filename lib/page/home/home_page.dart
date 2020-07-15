@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/config/config.dart';
+import 'package:wanandroid/common/http/HttpManager.dart';
 import 'package:wanandroid/generated/l10n.dart';
+import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home/home_segment.dart';
 import 'package:wanandroid/page/home/system_segment.dart';
@@ -78,8 +81,9 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.all(
                             Radius.circular(ScreenUtil().setWidth(3))),
                         onTap: () {
-                          context.read<GlobalState>().setTheme(
-                              ThemeData(primaryColor: Colors.green));
+                          context
+                              .read<GlobalState>()
+                              .setTheme(ThemeData(primaryColor: Colors.green));
                         },
                         child: Container(
                           margin:
@@ -183,6 +187,7 @@ class _HomePageState extends State<HomePage> {
 class _HomeViewModel extends BaseViewModel {
   int selectedIndex;
 
+
   void dispose() {
     super.dispose();
   }
@@ -195,5 +200,9 @@ class _HomeViewModel extends BaseViewModel {
   @override
   void initState() {
     selectedIndex = 0;
+  }
+
+  void refreshData() {
+
   }
 }

@@ -7,6 +7,6 @@ abstract class BaseViewModel with ChangeNotifier{
   void initState();
 
   void dispose(){
-    super.dispose();
+   // super.dispose();
   }
 }

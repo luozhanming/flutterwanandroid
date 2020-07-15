@@ -8,8 +8,9 @@ part of 'result.dart';
 
 Result _$ResultFromJson(Map<String, dynamic> json) {
   return Result(
-    data: json['data'] as Map<String, dynamic>,
+    dataJson: json['dataJson'] as Map<String, dynamic>,
     errorCode: json['errorCode'] as int,
     errorMsg: json['errorMsg'] as String,
+    dataList: json['dataList'] as List,
   );
 }

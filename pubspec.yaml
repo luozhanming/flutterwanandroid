@@ -51,6 +51,7 @@ dependencies:
   ff_navigation_bar: ^0.1.4
   provider : ^4.1.3
   rxdart : ^0.24.1
+  dio_cookie_manager: 1.0.0
 
   battery :
     path: battery
