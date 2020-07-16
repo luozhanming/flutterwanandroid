@@ -99,7 +99,7 @@ class _BannerState extends State<BannerView> {
       widget.items[i].realPos = i;
       _tempItems.add(widget.items[i]);
     }
-    
+
     List<BannerItem> items = _tempItems.toList();
     for (int i = 0, len = items.length; i < len; i++) {
       BannerItem item = items[i];
