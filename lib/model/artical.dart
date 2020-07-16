@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'artical.g.dart';
 
-
+@JsonSerializable(createToJson: false)
 class Artical{
   final String apkLink;
   final int audit;

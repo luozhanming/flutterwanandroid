@@ -3,24 +3,30 @@ import 'package:json_annotation/json_annotation.dart';
 part 'pager.g.dart';
 
 @JsonSerializable(createToJson: false)
-class Pager {
-  final List<dynamic> datas;
-  final int page;
+class Pager<T> {
+  final List<T> datas;
+  final int curPage;
   final int offset;
   final bool over;
   final int pageCount;
-  final int pageSize;
+  final int size;
   final int total;
 
   const Pager(
       {this.datas,
-      this.page,
+      this.curPage,
       this.offset,
       this.over,
       this.pageCount,
-      this.pageSize,
+      this.size,
       this.total});
 
   factory Pager.fromJson(Map<String,dynamic> json) =>_$PagerFromJson(json);
+
+  factory  Pager.copyWith(Pager page,List<T> datas){
+    return Pager(curPage: page.curPage,offset: page.offset,over: page.over,
+    pageCount: page.pageCount,size: page.size,total: page.total,
+    datas: datas);
+  }
 }
 
