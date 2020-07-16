@@ -13,7 +13,10 @@ class Config {
 
   static const String PATH_IMAGE = "static/images/";
 
+  static const int PAGE_SIZE = 20;
+
   static Env ENV = DevEnv();
+
 
   /*****************************Wanandroid api*****************************/
   //首页banner

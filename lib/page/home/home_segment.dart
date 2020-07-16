@@ -83,9 +83,10 @@ class _HomeSegmentState extends State<HomeSegment> {
 }
 
 class HomeSegmentViewModel extends BaseViewModel {
-  List<HomeBanner> banners;
   CompositeSubscription _subscriptions;
   HomeModel _model;
+
+  List<HomeBanner> banners;
   int page;
 
   @override
@@ -94,8 +95,7 @@ class HomeSegmentViewModel extends BaseViewModel {
     _subscriptions = CompositeSubscription();
     _model = HomeModel();
     banners = [];
-    loadBanner();
-    loadHomeArticals();
+    loadData();
   }
 
   @override
@@ -108,7 +108,9 @@ class HomeSegmentViewModel extends BaseViewModel {
     _subscriptions.add(_model.refreshBanner().listen((event) {
       banners = event;
       notifyListeners();
-    }, onError: (error) {}));
+    }, onError: (error) {
+
+    }));
   }
 
   void loadHomeArticals() {
@@ -118,5 +120,12 @@ class HomeSegmentViewModel extends BaseViewModel {
     },onError: (error){
 
     }));
+  }
+
+  void loadData() {
+    List<Stream> streams = [_model.refreshBanner(),_model.loadHomeArticals(page)];
+    Rx.zip(streams, (values){
+      banners = values[0];
+    });
   }
 }
