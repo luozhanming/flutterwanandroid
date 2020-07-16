@@ -9,18 +9,39 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 typedef void BannerTapCallback(int index);
 
 class BannerView extends StatefulWidget {
+
+  /**
+   * 显示items
+   * */
   final List<BannerItem> items;
 
+  /**
+   * 是否自动轮播
+   * */
   final bool canLoop;
 
+  /**
+   * 轮播周期
+   * */
   final Duration duration;
 
+  /**
+   * 初始位置
+   * */
   final int initPos;
 
+  /**
+   * 边界颜色
+   * */
   final Color borderColor;
 
+  /**
+   * 边界宽度
+   * */
   final double borderWidth;
-
+  /**
+   * 点击回调
+   * */
   final BannerTapCallback callback;
 
   BannerView({this.items,
@@ -39,12 +60,14 @@ class BannerView extends StatefulWidget {
 class _BannerState extends State<BannerView> {
   String _msg = "";
 
+  GlobalKey _pageViewKey = GlobalKey();
+
   //实际banner的真实元素位置
   int _curPos = 0;
   Timer _loopTimer;
   PageController _pageController;
 
-  Queue<BannerItem> tempItems = Queue();
+  Queue<BannerItem> _tempItems = Queue();
 
   @override
   void initState() {
@@ -71,11 +94,21 @@ class _BannerState extends State<BannerView> {
     //为item指定真实位置
     //初始化副本items
     int len = widget.items.length;
-    tempItems.add(widget.items[len - 1]);
+    _tempItems.add(widget.items[len - 1]);
     for (int i = 0; i < len; i++) {
       widget.items[i].realPos = i;
-      tempItems.add(widget.items[i]);
+      _tempItems.add(widget.items[i]);
     }
+    
+    List<BannerItem> items = _tempItems.toList();
+    for (int i = 0, len = items.length; i < len; i++) {
+      BannerItem item = items[i];
+      widgets.add(Image(
+        image: item.image,
+        fit: BoxFit.cover,
+      ));
+    }
+
   }
 
   @override
@@ -84,20 +117,13 @@ class _BannerState extends State<BannerView> {
     _loopTimer?.cancel();
     _pageController?.dispose();
   }
-
+  List<Widget> widgets = [];
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = [];
+
     List<Widget> circles = [];
-    if (tempItems != null && tempItems.isNotEmpty) {
-      List<BannerItem> items = tempItems.toList();
-      for (int i = 0, len = items.length; i < len; i++) {
-        BannerItem item = items[i];
-        widgets.add(Image(
-          image: item.image,
-          fit: BoxFit.cover,
-        ));
-      }
+    if (_tempItems != null && _tempItems.isNotEmpty) {
+
 
       for (int i = 0, len = widget.items.length; i < len; i++) {
         circles.add(SizedBox(
@@ -149,6 +175,7 @@ class _BannerState extends State<BannerView> {
             child: Stack(
               children: <Widget>[
                 PageView(
+                  key: _pageViewKey,
                   controller: _pageController,
                   onPageChanged: (i) {
                     _onPageChanged(i);
@@ -196,29 +223,34 @@ class _BannerState extends State<BannerView> {
   void _onPageChanged(int i) {
     int flag = 0;
     setState(() {
-      _curPos = tempItems.toList()[i].realPos;
+      _curPos = _tempItems.toList()[i].realPos;
       _msg = widget.items != null && widget.items.length > 0
           ? widget.items[_curPos].message
           : "";
-      int length = tempItems.length;
+      int length = _tempItems.length;
       if (i == length - 1) {
         //滑到最后一个
-        tempItems.removeFirst();
-        tempItems.addLast(tempItems.first);
+        _tempItems.removeFirst();
+        _tempItems.addLast(_tempItems.first);
         flag = -1;
         //    _pageController.jumpToPage(i-1);
       } else if (i == 0) {
         //滑到第一个
-        tempItems.removeLast();
-        tempItems.addFirst(tempItems.last);
+        _tempItems.removeLast();
+        _tempItems.addFirst(_tempItems.last);
         flag = 1;
         //   _pageController.jumpToPage(i+1);
       }
     });
-    if (flag > 0)
-      _pageController.jumpToPage(i + 1);
-    else if (flag < 0) {
-      _pageController.jumpToPage(i - 1);
+
+    //获取PageView的大小
+    RenderBox box = _pageViewKey.currentContext.findRenderObject();
+    var width = box.size.width;
+    var offset  = _pageController.offset;
+    if (flag > 0){
+      _pageController.jumpTo(offset+width);
+    } else if (flag < 0) {
+      _pageController.jumpTo(offset-width);
     }
   }
 }
