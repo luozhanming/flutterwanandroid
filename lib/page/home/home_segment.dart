@@ -12,8 +12,13 @@ import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/widget/banner.dart';
 
 class HomeSegment extends StatefulWidget {
+
+
   @override
   _HomeSegmentState createState() => _HomeSegmentState();
+
+  HomeSegment({Key key}):
+        super(key:key);
 }
 
 class _HomeSegmentState extends State<HomeSegment> {
@@ -87,27 +92,40 @@ class _HomeSegmentState extends State<HomeSegment> {
     return Builder(builder: (context) {
       int itemCount = context
           .select<HomeSegmentViewModel, int>((value) => value.articals.length);
+      //没有更多或加载更多状态，item视图加一
+      int state =
+      context.select<HomeSegmentViewModel, int>((value) => value.state);
+      if(state==BaseViewModel.STATE_NOMORE||state==BaseViewModel.STATE_LOADMORE){
+        itemCount++;
+      }
       return SliverList(
           delegate: SliverChildBuilderDelegate(_articalItemBuilder,
-              childCount: itemCount + 1));
+              childCount: itemCount));
     });
   }
 
   Widget _articalItemBuilder(BuildContext context, int index) {
     return Builder(builder: (context) {
+      //数据为空
       int state =
           context.select<HomeSegmentViewModel, int>((value) => value.state);
-      if (state == BaseViewModel.STATE_LOADMORE &&
-          index == _viewModel.articals.length) {
-        //最后一个
-        return Center(
+      if(_viewModel.articals.isEmpty){
+        return Center();
+      }else if (state == BaseViewModel.STATE_LOADMORE &&
+          index == _viewModel.articals.length) {    //加载更多视图
+        return Container(
+          alignment: Alignment.center,
+          height: 60,
           child: Text("加载更多...."),
         );
-      } else {
+      } else {  //普通选项
         Artical artical = context.select<HomeSegmentViewModel, Artical>(
             (value) => value.articals[index]);
-        return Center(
-          child: Text(artical.title),
+        return Container(
+          height: 60,
+          child: Center(
+            child: Text(artical.title),
+          ),
         );
       }
     });
@@ -119,7 +137,6 @@ class _HomeSegmentState extends State<HomeSegment> {
       _viewModel.loadHomeArticals(true);
     } else if (notification.metrics.extentBefore == 0.0) {
       //滑到最顶部
-
     }
   }
 }
@@ -156,12 +173,16 @@ class HomeSegmentViewModel extends BaseViewModel {
   }
 
   void loadHomeArticals(bool isLoadMore) {
-    if (curPager?.over ??
-        false ||
-            state == BaseViewModel.STATE_LOADING ||
-            state == BaseViewModel.STATE_LOADMORE) return;
+    //没有更多数据
+    if (curPager?.over ?? false) {
+      state = BaseViewModel.STATE_NOMORE;
+      notifyListeners();
+    }
+    //同一时间只能有1个此类请求
+    if (state == BaseViewModel.STATE_REFRESH ||
+        state == BaseViewModel.STATE_LOADMORE) return;
     state =
-        isLoadMore ? BaseViewModel.STATE_LOADMORE : BaseViewModel.STATE_LOADING;
+        isLoadMore ? BaseViewModel.STATE_LOADMORE : BaseViewModel.STATE_REFRESH;
     notifyListeners();
     _subscriptions.add(_model
         .loadHomeArticals(isLoadMore ? curPager?.curPage ?? 0 + 1 : 0)
@@ -184,6 +205,8 @@ class HomeSegmentViewModel extends BaseViewModel {
   }
 
   void refreshData() {
+    state = BaseViewModel.STATE_REFRESH;
+    notifyListeners();
     List<Stream> streams = [_model.refreshBanner(), _model.loadHomeArticals(0)];
     _subscriptions.add(Rx.zip(streams, (values) {
       banners = values[0];
@@ -191,9 +214,6 @@ class HomeSegmentViewModel extends BaseViewModel {
       articals.clear();
       articals.addAll(curPager.datas);
       state = BaseViewModel.STATE_SUCCESS;
-      notifyListeners();
-    }).doOnListen(() {
-      state = BaseViewModel.STATE_LOADING;
       notifyListeners();
     }).listen((event) {}, onError: (error) {
       state = BaseViewModel.STATE_FAILED;

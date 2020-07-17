@@ -9,6 +9,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class SystemSegment extends StatefulWidget {
+
+  SystemSegment({Key key}):
+        super(key:key);
   @override
   _SystemSegmentState createState() => _SystemSegmentState();
 }
