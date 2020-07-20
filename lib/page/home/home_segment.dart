@@ -9,9 +9,10 @@ import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
+import 'package:wanandroid/widget/artical_item_widget.dart';
 import 'package:wanandroid/widget/banner.dart';
 
-class HomeSegment extends StatefulWidget {
+class HomeSegment extends StatefulWidget{
 
 
   @override
@@ -30,6 +31,7 @@ class _HomeSegmentState extends State<HomeSegment> {
     super.initState();
     _scrollController = ScrollController();
   }
+
 
   @override
   void dispose() {
@@ -60,10 +62,7 @@ class _HomeSegmentState extends State<HomeSegment> {
   Widget _buildBanner() {
     return SliverToBoxAdapter(
       child: Container(
-          margin: EdgeInsets.only(
-              top: ScreenUtil().setWidth(8),
-              left: ScreenUtil().setWidth(8),
-              right: ScreenUtil().setWidth(8)),
+          margin: EdgeInsets.all(ScreenUtil().setWidth(8)),
           height: ScreenUtil().setWidth(200),
           child: Builder(builder: (context) {
             List<BannerItem> items = [];
@@ -121,12 +120,7 @@ class _HomeSegmentState extends State<HomeSegment> {
       } else {  //普通选项
         Artical artical = context.select<HomeSegmentViewModel, Artical>(
             (value) => value.articals[index]);
-        return Container(
-          height: 60,
-          child: Center(
-            child: Text(artical.title),
-          ),
-        );
+        return ArticalItemWidget(artical);
       }
     });
   }

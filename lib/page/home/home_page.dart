@@ -18,18 +18,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   _HomeViewModel mViewModel;
+  List<Widget> _tabList = [];
 
   @override
   void initState() {
     super.initState();
     mViewModel = _HomeViewModel();
     mViewModel.initState();
+    _tabList.addAll([
+      AnimatedSwitcher(
+        child: HomeSegment(),
+        duration: const Duration(milliseconds: 300),
+      ),
+      AnimatedSwitcher(
+        child: SystemSegment(),
+        duration: const Duration(milliseconds: 300),
+      )
+    ]);
   }
 
   @override
   void dispose() {
     super.dispose();
     mViewModel.dispose();
+    _tabList.clear();
   }
 
   @override
@@ -43,104 +55,13 @@ class _HomePageState extends State<HomePage> {
         appBar: PreferredSize(
           preferredSize: Size(ScreenUtil().setWidth(Config.DESIGN_WIDTH),
               ScreenUtil().setWidth(40)),
-          child: AppBar(
-            leading: Center(),
-            flexibleSpace: Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Center(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                        padding:
-                            EdgeInsets.only(left: ScreenUtil().setWidth(8))),
-                    Builder(
-                      //将context范围缩到Scaffold
-                      builder: (context) => InkWell(
-                        onTap: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        child: OvalWidget(
-                            width: ScreenUtil().setWidth(30),
-                            height: ScreenUtil().setWidth(30),
-                            child: Image.asset(
-                              "${Config.PATH_IMAGE}ic_pic.jpg",
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                    ),
-                    Padding(
-                        padding:
-                            EdgeInsets.only(left: ScreenUtil().setWidth(8))),
-                    Expanded(
-                      child: InkWell(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.black54,
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(ScreenUtil().setWidth(3))),
-                        onTap: () {
-                          context
-                              .read<GlobalState>()
-                              .setTheme(ThemeData(primaryColor: Colors.green));
-                        },
-                        child: Container(
-                          margin:
-                              EdgeInsets.only(right: ScreenUtil().setWidth(8)),
-                          height: ScreenUtil().setWidth(26),
-                          decoration: BoxDecoration(
-                              color: Colors.black26,
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(ScreenUtil().setWidth(3))),
-                              border: Border.all(color: Colors.black12)),
-                          child: Row(
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: ScreenUtil().setWidth(6)),
-                                  child: Icon(Icons.search,
-                                      size: ScreenUtil().setWidth(20),
-                                      color: context
-                                          .select<GlobalState, ThemeData>(
-                                              (value) => value.themeData)
-                                          .primaryTextTheme
-                                          .title
-                                          .color),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: ScreenUtil().setWidth(4)),
-                                  child: Text(
-                                    S.of(context).search_website_content,
-                                    style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(14),
-                                        color: context
-                                            .select<GlobalState, ThemeData>(
-                                                (value) => value.themeData)
-                                            .primaryTextTheme
-                                            .title
-                                            .color),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ), //// AppBar是固定56高度的
-          ),
+          child: _buildAppBar(context),
         ),
         bottomNavigationBar: Consumer<_HomeViewModel>(
           builder: (context, value, child) => FFNavigationBar(
             selectedIndex: value.selectedIndex,
             theme: FFNavigationBarTheme(
+              selectedItemBackgroundColor: Theme.of(context).primaryColor,
                 showSelectedItemShadow: false,
                 barHeight: ScreenUtil().setWidth(36),
                 itemWidth: ScreenUtil().setWidth(30)),
@@ -153,18 +74,109 @@ class _HomePageState extends State<HomePage> {
         body: Builder(builder: (context) {
           int selecteIndex = context
               .select<_HomeViewModel, int>((value) => value.selectedIndex);
-          if (selecteIndex == 0) {
-            return AnimatedSwitcher(
-              child: HomeSegment(),
-              duration: const Duration(milliseconds: 300),
-            );
-          } else
-            return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: SystemSegment());
+          return IndexedStack(
+            index: selecteIndex,
+            children: _tabList,
+          );
         }),
       ),
     );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+          leading: Center(),
+          flexibleSpace: Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: Center(
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                      padding:
+                          EdgeInsets.only(left: ScreenUtil().setWidth(8))),
+                  Builder(
+                    //将context范围缩到Scaffold
+                    builder: (context) => InkWell(
+                      onTap: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                      child: OvalWidget(
+                          width: ScreenUtil().setWidth(30),
+                          height: ScreenUtil().setWidth(30),
+                          child: Image.asset(
+                            "${Config.PATH_IMAGE}ic_pic.jpg",
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                  ),
+                  Padding(
+                      padding:
+                          EdgeInsets.only(left: ScreenUtil().setWidth(8))),
+                  Expanded(
+                    child: InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.black54,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(ScreenUtil().setWidth(3))),
+                      onTap: () {
+                        context
+                            .read<GlobalState>()
+                            .setTheme(ThemeData(primaryColor: Colors.green));
+                      },
+                      child: Container(
+                        margin:
+                            EdgeInsets.only(right: ScreenUtil().setWidth(8)),
+                        height: ScreenUtil().setWidth(26),
+                        decoration: BoxDecoration(
+                            color: Colors.black26,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(ScreenUtil().setWidth(3))),
+                            border: Border.all(color: Colors.black12)),
+                        child: Row(
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: ScreenUtil().setWidth(6)),
+                                child: Icon(Icons.search,
+                                    size: ScreenUtil().setWidth(20),
+                                    color: context
+                                        .select<GlobalState, ThemeData>(
+                                            (value) => value.themeData)
+                                        .primaryTextTheme
+                                        .title
+                                        .color),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: ScreenUtil().setWidth(4)),
+                                child: Text(
+                                  S.of(context).search_website_content,
+                                  style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(14),
+                                      color: context
+                                          .select<GlobalState, ThemeData>(
+                                              (value) => value.themeData)
+                                          .primaryTextTheme
+                                          .title
+                                          .color),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ), //// AppBar是固定56高度的
+        );
   }
 
   List<FFNavigationBarItem> getNavigationBarItems() {
@@ -184,7 +196,6 @@ class _HomePageState extends State<HomePage> {
 class _HomeViewModel extends BaseViewModel {
   int selectedIndex;
 
-
   void dispose() {
     super.dispose();
   }
@@ -199,7 +210,5 @@ class _HomeViewModel extends BaseViewModel {
     selectedIndex = 0;
   }
 
-  void refreshData() {
-
-  }
+  void refreshData() {}
 }

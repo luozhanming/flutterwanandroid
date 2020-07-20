@@ -6,5 +6,8 @@
   "home": "首页",
   "tixi": "体系",
   "gongzonghao": "公众号",
-  "navigation": "导航"
+  "navigation": "导航",
+  "author": "作者：",
+  "shareUser": "分享者：",
+  "time": "时间："
 }

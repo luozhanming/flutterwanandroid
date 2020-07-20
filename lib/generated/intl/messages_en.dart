@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "author" : MessageLookupByLibrary.simpleMessage("Author:"),
     "gongzonghao" : MessageLookupByLibrary.simpleMessage("公众号"),
     "hint_input_password" : MessageLookupByLibrary.simpleMessage("请输入密码"),
     "hint_input_username" : MessageLookupByLibrary.simpleMessage("请输入用户名"),
@@ -28,6 +29,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "login" : MessageLookupByLibrary.simpleMessage("Login"),
     "navigation" : MessageLookupByLibrary.simpleMessage("导航"),
     "search_website_content" : MessageLookupByLibrary.simpleMessage("search"),
+    "shareUser" : MessageLookupByLibrary.simpleMessage("ShareUser:"),
+    "time" : MessageLookupByLibrary.simpleMessage("Time:"),
     "tixi" : MessageLookupByLibrary.simpleMessage("体系")
   };
 }

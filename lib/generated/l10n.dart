@@ -112,6 +112,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Author:`
+  String get author {
+    return Intl.message(
+      'Author:',
+      name: 'author',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ShareUser:`
+  String get shareUser {
+    return Intl.message(
+      'ShareUser:',
+      name: 'shareUser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time:`
+  String get time {
+    return Intl.message(
+      'Time:',
+      name: 'time',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

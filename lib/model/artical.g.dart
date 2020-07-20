@@ -39,6 +39,14 @@ Artical _$ArticalFromJson(Map<String, dynamic> json) {
     userId: json['userId'] as int,
     visible: json['visible'] as int,
     zan: json['zan'] as int,
-    tags: json['tags'] as List,
+    tags: _buildTags(json["tags"]),
   );
+}
+
+List<Tag> _buildTags(List json) {
+  List<Tag> tags = [];
+  json.forEach((element) {
+    tags.add(Tag.fromJson(element));
+  });
+  return tags;
 }

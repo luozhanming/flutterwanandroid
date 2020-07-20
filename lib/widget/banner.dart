@@ -9,40 +9,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 typedef void BannerTapCallback(int index);
 
 class BannerView extends StatefulWidget {
-
-  /**
-   * 显示items
-   * */
   final List<BannerItem> items;
 
-  /**
-   * 是否自动轮播
-   * */
   final bool canLoop;
 
-  /**
-   * 轮播周期
-   * */
   final Duration duration;
 
-  /**
-   * 初始位置
-   * */
   final int initPos;
 
-  /**
-   * 边界颜色
-   * */
   final Color borderColor;
 
-  /**
-   * 边界宽度
-   * */
   final double borderWidth;
-  /**
-   * 点击回调
-   * */
+
   final BannerTapCallback callback;
+
 
   BannerView({this.items,
     this.canLoop = true,
@@ -60,14 +40,14 @@ class BannerView extends StatefulWidget {
 class _BannerState extends State<BannerView> {
   String _msg = "";
 
-  GlobalKey _pageViewKey = GlobalKey();
-
   //实际banner的真实元素位置
   int _curPos = 0;
   Timer _loopTimer;
   PageController _pageController;
 
-  Queue<BannerItem> _tempItems = Queue();
+  Queue<BannerItem> tempItems = Queue();
+
+  GlobalKey _pagerKey = GlobalKey();
 
   @override
   void initState() {
@@ -94,21 +74,11 @@ class _BannerState extends State<BannerView> {
     //为item指定真实位置
     //初始化副本items
     int len = widget.items.length;
-    _tempItems.add(widget.items[len - 1]);
+    tempItems.add(widget.items[len - 1]);
     for (int i = 0; i < len; i++) {
       widget.items[i].realPos = i;
-      _tempItems.add(widget.items[i]);
+      tempItems.add(widget.items[i]);
     }
-
-    List<BannerItem> items = _tempItems.toList();
-    for (int i = 0, len = items.length; i < len; i++) {
-      BannerItem item = items[i];
-      widgets.add(Image(
-        image: item.image,
-        fit: BoxFit.cover,
-      ));
-    }
-
   }
 
   @override
@@ -117,13 +87,21 @@ class _BannerState extends State<BannerView> {
     _loopTimer?.cancel();
     _pageController?.dispose();
   }
-  List<Widget> widgets = [];
+
   @override
   Widget build(BuildContext context) {
-
+    List<Widget> widgets = [];
     List<Widget> circles = [];
-    if (_tempItems != null && _tempItems.isNotEmpty) {
-
+    if (tempItems != null && tempItems.isNotEmpty) {
+      //重建Banner内容widget
+      List<BannerItem> items = tempItems.toList();
+      for (int i = 0, len = items.length; i < len; i++) {
+        BannerItem item = items[i];
+        widgets.add(Image(
+          image: item.image,
+          fit: BoxFit.cover,
+        ));
+      }
 
       for (int i = 0, len = widget.items.length; i < len; i++) {
         circles.add(SizedBox(
@@ -152,9 +130,9 @@ class _BannerState extends State<BannerView> {
                     width: widget.borderWidth, color: widget.borderColor)),
           ),
           child: ClipRRect(
-            borderRadius:
-            BorderRadius.all(Radius.circular(ScreenUtil().setWidth(2))),
-            child:Image.asset("static/images/ic_pic.jpg",fit: BoxFit.fill))
+              borderRadius:
+              BorderRadius.all(Radius.circular(ScreenUtil().setWidth(2))),
+              child:Image.asset("static/images/ic_pic.jpg",fit: BoxFit.fill))
       );
     } else
       return GestureDetector(
@@ -175,7 +153,7 @@ class _BannerState extends State<BannerView> {
             child: Stack(
               children: <Widget>[
                 PageView(
-                  key: _pageViewKey,
+                  key:_pagerKey,
                   controller: _pageController,
                   onPageChanged: (i) {
                     _onPageChanged(i);
@@ -223,33 +201,31 @@ class _BannerState extends State<BannerView> {
   void _onPageChanged(int i) {
     int flag = 0;
     setState(() {
-      _curPos = _tempItems.toList()[i].realPos;
+      _curPos = tempItems.toList()[i].realPos;
       _msg = widget.items != null && widget.items.length > 0
           ? widget.items[_curPos].message
           : "";
-      int length = _tempItems.length;
+      int length = tempItems.length;
       if (i == length - 1) {
         //滑到最后一个
-        _tempItems.removeFirst();
-        _tempItems.addLast(_tempItems.first);
+        tempItems.removeFirst();
+        tempItems.addLast(tempItems.first);
         flag = -1;
         //    _pageController.jumpToPage(i-1);
       } else if (i == 0) {
         //滑到第一个
-        _tempItems.removeLast();
-        _tempItems.addFirst(_tempItems.last);
+        tempItems.removeLast();
+        tempItems.addFirst(tempItems.last);
         flag = 1;
         //   _pageController.jumpToPage(i+1);
       }
     });
-
-    //获取PageView的大小
-    RenderBox box = _pageViewKey.currentContext.findRenderObject();
+    RenderBox box = _pagerKey.currentContext.findRenderObject();
     var width = box.size.width;
-    var offset  = _pageController.offset;
-    if (flag > 0){
+    var offset = _pageController.offset;
+    if (flag > 0)
       _pageController.jumpTo(offset+width);
-    } else if (flag < 0) {
+    else if (flag < 0) {
       _pageController.jumpTo(offset-width);
     }
   }

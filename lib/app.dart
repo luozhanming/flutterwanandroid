@@ -30,7 +30,7 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
             ],
             supportedLocales: [
               const Locale("zh","CN"),
-              ...S.delegate.supportedLocales
+           //   ...S.delegate.supportedLocales
             ],
             locale: context.select<GlobalState,Locale>((value) => value.locale),
             theme: context.select<GlobalState,ThemeData>((value) => value.themeData),
