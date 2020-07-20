@@ -1,12 +1,15 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wanandroid/common/config/config.dart';
+import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
-import '';
+import 'package:wanandroid/widget/circle_widget.dart';
+import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
+  static const String NAME = "Search";
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -15,10 +18,12 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: PreferredSize(
+          preferredSize: Size(ScreenUtil().setWidth(Config.DESIGN_WIDTH),
+              ScreenUtil().setWidth(40)),
+          child: _buildAppBar(context)),
     );
   }
-
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
@@ -28,91 +33,37 @@ class _SearchPageState extends State<SearchPage> {
         child: Center(
           child: Row(
             children: <Widget>[
-              Padding(
-                  padding:
-                  EdgeInsets.only(left: ScreenUtil().setWidth(8))),
+              Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
               Builder(
                 //将context范围缩到Scaffold
-                builder: (context) => InkWell(
-                  onTap: () {
-                    Scaffold.of(context).openDrawer();
+                builder: (context) => IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
                   },
-                  child: OvalWidget(
-                      width: ScreenUtil().setWidth(30),
-                      height: ScreenUtil().setWidth(30),
-                      child: Image.asset(
-                        "${Config.PATH_IMAGE}ic_pic.jpg",
-                        fit: BoxFit.cover,
-                      )),
                 ),
               ),
-              Padding(
-                  padding:
-                  EdgeInsets.only(left: ScreenUtil().setWidth(8))),
+              Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
               Expanded(
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.black54,
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(ScreenUtil().setWidth(3))),
-                  onTap: () {
-                    context
-                        .read<GlobalState>()
-                        .setTheme(ThemeData(primaryColor: Colors.green));
-                  },
-                  child: Container(
-                    margin:
-                    EdgeInsets.only(right: ScreenUtil().setWidth(8)),
-                    height: ScreenUtil().setWidth(26),
-                    decoration: BoxDecoration(
-                        color: Colors.black26,
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(ScreenUtil().setWidth(3))),
-                        border: Border.all(color: Colors.black12)),
-                    child: Row(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                left: ScreenUtil().setWidth(6)),
-                            child: Icon(Icons.search,
-                                size: ScreenUtil().setWidth(20),
-                                color: context
-                                    .select<GlobalState, ThemeData>(
-                                        (value) => value.themeData)
-                                    .primaryTextTheme
-                                    .title
-                                    .color),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                left: ScreenUtil().setWidth(4)),
-                            child: Text(
-                              S.of(context).search_website_content,
-                              style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(14),
-                                  color: context
-                                      .select<GlobalState, ThemeData>(
-                                          (value) => value.themeData)
-                                      .primaryTextTheme
-                                      .title
-                                      .color),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                child: _buildSearchField(context),
               )
             ],
           ),
         ),
       ), //// AppBar是固定56高度的
+    );
+  }
+
+  Widget _buildSearchField(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: TextField(
+
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: S.of(context).search_website_content,
+            focusColor: Colors.lightBlueAccent),
+      ),
     );
   }
 }

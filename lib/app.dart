@@ -6,6 +6,7 @@ import 'package:redux/redux.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home/home_page.dart';
+import 'package:wanandroid/page/search/search_page.dart';
 
 import 'package:wanandroid/redux/app_redux.dart';
 
@@ -22,23 +23,26 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-            localizationsDelegates: [
-              S.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate
-            ],
-            supportedLocales: [
-              const Locale("zh","CN"),
-           //   ...S.delegate.supportedLocales
-            ],
-            locale: context.select<GlobalState,Locale>((value) => value.locale),
-            theme: context.select<GlobalState,ThemeData>((value) => value.themeData),
-            routes: {
-              "/":(context){
-                return HomePage();
-              }
-            },
+      localizationsDelegates: [
+        S.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale("zh", "CN"),
+        //   ...S.delegate.supportedLocales
+      ],
+      locale: context.select<GlobalState, Locale>((value) => value.locale),
+      theme: context.select<GlobalState, ThemeData>((value) => value.themeData),
+      routes: {
+        HomePage.NAME: (context) {
+          return HomePage();
+        },
+        SearchPage.NAME: (context) {
+          return SearchPage();
+        }
+      },
     );
   }
 }

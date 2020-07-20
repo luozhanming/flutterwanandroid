@@ -13,7 +13,7 @@ abstract class BaseState<T extends StatefulWidget,VM extends BaseViewModel> exte
   @override
   void initState() {
     super.initState();
-    mViewModel = _buildViewModel(context);
+    mViewModel = buildViewModel(context);
     mViewModel.initState();
   }
 
@@ -28,15 +28,14 @@ abstract class BaseState<T extends StatefulWidget,VM extends BaseViewModel> exte
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<VM>(
       create:(context)=> mViewModel,
-      child: _buildBody(),
-      builder: (context,child)=>child,
+      builder: (context,child)=>buildBody(context),
     );
   }
 
 
-  VM _buildViewModel(BuildContext context);
+  VM buildViewModel(BuildContext context);
 
-  Widget _buildBody();
+  Widget buildBody(BuildContext context);
 
 
 

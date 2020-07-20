@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/db/home_repository.dart';
 import 'package:wanandroid/model/artical.dart';
@@ -22,8 +23,7 @@ class HomeSegment extends StatefulWidget{
         super(key:key);
 }
 
-class _HomeSegmentState extends State<HomeSegment> {
-  HomeSegmentViewModel _viewModel;
+class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
   ScrollController _scrollController;
 
   @override
@@ -36,27 +36,7 @@ class _HomeSegmentState extends State<HomeSegment> {
   @override
   void dispose() {
     super.dispose();
-    _viewModel.dispose();
     _scrollController.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        _viewModel = HomeSegmentViewModel();
-        _viewModel.initState();
-        return _viewModel;
-      },
-      builder: (context, child) => NotificationListener<ScrollNotification>(
-        onNotification: _onScrollNotification,
-        child: CustomScrollView(
-          controller: _scrollController,
-          scrollDirection: Axis.vertical,
-          slivers: <Widget>[_buildBanner(), _buildHomeArticals()],
-        ),
-      ),
-    );
   }
 
   Widget _buildBanner() {
@@ -108,10 +88,10 @@ class _HomeSegmentState extends State<HomeSegment> {
       //数据为空
       int state =
           context.select<HomeSegmentViewModel, int>((value) => value.state);
-      if(_viewModel.articals.isEmpty){
+      if(mViewModel.articals.isEmpty){
         return Center();
       }else if (state == BaseViewModel.STATE_LOADMORE &&
-          index == _viewModel.articals.length) {    //加载更多视图
+          index == mViewModel.articals.length) {    //加载更多视图
         return Container(
           alignment: Alignment.center,
           height: 60,
@@ -128,10 +108,27 @@ class _HomeSegmentState extends State<HomeSegment> {
   bool _onScrollNotification(ScrollNotification notification) {
     if (notification.metrics.extentAfter == 0.0) {
       //滑到最底部
-      _viewModel.loadHomeArticals(true);
+      mViewModel.loadHomeArticals(true);
     } else if (notification.metrics.extentBefore == 0.0) {
       //滑到最顶部
     }
+  }
+
+  @override
+  Widget buildBody(BuildContext context) {
+   return NotificationListener<ScrollNotification>(
+      onNotification: _onScrollNotification,
+      child: CustomScrollView(
+        controller: _scrollController,
+        scrollDirection: Axis.vertical,
+        slivers: <Widget>[_buildBanner(), _buildHomeArticals()],
+      ),
+    );
+  }
+
+  @override
+  HomeSegmentViewModel buildViewModel(BuildContext context) {
+    return HomeSegmentViewModel();
   }
 }
 

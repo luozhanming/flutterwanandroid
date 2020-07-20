@@ -3,28 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home/home_segment.dart';
 import 'package:wanandroid/page/home/system_segment.dart';
+import 'package:wanandroid/page/search/search_page.dart';
 import 'package:wanandroid/widget/circle_widget.dart';
 
 class HomePage extends StatefulWidget {
+
+  static const String NAME = "/";
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends BaseState<HomePage,_HomeViewModel> {
   _HomeViewModel mViewModel;
   List<Widget> _tabList = [];
 
   @override
   void initState() {
     super.initState();
-    mViewModel = _HomeViewModel();
-    mViewModel.initState();
     _tabList.addAll([
       AnimatedSwitcher(
         child: HomeSegment(),
@@ -40,47 +43,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-    mViewModel.dispose();
     _tabList.clear();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: Config.DESIGN_WIDTH);
-    return ChangeNotifierProvider<_HomeViewModel>(
-      create: (context) => mViewModel,
-      builder: (context, child) => Scaffold(
-        drawerScrimColor: Colors.transparent,
-        drawer: Text("sdfsdfsdfsdfsdfsdfsdfsdf"),
-        appBar: PreferredSize(
-          preferredSize: Size(ScreenUtil().setWidth(Config.DESIGN_WIDTH),
-              ScreenUtil().setWidth(40)),
-          child: _buildAppBar(context),
-        ),
-        bottomNavigationBar: Consumer<_HomeViewModel>(
-          builder: (context, value, child) => FFNavigationBar(
-            selectedIndex: value.selectedIndex,
-            theme: FFNavigationBarTheme(
-              selectedItemBackgroundColor: Theme.of(context).primaryColor,
-                showSelectedItemShadow: false,
-                barHeight: ScreenUtil().setWidth(36),
-                itemWidth: ScreenUtil().setWidth(30)),
-            items: getNavigationBarItems(),
-            onSelectTab: (index) {
-              value.changeSelectedIndex(index);
-            },
-          ),
-        ),
-        body: Builder(builder: (context) {
-          int selecteIndex = context
-              .select<_HomeViewModel, int>((value) => value.selectedIndex);
-          return IndexedStack(
-            index: selecteIndex,
-            children: _tabList,
-          );
-        }),
-      ),
-    );
   }
 
   AppBar _buildAppBar(BuildContext context) {
@@ -118,10 +81,8 @@ class _HomePageState extends State<HomePage> {
                       highlightColor: Colors.black54,
                       borderRadius: BorderRadius.all(
                           Radius.circular(ScreenUtil().setWidth(3))),
-                      onTap: () {
-                        context
-                            .read<GlobalState>()
-                            .setTheme(ThemeData(primaryColor: Colors.green));
+                      onTap: () async{
+                        await Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
                       },
                       child: Container(
                         margin:
@@ -190,6 +151,47 @@ class _HomePageState extends State<HomePage> {
       label: S.of(context).tixi,
     ));
     return items;
+  }
+
+  @override
+  Widget buildBody(BuildContext context) {
+    ScreenUtil.init(context, width: Config.DESIGN_WIDTH);
+    return Scaffold(
+        drawerScrimColor: Colors.transparent,
+        drawer: Text("sdfsdfsdfsdfsdfsdfsdfsdf"),
+        appBar: PreferredSize(
+          preferredSize: Size(ScreenUtil().setWidth(Config.DESIGN_WIDTH),
+              ScreenUtil().setWidth(40)),
+          child: _buildAppBar(context),
+        ),
+        bottomNavigationBar: Consumer<_HomeViewModel>(
+          builder: (context, value, child) => FFNavigationBar(
+            selectedIndex: value.selectedIndex,
+            theme: FFNavigationBarTheme(
+                selectedItemBackgroundColor: Theme.of(context).primaryColor,
+                showSelectedItemShadow: false,
+                barHeight: ScreenUtil().setWidth(36),
+                itemWidth: ScreenUtil().setWidth(30)),
+            items: getNavigationBarItems(),
+            onSelectTab: (index) {
+              value.changeSelectedIndex(index);
+            },
+          ),
+        ),
+        body: Builder(builder: (context) {
+          int selecteIndex = context
+              .select<_HomeViewModel, int>((value) => value.selectedIndex);
+          return IndexedStack(
+            index: selecteIndex,
+            children: _tabList,
+          );
+        }),
+      );
+  }
+
+  @override
+  _HomeViewModel buildViewModel(BuildContext context) {
+    return _HomeViewModel();
   }
 }
 
