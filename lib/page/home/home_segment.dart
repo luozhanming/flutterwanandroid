@@ -26,11 +26,26 @@ class HomeSegment extends StatefulWidget{
 class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
   ScrollController _scrollController;
 
+  GlobalKey<BannerState> _bannerKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
   }
+
+  @override
+  void didPushNext() {
+     //关闭banner的轮播
+    _bannerKey.currentState.startLoop(false);
+  }
+
+  @override
+  void didPopNext(){
+    _bannerKey.currentState.startLoop(true);
+  }
+
+
 
 
   @override

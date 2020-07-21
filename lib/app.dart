@@ -12,6 +12,8 @@ import 'package:wanandroid/redux/app_redux.dart';
 
 import 'package:battery/battery.dart';
 
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 class FlutterReduxApp extends StatefulWidget {
   @override
   _FlutterReduxAppState createState() => _FlutterReduxAppState();
@@ -19,6 +21,7 @@ class FlutterReduxApp extends StatefulWidget {
 
 class _FlutterReduxAppState extends State<FlutterReduxApp> {
   final Store store = Store<AppState>(appReducer);
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +46,7 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
           return SearchPage();
         }
       },
+      navigatorObservers:[routeObserver] ,
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home/home_segment.dart';
 import 'package:wanandroid/page/home/system_segment.dart';
 import 'package:wanandroid/page/search/search_page.dart';
+import 'package:wanandroid/widget/banner.dart';
 import 'package:wanandroid/widget/circle_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,6 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends BaseState<HomePage,_HomeViewModel> {
   _HomeViewModel mViewModel;
   List<Widget> _tabList = [];
+
 
   @override
   void initState() {
@@ -45,6 +47,8 @@ class _HomePageState extends BaseState<HomePage,_HomeViewModel> {
     super.dispose();
     _tabList.clear();
   }
+
+
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(

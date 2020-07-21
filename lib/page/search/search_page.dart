@@ -14,7 +14,7 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage>  with RouteAware{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,11 +36,21 @@ class _SearchPageState extends State<SearchPage> {
               Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
               Builder(
                 //将context范围缩到Scaffold
-                builder: (context) => IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                builder: (context) => Container(
+                  alignment: Alignment.center,
+                  width: ScreenUtil().setWidth(40),
+                  height: ScreenUtil().setWidth(40),
+                  child: IconButton (
+                    padding: EdgeInsets.all(0),
+                    constraints:BoxConstraints(
+                      maxWidth: ScreenUtil().setWidth(40),
+                      maxHeight: ScreenUtil().setWidth(40)
+                    ),
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
               ),
               Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),

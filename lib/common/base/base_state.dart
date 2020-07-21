@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 
-abstract class BaseState<T extends StatefulWidget,VM extends BaseViewModel> extends State<T>{
+import '../../app.dart';
+
+abstract class BaseState<T extends StatefulWidget,VM extends BaseViewModel> extends State<T> with RouteAware{
 
 
   VM mViewModel;
@@ -19,15 +21,26 @@ abstract class BaseState<T extends StatefulWidget,VM extends BaseViewModel> exte
 
   @override
   void dispose() {
+    routeObserver.unsubscribe(this);
     super.dispose();
     mViewModel.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<VM>(
-      create:(context)=> mViewModel,
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<VM>(create: (_) => mViewModel),
+          ChangeNotifierProvider<LifeCycle>(create: (_) => SomethingElse()),
+        ],
       builder: (context,child)=>buildBody(context),
     );
   }
@@ -37,8 +50,17 @@ abstract class BaseState<T extends StatefulWidget,VM extends BaseViewModel> exte
 
   Widget buildBody(BuildContext context);
 
+}
 
 
+class LifeCycle extends ChangeNotifier{
+  static const int IDEL = 0;
+  static const int CREATE = 1000;
+  static const int START = 1001;
+  static const int STOP = 1002;
+  static const int DESTROY = 1003;
 
+  int curLifeCycle = IDEL;
 
+  
 }

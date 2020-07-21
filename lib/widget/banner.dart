@@ -23,21 +23,21 @@ class BannerView extends StatefulWidget {
 
   final BannerTapCallback callback;
 
-
-  BannerView({this.items,
-    this.canLoop = true,
-    this.duration = const Duration(seconds: 5),
-    this.initPos = 0,
-    this.borderColor = Colors.transparent,
-    this.borderWidth = 0,
-    this.callback})
-      : super(key: ObjectKey(items));
+  BannerView(
+      {Key key,
+      this.items,
+      this.canLoop = true,
+      this.duration = const Duration(seconds: 5),
+      this.initPos = 0,
+      this.borderColor = Colors.transparent,
+      this.borderWidth = 0,
+      this.callback}):super(key:ObjectKey(items));
 
   @override
-  _BannerState createState() => _BannerState();
+  BannerState createState() => BannerState();
 }
 
-class _BannerState extends State<BannerView> {
+class BannerState extends State<BannerView> {
   String _msg = "";
 
   //实际banner的真实元素位置
@@ -58,15 +58,6 @@ class _BannerState extends State<BannerView> {
     _msg = widget.items != null && widget.items.length > 0
         ? widget.items[_curPos].message
         : "";
-    _loopTimer?.cancel();
-    if (widget.canLoop) {
-      _loopTimer = Timer.periodic(widget.duration, (timer) {
-        log("BannerView loop", name: "BannerView");
-        int curPagePos = _pageController.page.toInt();
-        _pageController.animateToPage(curPagePos + 1,
-            duration: Duration(milliseconds: 200), curve: Curves.linear);
-      });
-    }
     //因为有可能多次调用
     _pageController?.dispose();
     _pageController = PageController(initialPage: _curPos + 1);
@@ -79,13 +70,14 @@ class _BannerState extends State<BannerView> {
       widget.items[i].realPos = i;
       tempItems.add(widget.items[i]);
     }
+    startLoop(true);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _loopTimer?.cancel();
     _pageController?.dispose();
+    startLoop(false);
   }
 
   @override
@@ -125,15 +117,15 @@ class _BannerState extends State<BannerView> {
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
                 borderRadius:
-                BorderRadius.all(Radius.circular(ScreenUtil().setWidth(6))),
+                    BorderRadius.all(Radius.circular(ScreenUtil().setWidth(6))),
                 side: BorderSide(
                     width: widget.borderWidth, color: widget.borderColor)),
           ),
           child: ClipRRect(
               borderRadius:
-              BorderRadius.all(Radius.circular(ScreenUtil().setWidth(2))),
-              child:Image.asset("static/images/ic_pic.jpg",fit: BoxFit.fill))
-      );
+                  BorderRadius.all(Radius.circular(ScreenUtil().setWidth(2))),
+              child:
+                  Image.asset("static/images/ic_pic.jpg", fit: BoxFit.fill)));
     } else
       return GestureDetector(
         onTap: () {
@@ -143,17 +135,17 @@ class _BannerState extends State<BannerView> {
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
                 borderRadius:
-                BorderRadius.all(Radius.circular(ScreenUtil().setWidth(6))),
+                    BorderRadius.all(Radius.circular(ScreenUtil().setWidth(6))),
                 side: BorderSide(
                     width: widget.borderWidth, color: widget.borderColor)),
           ),
           child: ClipRRect(
             borderRadius:
-            BorderRadius.all(Radius.circular(ScreenUtil().setWidth(2))),
+                BorderRadius.all(Radius.circular(ScreenUtil().setWidth(2))),
             child: Stack(
               children: <Widget>[
                 PageView(
-                  key:_pagerKey,
+                  key: _pagerKey,
                   controller: _pageController,
                   onPageChanged: (i) {
                     _onPageChanged(i);
@@ -172,7 +164,7 @@ class _BannerState extends State<BannerView> {
                           alignment: Alignment.centerLeft,
                           child: Padding(
                             padding:
-                            EdgeInsets.only(left: ScreenUtil().setWidth(8)),
+                                EdgeInsets.only(left: ScreenUtil().setWidth(8)),
                             child: Text(
                               _msg,
                               style: TextStyle(
@@ -224,9 +216,25 @@ class _BannerState extends State<BannerView> {
     var width = box.size.width;
     var offset = _pageController.offset;
     if (flag > 0)
-      _pageController.jumpTo(offset+width);
+      _pageController.jumpTo(offset + width);
     else if (flag < 0) {
-      _pageController.jumpTo(offset-width);
+      _pageController.jumpTo(offset - width);
+    }
+  }
+
+  void startLoop(bool start) {
+    if (start) {
+      _loopTimer?.cancel();
+      if (widget.canLoop) {
+        _loopTimer = Timer.periodic(widget.duration, (timer) {
+          log("BannerView loop", name: "BannerView");
+          int curPagePos = _pageController.page.toInt();
+          _pageController.animateToPage(curPagePos + 1,
+              duration: Duration(milliseconds: 200), curve: Curves.linear);
+        });
+      }
+    } else {
+      _loopTimer?.cancel();
     }
   }
 }
