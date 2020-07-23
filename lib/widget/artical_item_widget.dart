@@ -16,10 +16,10 @@ import 'package:wanandroid/model/tag.dart';
 class ArticalItemWidget extends StatelessWidget {
   final Artical artical;
   final OnCollectTap onCollectTap;
-
+  final OnArticalTap onArticalTap;
   final bool isLogin;
 
-  ArticalItemWidget(this.artical, {this.onCollectTap, this.isLogin})
+  ArticalItemWidget(this.artical, {this.onArticalTap,this.onCollectTap, this.isLogin})
       : super(key: ObjectKey(artical));
 
   @override
@@ -34,10 +34,7 @@ class ArticalItemWidget extends StatelessWidget {
     rowWidget.add(Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(10))));
     rowWidget.add(_buildTimeWidget(context));
 
-    return Material(
-      color: Colors.white,
-      child: Slidable(
-
+    return Slidable(
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.15,
         secondaryActions: <Widget>[
@@ -47,36 +44,41 @@ class ArticalItemWidget extends StatelessWidget {
             onTap: (){},
           )
         ],
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(vertical:ScreenUtil().setWidth(8),horizontal: ScreenUtil().setWidth(12)),
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text(artical.title,style: titleTextStyle,maxLines: 2,),
-                      Padding(
-                        padding: EdgeInsets.only(top: ScreenUtil().setWidth(8)),
-                      ),
-                      Row(
-                        children: rowWidget,
-                      )
-                    ],
-                  ),
-                ],
+        child: GestureDetector(
+          onTap: (){
+            onArticalTap?.call(artical);
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(vertical:ScreenUtil().setWidth(8),horizontal: ScreenUtil().setWidth(12)),
+                child: Stack(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text(artical.title,style: titleTextStyle,maxLines: 2,),
+                        Padding(
+                          padding: EdgeInsets.only(top: ScreenUtil().setWidth(8)),
+                        ),
+                        Row(
+                          children: rowWidget,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(margin: EdgeInsets.only(left: ScreenUtil().setWidth(8),right: ScreenUtil().setWidth(8)),
-            height: 1,
-            color: Colors.black12,)
-          ],
+              Container(margin: EdgeInsets.only(left: ScreenUtil().setWidth(8),right: ScreenUtil().setWidth(8)),
+              height: 1,
+              color: Colors.black12,)
+            ],
+          ),
         ),
-      ),
-    );
+      );
+
   }
 
 
@@ -125,3 +127,5 @@ typedef void OnCollectTap(Artical artical, int index);
 typedef void OnChaperNameTap(String chapter);
 /**tag按钮点击*/
 typedef void OnTagTap(String tag);
+/**文章点击*/
+typedef void OnArticalTap(Artical artical);

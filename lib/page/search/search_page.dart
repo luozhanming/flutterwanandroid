@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wanandroid/common/base/base_state.dart';
+import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/generated/l10n.dart';
-import 'package:wanandroid/model/global_state.dart';
-import 'package:wanandroid/widget/circle_widget.dart';
-import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
   static const String NAME = "Search";
@@ -14,16 +13,8 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage>  with RouteAware{
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size(ScreenUtil().setWidth(Config.DESIGN_WIDTH),
-              ScreenUtil().setWidth(40)),
-          child: _buildAppBar(context)),
-    );
-  }
+class _SearchPageState extends BaseState<SearchPage,SearchViewModel>{
+
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
@@ -76,4 +67,27 @@ class _SearchPageState extends State<SearchPage>  with RouteAware{
       ),
     );
   }
+
+  @override
+  Widget buildBody(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+          preferredSize: Size(ScreenUtil().setWidth(Config.DESIGN_WIDTH),
+              ScreenUtil().setWidth(40)),
+          child: _buildAppBar(context)),
+    );
+  }
+
+  @override
+  buildViewModel(BuildContext context) {
+    return SearchViewModel();
+  }
+}
+
+
+class SearchViewModel extends BaseViewModel{
+  @override
+  void initState() {
+  }
+
 }

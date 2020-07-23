@@ -11,7 +11,6 @@ import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home/home_segment.dart';
 import 'package:wanandroid/page/home/system_segment.dart';
 import 'package:wanandroid/page/search/search_page.dart';
-import 'package:wanandroid/widget/banner.dart';
 import 'package:wanandroid/widget/circle_widget.dart';
 
 class HomePage extends StatefulWidget {

@@ -5,10 +5,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wanandroid/common/base/route_widget.dart';
+import 'package:wanandroid/common/config/config.dart';
 
 typedef void BannerTapCallback(int index);
 
-class BannerView extends StatefulWidget {
+class BannerView extends StatefulWidget with RouteAware {
   final List<BannerItem> items;
 
   final bool canLoop;
@@ -24,8 +26,7 @@ class BannerView extends StatefulWidget {
   final BannerTapCallback callback;
 
   BannerView(
-      {Key key,
-      this.items,
+      {this.items,
       this.canLoop = true,
       this.duration = const Duration(seconds: 5),
       this.initPos = 0,
@@ -37,7 +38,7 @@ class BannerView extends StatefulWidget {
   BannerState createState() => BannerState();
 }
 
-class BannerState extends State<BannerView> {
+class BannerState extends RouteAwareWidgetState<BannerView> {
   String _msg = "";
 
   //实际banner的真实元素位置
@@ -79,6 +80,17 @@ class BannerState extends State<BannerView> {
     _pageController?.dispose();
     startLoop(false);
   }
+
+  @override
+  void didPopNext() {
+    startLoop(true);
+  }
+
+  @override
+  void didPushNext() {
+    startLoop(false);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +137,7 @@ class BannerState extends State<BannerView> {
               borderRadius:
                   BorderRadius.all(Radius.circular(ScreenUtil().setWidth(2))),
               child:
-                  Image.asset("static/images/ic_pic.jpg", fit: BoxFit.fill)));
+                  Image.asset("${Config.PATH_IMAGE}ic_pic.jpg", fit: BoxFit.fill)));
     } else
       return GestureDetector(
         onTap: () {

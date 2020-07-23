@@ -36,11 +36,8 @@ abstract class BaseState<T extends StatefulWidget,VM extends BaseViewModel> exte
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<VM>(create: (_) => mViewModel),
-          ChangeNotifierProvider<LifeCycle>(create: (_) => SomethingElse()),
-        ],
+    return ChangeNotifierProvider(
+      create: (context)=>mViewModel,
       builder: (context,child)=>buildBody(context),
     );
   }
@@ -62,5 +59,11 @@ class LifeCycle extends ChangeNotifier{
 
   int curLifeCycle = IDEL;
 
+  void changeLifeCycle(int lifecycle){
+    curLifeCycle = lifecycle;
+    notifyListeners();
+  }
+
   
 }
+

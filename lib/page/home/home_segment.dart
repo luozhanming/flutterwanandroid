@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
@@ -10,6 +11,7 @@ import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
+import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/widget/artical_item_widget.dart';
 import 'package:wanandroid/widget/banner.dart';
 
@@ -26,26 +28,11 @@ class HomeSegment extends StatefulWidget{
 class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
   ScrollController _scrollController;
 
-  GlobalKey<BannerState> _bannerKey = GlobalKey();
-
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
   }
-
-  @override
-  void didPushNext() {
-     //关闭banner的轮播
-    _bannerKey.currentState.startLoop(false);
-  }
-
-  @override
-  void didPopNext(){
-    _bannerKey.currentState.startLoop(true);
-  }
-
-
 
 
   @override
@@ -53,6 +40,8 @@ class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
     super.dispose();
     _scrollController.dispose();
   }
+
+
 
   Widget _buildBanner() {
     return SliverToBoxAdapter(
@@ -71,6 +60,13 @@ class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
                   message: banner.title));
             }
             return BannerView(
+              callback:(index) async{
+                var banner = mViewModel.banners[index];
+                var url = banner.url;
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context)=>WebviewPage(url: url,title: banner.title,)
+                ));
+                },
               borderWidth: ScreenUtil().setWidth(6),
               borderColor: context
                   .select<GlobalState, ThemeData>((value) => value.themeData)
@@ -115,7 +111,11 @@ class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
       } else {  //普通选项
         Artical artical = context.select<HomeSegmentViewModel, Artical>(
             (value) => value.articals[index]);
-        return ArticalItemWidget(artical);
+        return ArticalItemWidget(artical,onArticalTap: (artical)async{
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context)=>WebviewPage(url: artical.link,title: artical.title,)
+          ));
+        },);
       }
     });
   }
