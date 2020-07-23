@@ -8,20 +8,18 @@ import 'package:wanandroid/common/styles.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewPage extends StatefulWidget {
-
   static const String NAME = "Webview";
 
   final String url;
   final String title;
 
-  WebviewPage({@required this.url,this.title});
+  WebviewPage({@required this.url, this.title});
 
   @override
   _WebviewPageState createState() => _WebviewPageState();
 }
 
 class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
-
   WebViewController _webViewController;
 
   @override
@@ -38,11 +36,11 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
   @override
   Widget buildBody(BuildContext context) {
     return WillPopScope(
-      onWillPop: ()async{
-        if(await _webViewController.canGoBack()){
+      onWillPop: () async {
+        if (await _webViewController.canGoBack()) {
           _webViewController.goBack();
           return false;
-        }else{
+        } else {
           return true;
         }
       },
@@ -50,13 +48,13 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
         appBar: _buildAppBar(context),
         body: Container(
           child: WebView(
-            onWebViewCreated: (controller){
-              _webViewController = controller;
-            },
-            initialUrl: widget.url,
-            javascriptMode: JavascriptMode.unrestricted,
-            gestureNavigationEnabled: true
-          ),
+              onWebViewCreated: (controller) {
+                _webViewController = controller;
+              },
+
+              initialUrl: widget.url,
+              javascriptMode: JavascriptMode.unrestricted,
+              gestureNavigationEnabled: true),
         ),
       ),
     );
@@ -91,7 +89,10 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
                         constraints: BoxConstraints(
                             maxWidth: ScreenUtil().setWidth(40),
                             maxHeight: ScreenUtil().setWidth(40)),
-                        icon: Icon(Icons.arrow_back),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -100,11 +101,22 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
                   ),
                   Padding(
                       padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
-                  Text(
-                    widget.title,
-                    softWrap:true,
-                    maxLines: 1,
-                    style: TextStyles.titleTextStyle,
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(right: ScreenUtil().setWidth(16)),
+                      child: Hero(
+                        tag: widget.title,
+                        child: Text(
+                          widget.title,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                          maxLines: 1,
+                          style: TextStyles.titleTextStyle,
+                        ),
+                      ),
+                    ),
                   )
                 ],
               ),

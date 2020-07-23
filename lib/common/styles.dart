@@ -6,5 +6,5 @@ import 'package:flutter/widgets.dart';
  * */
 class TextStyles {
   static const  TextStyle titleTextStyle =
-      TextStyle(fontSize:18.0, color: Colors.white);
+      TextStyle(fontSize:18.0, color: Colors.white,);
 }
