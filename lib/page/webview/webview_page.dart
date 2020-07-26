@@ -5,6 +5,8 @@ import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/styles.dart';
+import 'package:wanandroid/widget/common_appbar.dart';
+import 'package:wanandroid/widget/progressbar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewPage extends StatefulWidget {
@@ -46,15 +48,20 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
       },
       child: Scaffold(
         appBar: _buildAppBar(context),
-        body: Container(
-          child: WebView(
-              onWebViewCreated: (controller) {
-                _webViewController = controller;
-              },
-
-              initialUrl: widget.url,
-              javascriptMode: JavascriptMode.unrestricted,
-              gestureNavigationEnabled: true),
+        body: Column(
+          children: <Widget>[
+            ProgressBar(backgroundColor: Colors.grey,progress: 50,progressColor: Theme.of(context).accentColor,size: Size(double.infinity,ScreenUtil().setWidth(2)) ),
+            Expanded(
+              flex: 1,
+              child: WebView(
+                  onWebViewCreated: (controller) {
+                    _webViewController = controller;
+                  },
+                  initialUrl: widget.url,
+                  javascriptMode: JavascriptMode.unrestricted,
+                  gestureNavigationEnabled: true),
+            ),
+          ],
         ),
       ),
     );
@@ -66,67 +73,34 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return PreferredSize(
-        preferredSize: Size(ScreenUtil().setWidth(Config.DESIGN_WIDTH),
-            ScreenUtil().setWidth(40)),
-        child: AppBar(
-          leading: Center(),
-          flexibleSpace: Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: Center(
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
-                  Builder(
-                    //将context范围缩到Scaffold
-                    builder: (context) => Container(
-                      alignment: Alignment.center,
-                      width: ScreenUtil().setWidth(40),
-                      height: ScreenUtil().setWidth(40),
-                      child: IconButton(
-                        padding: EdgeInsets.all(0),
-                        constraints: BoxConstraints(
-                            maxWidth: ScreenUtil().setWidth(40),
-                            maxHeight: ScreenUtil().setWidth(40)),
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding:
-                          EdgeInsets.only(right: ScreenUtil().setWidth(16)),
-                      child: Hero(
-                        tag: widget.title,
-                        child: Text(
-                          widget.title,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                          maxLines: 1,
-                          style: TextStyles.titleTextStyle,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+    return MyAppBar(
+      leadingIcon: Icons.close,
+      onLeadingIconTap: (){
+        Navigator.pop(context);
+      },
+      widget: Padding(
+          padding:
+          EdgeInsets.only(right: ScreenUtil().setWidth(16)),
+          child: Hero(
+            tag: widget.title,
+            child: Text(
+              widget.title,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
+              maxLines: 1,
+              style: TextStyles.titleTextStyle,
             ),
-          ), //// AppBar是固定56高度的
-        ));
+          ),
+        ),
+
+    );
   }
 }
 
 class WebviewViewModel extends BaseViewModel {
+
+
+
   @override
   void initState() {}
 }

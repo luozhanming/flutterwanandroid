@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
@@ -15,18 +14,16 @@ import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/widget/artical_item_widget.dart';
 import 'package:wanandroid/widget/banner.dart';
 
-class HomeSegment extends StatefulWidget{
-
-
+class HomeSegment extends StatefulWidget {
   @override
   _HomeSegmentState createState() => _HomeSegmentState();
 
-  HomeSegment({Key key}):
-        super(key:key);
+  HomeSegment({Key key}) : super(key: key);
 }
 
-class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
+class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
   ScrollController _scrollController;
+  GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey();
 
   @override
   void initState() {
@@ -34,14 +31,17 @@ class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
     _scrollController = ScrollController();
   }
 
-
   @override
   void dispose() {
     super.dispose();
     _scrollController.dispose();
   }
 
-
+  Future<void> _waitLoading() async {
+    await Future.doWhile(() async {
+     return mViewModel.state == BaseViewModel.STATE_REFRESH;
+    });
+  }
 
   Widget _buildBanner() {
     return SliverToBoxAdapter(
@@ -60,13 +60,15 @@ class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
                   message: banner.title));
             }
             return BannerView(
-              callback:(index) async{
+              callback: (index) async {
                 var banner = mViewModel.banners[index];
                 var url = banner.url;
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context)=>WebviewPage(url: url,title: banner.title,)
-                ));
-                },
+                    builder: (context) => WebviewPage(
+                          url: url,
+                          title: banner.title,
+                        )));
+              },
               borderWidth: ScreenUtil().setWidth(6),
               borderColor: context
                   .select<GlobalState, ThemeData>((value) => value.themeData)
@@ -84,8 +86,9 @@ class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
           .select<HomeSegmentViewModel, int>((value) => value.articals.length);
       //没有更多或加载更多状态，item视图加一
       int state =
-      context.select<HomeSegmentViewModel, int>((value) => value.state);
-      if(state==BaseViewModel.STATE_NOMORE||state==BaseViewModel.STATE_LOADMORE){
+          context.select<HomeSegmentViewModel, int>((value) => value.state);
+      if (state == BaseViewModel.STATE_NOMORE ||
+          state == BaseViewModel.STATE_LOADMORE) {
         itemCount++;
       }
       return SliverList(
@@ -99,23 +102,30 @@ class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
       //数据为空
       int state =
           context.select<HomeSegmentViewModel, int>((value) => value.state);
-      if(mViewModel.articals.isEmpty){
+      if (mViewModel.articals.isEmpty) {
         return Center();
-      }else if (state == BaseViewModel.STATE_LOADMORE &&
-          index == mViewModel.articals.length) {    //加载更多视图
+      } else if (state == BaseViewModel.STATE_LOADMORE &&
+          index == mViewModel.articals.length) {
+        //加载更多视图
         return Container(
           alignment: Alignment.center,
           height: 60,
           child: Text("加载更多...."),
         );
-      } else {  //普通选项
+      } else {
+        //普通选项
         Artical artical = context.select<HomeSegmentViewModel, Artical>(
             (value) => value.articals[index]);
-        return ArticalItemWidget(artical,onArticalTap: (artical)async{
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context)=>WebviewPage(url: artical.link,title: artical.title,)
-          ));
-        },);
+        return ArticalItemWidget(
+          artical,
+          onArticalTap: (artical) async {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => WebviewPage(
+                      url: artical.link,
+                      title: artical.title,
+                    )));
+          },
+        );
       }
     });
   }
@@ -131,12 +141,18 @@ class _HomeSegmentState extends BaseState<HomeSegment,HomeSegmentViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-   return NotificationListener<ScrollNotification>(
+    return NotificationListener<ScrollNotification>(
       onNotification: _onScrollNotification,
-      child: CustomScrollView(
-        controller: _scrollController,
-        scrollDirection: Axis.vertical,
-        slivers: <Widget>[_buildBanner(), _buildHomeArticals()],
+      child: RefreshIndicator(
+        onRefresh: () async {
+          mViewModel.refreshData();
+          await _waitLoading();
+        },
+        child: CustomScrollView(
+          controller: _scrollController,
+          scrollDirection: Axis.vertical,
+          slivers: <Widget>[_buildBanner(), _buildHomeArticals()],
+        ),
       ),
     );
   }
