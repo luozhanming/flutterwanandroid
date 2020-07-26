@@ -37,10 +37,19 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
     _scrollController.dispose();
   }
 
-  Future<void> _waitLoading() async {
-    await Future.doWhile(() async {
-     return mViewModel.state == BaseViewModel.STATE_REFRESH;
-    });
+  _lockToAwait() async {
+    ///if loading, lock to await
+    doDelayed() async {
+      await Future.delayed(Duration(seconds: 1)).then((_) async {
+        if (mViewModel.state==BaseViewModel.STATE_REFRESH) {
+          return await doDelayed();
+        } else {
+          return null;
+        }
+      });
+    }
+
+    await doDelayed();
   }
 
   Widget _buildBanner() {
@@ -146,7 +155,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
       child: RefreshIndicator(
         onRefresh: () async {
           mViewModel.refreshData();
-          await _waitLoading();
+          await _lockToAwait();
         },
         child: CustomScrollView(
           controller: _scrollController,
