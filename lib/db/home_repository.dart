@@ -3,6 +3,7 @@ import 'package:wanandroid/common/http/HttpManager.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/pager.dart';
+import 'package:wanandroid/model/search_hot.dart';
 
 class HomeModel {
   HttpManager _httpManager;
@@ -43,6 +44,23 @@ class HomeModel {
       });
       var result = Pager<Artical>.copyWith(pager, articals);
       return result;
+    });
+  }
+
+
+  /**
+   * 搜索热词
+   * */
+  Stream<List<SearchHot>> loadSearchHot() async* {
+    yield* _httpManager.get(Config.SEARCH_HOT).map((event) {
+      var  list = event.dataList;
+      List<SearchHot> searchHots = [];
+      list.forEach((element) {
+        if(element is Map<String,dynamic>){
+          searchHots.add(SearchHot.fromJson(element));
+        }
+      });
+      return searchHots;
     });
   }
 }
