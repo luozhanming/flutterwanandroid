@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_website_content" : MessageLookupByLibrary.simpleMessage("搜索站内内容"),
     "shareUser" : MessageLookupByLibrary.simpleMessage("分享者："),
     "time" : MessageLookupByLibrary.simpleMessage("时间："),
+    "tip_can_not_open_link" : MessageLookupByLibrary.simpleMessage("无法打开该链接"),
     "tixi" : MessageLookupByLibrary.simpleMessage("体系")
   };
 }

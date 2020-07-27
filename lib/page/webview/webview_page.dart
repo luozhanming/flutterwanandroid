@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/styles.dart';
+import 'package:wanandroid/generated/l10n.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewPage extends StatefulWidget {
@@ -51,13 +54,34 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
               onWebViewCreated: (controller) {
                 _webViewController = controller;
               },
-
+              navigationDelegate: (navigation) async{
+                if(navigation.url.startsWith("http")||navigation.url.startsWith("https")){
+                  return NavigationDecision.navigate;
+                }else{
+                  await _launchInBrowser(navigation.url);
+                  return NavigationDecision.prevent;
+                }
+              },
               initialUrl: widget.url,
               javascriptMode: JavascriptMode.unrestricted,
               gestureNavigationEnabled: true),
         ),
       ),
     );
+  }
+
+
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -80,23 +104,20 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
                       padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
                   Builder(
                     //将context范围缩到Scaffold
-                    builder: (context) => Container(
-                      alignment: Alignment.center,
-                      width: ScreenUtil().setWidth(40),
-                      height: ScreenUtil().setWidth(40),
-                      child: IconButton(
-                        padding: EdgeInsets.all(0),
-                        constraints: BoxConstraints(
-                            maxWidth: ScreenUtil().setWidth(40),
-                            maxHeight: ScreenUtil().setWidth(40)),
-                        icon: Icon(
+                    builder: (context) => InkWell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: ScreenUtil().setWidth(30),
+                        height: ScreenUtil().setWidth(30),
+                        child: Icon(
                           Icons.arrow_back,
                           color: Colors.white,
+                          size:ScreenUtil().setWidth(18) ,
                         ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
                       ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                   Padding(

@@ -43,20 +43,20 @@ class S {
     );
   }
 
-  /// `请输入用户名`
+  /// `Please input your username.`
   String get hint_input_username {
     return Intl.message(
-      '请输入用户名',
+      'Please input your username.',
       name: 'hint_input_username',
       desc: '',
       args: [],
     );
   }
 
-  /// `请输入密码`
+  /// `Please input your password.`
   String get hint_input_password {
     return Intl.message(
-      '请输入密码',
+      'Please input your password.',
       name: 'hint_input_password',
       desc: '',
       args: [],
@@ -73,40 +73,40 @@ class S {
     );
   }
 
-  /// `首页`
+  /// `Home`
   String get home {
     return Intl.message(
-      '首页',
+      'Home',
       name: 'home',
       desc: '',
       args: [],
     );
   }
 
-  /// `体系`
+  /// `System`
   String get tixi {
     return Intl.message(
-      '体系',
+      'System',
       name: 'tixi',
       desc: '',
       args: [],
     );
   }
 
-  /// `公众号`
+  /// `Pub`
   String get gongzonghao {
     return Intl.message(
-      '公众号',
+      'Pub',
       name: 'gongzonghao',
       desc: '',
       args: [],
     );
   }
 
-  /// `导航`
+  /// `Navigation`
   String get navigation {
     return Intl.message(
-      '导航',
+      'Navigation',
       name: 'navigation',
       desc: '',
       args: [],
@@ -138,6 +138,16 @@ class S {
     return Intl.message(
       'Time:',
       name: 'time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can not open this link.`
+  String get tip_can_not_open_link {
+    return Intl.message(
+      'Can not open this link.',
+      name: 'tip_can_not_open_link',
       desc: '',
       args: [],
     );

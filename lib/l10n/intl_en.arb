@@ -1,13 +1,14 @@
 {
   "login": "Login",
-  "hint_input_username": "请输入用户名",
-  "hint_input_password": "请输入密码",
+  "hint_input_username": "Please input your username.",
+  "hint_input_password": "Please input your password.",
   "search_website_content": "search",
-  "home": "首页",
-  "tixi": "体系",
-  "gongzonghao": "公众号",
-  "navigation": "导航",
+  "home": "Home",
+  "tixi": "System",
+  "gongzonghao": "Pub",
+  "navigation": "Navigation",
   "author": "Author:",
   "shareUser": "ShareUser:",
-  "time": "Time:"
+  "time": "Time:",
+  "tip_can_not_open_link": "Can not open this link."
 }

@@ -22,15 +22,16 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "author" : MessageLookupByLibrary.simpleMessage("Author:"),
-    "gongzonghao" : MessageLookupByLibrary.simpleMessage("公众号"),
-    "hint_input_password" : MessageLookupByLibrary.simpleMessage("请输入密码"),
-    "hint_input_username" : MessageLookupByLibrary.simpleMessage("请输入用户名"),
-    "home" : MessageLookupByLibrary.simpleMessage("首页"),
+    "gongzonghao" : MessageLookupByLibrary.simpleMessage("Pub"),
+    "hint_input_password" : MessageLookupByLibrary.simpleMessage("Please input your password."),
+    "hint_input_username" : MessageLookupByLibrary.simpleMessage("Please input your username."),
+    "home" : MessageLookupByLibrary.simpleMessage("Home"),
     "login" : MessageLookupByLibrary.simpleMessage("Login"),
-    "navigation" : MessageLookupByLibrary.simpleMessage("导航"),
+    "navigation" : MessageLookupByLibrary.simpleMessage("Navigation"),
     "search_website_content" : MessageLookupByLibrary.simpleMessage("search"),
     "shareUser" : MessageLookupByLibrary.simpleMessage("ShareUser:"),
     "time" : MessageLookupByLibrary.simpleMessage("Time:"),
-    "tixi" : MessageLookupByLibrary.simpleMessage("体系")
+    "tip_can_not_open_link" : MessageLookupByLibrary.simpleMessage("Can not open this link."),
+    "tixi" : MessageLookupByLibrary.simpleMessage("System")
   };
 }
