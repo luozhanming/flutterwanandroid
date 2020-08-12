@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
-import 'package:wanandroid/db/home_repository.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/page/webview/webview_page.dart';
+import 'package:wanandroid/repository/home_repository.dart';
 import 'package:wanandroid/widget/artical_item_widget.dart';
 import 'package:wanandroid/widget/banner.dart';
 
@@ -41,7 +41,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
     ///if loading, lock to await
     doDelayed() async {
       await Future.delayed(Duration(seconds: 1)).then((_) async {
-        if (mViewModel.state==BaseViewModel.STATE_REFRESH) {
+        if (mViewModel.state==DataState.refresh) {
           return await doDelayed();
         } else {
           return null;
@@ -94,10 +94,10 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
       int itemCount = context
           .select<HomeSegmentViewModel, int>((value) => value.articals.length);
       //没有更多或加载更多状态，item视图加一
-      int state =
-          context.select<HomeSegmentViewModel, int>((value) => value.state);
-      if (state == BaseViewModel.STATE_NOMORE ||
-          state == BaseViewModel.STATE_LOADMORE) {
+      DataState state =
+          context.select<HomeSegmentViewModel, DataState>((value) => value.state);
+      if (state == DataState.nomore ||
+          state == DataState.loadmore) {
         itemCount++;
       }
       return SliverList(
@@ -109,11 +109,11 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
   Widget _articalItemBuilder(BuildContext context, int index) {
     return Builder(builder: (context) {
       //数据为空
-      int state =
-          context.select<HomeSegmentViewModel, int>((value) => value.state);
+      DataState state =
+          context.select<HomeSegmentViewModel, DataState>((value) => value.state);
       if (mViewModel.articals.isEmpty) {
         return Center();
-      } else if (state == BaseViewModel.STATE_LOADMORE &&
+      } else if (state == DataState.loadmore &&
           index == mViewModel.articals.length) {
         //加载更多视图
         return Container(
@@ -206,14 +206,14 @@ class HomeSegmentViewModel extends BaseViewModel {
   void loadHomeArticals(bool isLoadMore) {
     //没有更多数据
     if (curPager?.over ?? false) {
-      state = BaseViewModel.STATE_NOMORE;
+      state = DataState.nomore;
       notifyListeners();
     }
     //同一时间只能有1个此类请求
-    if (state == BaseViewModel.STATE_REFRESH ||
-        state == BaseViewModel.STATE_LOADMORE) return;
+    if (state == DataState.refresh ||
+        state == DataState.loadmore) return;
     state =
-        isLoadMore ? BaseViewModel.STATE_LOADMORE : BaseViewModel.STATE_REFRESH;
+        isLoadMore ? DataState.loadmore : DataState.refresh;
     notifyListeners();
     _subscriptions.add(_model
         .loadHomeArticals(isLoadMore ? curPager?.curPage ?? 0 + 1 : 0)
@@ -227,16 +227,16 @@ class HomeSegmentViewModel extends BaseViewModel {
         articals.clear();
         articals.addAll(curPager.datas);
       }
-      state = BaseViewModel.STATE_SUCCESS;
+      state = DataState.success;
       notifyListeners();
     }, onError: (error) {
-      state = BaseViewModel.STATE_FAILED;
+      state = DataState.failed;
       notifyListeners();
     }));
   }
 
   void refreshData() {
-    state = BaseViewModel.STATE_REFRESH;
+    state = DataState.refresh;
     notifyListeners();
     List<Stream> streams = [_model.refreshBanner(), _model.loadHomeArticals(0)];
     _subscriptions.add(Rx.zip(streams, (values) {
@@ -244,10 +244,10 @@ class HomeSegmentViewModel extends BaseViewModel {
       curPager = values[1];
       articals.clear();
       articals.addAll(curPager.datas);
-      state = BaseViewModel.STATE_SUCCESS;
+      state = DataState.success;
       notifyListeners();
     }).listen((event) {}, onError: (error) {
-      state = BaseViewModel.STATE_FAILED;
+      state = DataState.failed;
       notifyListeners();
     }));
   }

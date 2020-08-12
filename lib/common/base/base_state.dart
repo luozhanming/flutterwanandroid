@@ -22,8 +22,8 @@ abstract class BaseState<T extends StatefulWidget,VM extends BaseViewModel> exte
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
-    super.dispose();
     mViewModel.dispose();
+    super.dispose();
   }
 
   @override

@@ -152,6 +152,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Hots`
+  String get search_hots {
+    return Intl.message(
+      'Hots',
+      name: 'search_hots',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Records`
+  String get search_record {
+    return Intl.message(
+      'Records',
+      name: 'search_record',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

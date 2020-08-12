@@ -10,5 +10,7 @@
   "author": "作者：",
   "shareUser": "分享者：",
   "time": "时间：",
-  "tip_can_not_open_link": "无法打开该链接"
+  "tip_can_not_open_link": "无法打开该链接",
+  "search_hots": "搜索热词",
+  "search_record": "搜索记录"
 }

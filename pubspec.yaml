@@ -52,6 +52,7 @@ dependencies:
   provider : ^4.1.3
   rxdart : ^0.24.1
   dio_cookie_manager: 1.0.0
+  flare_flutter: ^1.8.3
 
   battery :
     path: battery

@@ -28,6 +28,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "home" : MessageLookupByLibrary.simpleMessage("首页"),
     "login" : MessageLookupByLibrary.simpleMessage("登录"),
     "navigation" : MessageLookupByLibrary.simpleMessage("导航"),
+    "search_hots" : MessageLookupByLibrary.simpleMessage("搜索热词"),
+    "search_record" : MessageLookupByLibrary.simpleMessage("搜索记录"),
     "search_website_content" : MessageLookupByLibrary.simpleMessage("搜索站内内容"),
     "shareUser" : MessageLookupByLibrary.simpleMessage("分享者："),
     "time" : MessageLookupByLibrary.simpleMessage("时间："),

@@ -10,5 +10,7 @@
   "author": "Author:",
   "shareUser": "ShareUser:",
   "time": "Time:",
-  "tip_can_not_open_link": "Can not open this link."
+  "tip_can_not_open_link": "Can not open this link.",
+  "search_hots": "Hots",
+  "search_record": "Records"
 }

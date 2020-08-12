@@ -28,6 +28,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "home" : MessageLookupByLibrary.simpleMessage("Home"),
     "login" : MessageLookupByLibrary.simpleMessage("Login"),
     "navigation" : MessageLookupByLibrary.simpleMessage("Navigation"),
+    "search_hots" : MessageLookupByLibrary.simpleMessage("Hots"),
+    "search_record" : MessageLookupByLibrary.simpleMessage("Records"),
     "search_website_content" : MessageLookupByLibrary.simpleMessage("search"),
     "shareUser" : MessageLookupByLibrary.simpleMessage("ShareUser:"),
     "time" : MessageLookupByLibrary.simpleMessage("Time:"),

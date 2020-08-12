@@ -5,14 +5,14 @@ part 'pager.g.dart';
 @JsonSerializable(createToJson: false)
 class Pager<T> {
   final List<T> datas;
-  final int curPage;
+   int curPage;
   final int offset;
-  final bool over;
+   bool over;
   final int pageCount;
   final int size;
   final int total;
 
-  const Pager(
+   Pager(
       {this.datas,
       this.curPage,
       this.offset,
@@ -27,6 +27,10 @@ class Pager<T> {
     return Pager(curPage: page.curPage,offset: page.offset,over: page.over,
     pageCount: page.pageCount,size: page.size,total: page.total,
     datas: datas);
+  }
+
+  bool isLoadMore(){
+    return curPage>1;
   }
 }
 

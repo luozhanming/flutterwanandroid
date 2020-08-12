@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
-import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/styles.dart';
 import 'package:wanandroid/widget/common_appbar.dart';
 import 'package:wanandroid/widget/progressbar.dart';
-import 'package:wanandroid/generated/l10n.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewPage extends StatefulWidget {
@@ -53,21 +50,26 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
         appBar: _buildAppBar(context),
         body: Column(
           children: <Widget>[
-            ProgressBar(backgroundColor: Colors.grey,progress: 50,progressColor: Theme.of(context).accentColor,size: Size(double.infinity,ScreenUtil().setWidth(2)) ),
+            ProgressBar(
+                backgroundColor: Colors.grey,
+                progress: 50,
+                progressColor: Theme.of(context).accentColor,
+                size: Size(double.infinity, ScreenUtil().setWidth(2))),
             Expanded(
               flex: 1,
               child: WebView(
                   onWebViewCreated: (controller) {
                     _webViewController = controller;
                   },
-                   navigationDelegate: (navigation) async{
-                                  if(navigation.url.startsWith("http")||navigation.url.startsWith("https")){
-                                    return NavigationDecision.navigate;
-                                  }else{
-                                    await _launchInBrowser(navigation.url);
-                                    return NavigationDecision.prevent;
-                                  }
-                                },
+                  navigationDelegate: (navigation) async {
+                    if (navigation.url.startsWith("http") ||
+                        navigation.url.startsWith("https")) {
+                      return NavigationDecision.navigate;
+                    } else {
+                      await _launchInBrowser(navigation.url);
+                      return NavigationDecision.prevent;
+                    }
+                  },
                   initialUrl: widget.url,
                   javascriptMode: JavascriptMode.unrestricted,
                   gestureNavigationEnabled: true),
@@ -77,8 +79,6 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
       ),
     );
   }
-
-
 
   Future<void> _launchInBrowser(String url) async {
     if (await canLaunch(url)) {
@@ -100,32 +100,27 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return MyAppBar(
       leadingIcon: Icons.close,
-      onLeadingIconTap: (){
+      onLeadingIconTap: () {
         Navigator.pop(context);
       },
       widget: Padding(
-          padding:
-          EdgeInsets.only(right: ScreenUtil().setWidth(16)),
-          child: Hero(
-            tag: widget.title,
-            child: Text(
-              widget.title,
-              overflow: TextOverflow.ellipsis,
-              softWrap: true,
-              maxLines: 1,
-              style: TextStyles.titleTextStyle,
-            ),
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(16)),
+        child: Hero(
+          tag: widget.title,
+          child: Text(
+            widget.title,
+            overflow: TextOverflow.ellipsis,
+            softWrap: true,
+            maxLines: 1,
+            style: TextStyles.titleTextStyle,
           ),
         ),
-
+      ),
     );
   }
 }
 
 class WebviewViewModel extends BaseViewModel {
-
-
-
   @override
   void initState() {}
 }

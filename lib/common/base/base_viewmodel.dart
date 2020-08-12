@@ -16,20 +16,30 @@ abstract class BaseViewModel with ChangeNotifier{
   //没有更多数据状态
   static const int STATE_NOMORE = 1006;
 
-  int _state = STATE_IDEL;
+  DataState _state = DataState.idel;
 
 
-  int get state => _state;
+  DataState get state => _state;
 
-  set state(int value) {
+  set state(DataState value) {
     _state = value;
   }
 
   void initState();
 
   void dispose(){
-   // super.dispose();
+    super.dispose();
   }
 
 
+}
+
+enum DataState{
+  idel,
+  loading,
+  refresh,
+  loadmore,
+  success,
+  failed,
+  nomore
 }
