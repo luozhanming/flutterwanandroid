@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
@@ -13,6 +13,7 @@ import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/model/search_hot.dart';
 import 'package:wanandroid/repository/home_repository.dart';
+import 'package:wanandroid/widget/artical_item_widget.dart';
 import 'package:wanandroid/widget/common_appbar.dart';
 
 class SearchPage extends StatefulWidget {
@@ -23,6 +24,17 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
+
+
+  ScrollController _scrollController;
+
+  @override
+  void initState(){
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+
   PreferredSize _buildAppBar(BuildContext context) {
     return MyAppBar(
       leadingIcon: Icons.arrow_back,
@@ -80,8 +92,10 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
             height: ScreenUtil().setWidth(20),
             alignment: Alignment.center,
             child: GestureDetector(
-              onTap: () async {
-                Fluttertoast.showToast(msg: "sdfsdf");
+              onTap: () {
+                if(mViewModel._searchTextController.text.isNotEmpty){
+                  mViewModel.search(false);
+                }
               },
               child: Icon(Icons.search,
                   size: ScreenUtil().setWidth(18), color: Colors.white70),
@@ -127,22 +141,26 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
               ],
             );
           } else {
-            DataState state = context.select<SearchViewModel,DataState>((value) => value.state);
-            switch(state){
-              case DataState.refresh:
-
-
-              case DataState.loadmore:
-
-                break;
-
-              case DataState.success:
-
-                break;
-
-                break;
-            }
-            return Center();
+            return SmartRefresher(
+              controller: mViewModel._refreshController,
+              enablePullUp: true,
+              enablePullDown: true,
+              onRefresh: () {
+                mViewModel.search(false);
+              },
+              onLoading: () {
+                mViewModel.search(true);
+              },
+              child: Builder(
+                builder:(context){
+                  var itemCount = context.select<SearchViewModel,int>((value) => value.searchDatas.length);
+                  return ListView.builder(itemBuilder: (context,index){
+                    return _searchItemResultBuilder(context, index);
+                  },itemCount:itemCount);
+                }
+              ),
+              scrollController: _scrollController,
+            );
           }
         }),
       ),
@@ -184,30 +202,49 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
       );
     });
   }
+
+  /**
+   * 创建搜索控件
+   * */
+  Widget _searchItemResultBuilder(BuildContext context, int index) {
+    return Builder(
+      builder: (context) {
+        var artical = context.select<SearchViewModel, Artical>(
+            (value) => value.searchDatas[index]);
+        return ArticalItemWidget(artical);
+      },
+    );
+  }
 }
 
 class SearchViewModel extends BaseViewModel {
   TextEditingController _searchTextController;
-  bool _searchEmpty = true;
+  RefreshController _refreshController;
 
-  List<SearchHot> hots = [];
   HomeModel _model;
   CompositeSubscription _subscriptions;
-  Pager<Artical> curPager;
-
   StreamSubscription _searchSubscription;
+
+
+  //最近一次刷新的数据
+  Pager<Artical> curPager;
+  //搜索列表控件
+  List<Artical> searchDatas = [];
+  List<SearchHot> hots = [];
+  bool _searchEmpty = true;
 
   @override
   void initState() {
     _model = HomeModel();
-    _subscriptions = CompositeSubscription();
-    loadSearchHots();
+    _refreshController = RefreshController();
     _searchTextController = TextEditingController();
     _searchTextController.addListener(_searchTextChanged);
+    _subscriptions = CompositeSubscription();
+    loadSearchHots();
   }
 
-
-  _searchTextChanged(){
+  _searchTextChanged() {
+    //清空之前的搜索缓存
     bool isSearchChanged = _searchEmpty != _searchTextController.text.isEmpty;
     _searchEmpty = _searchTextController.text.isEmpty;
     _searchSubscription?.cancel();
@@ -223,36 +260,33 @@ class SearchViewModel extends BaseViewModel {
     }));
   }
 
-//  void search(String key, bool isLoadMore) {
-//    if (isLoadMore && state ==DataState.nomore) {
-//      return;
-//    }
-//    _searchSubscription?.cancel();
-//    notifyListeners();
-//    _model.lo(key, 0).doOnListen(() {
-//      if (isLoadMore) {
-//        state = DataState.loadmore;
-//      } else {
-//        state = DataState.refresh;
-//      }
-//      notifyListeners();
-//    }).listen((event) {
-//      curPager = event;
-//      state = curPager.over
-//          ? DataState.nomore
-//          : DataState.success;
-//      notifyListeners();
-//    }, onError: (error) {
-//      state = DataState.failed;
-//      notifyListeners();
-//    });
-//  }
+  void search(bool isLoadMore) {
+    var key = _searchTextController.text;
+    var page = isLoadMore ? curPager.curPage + 1 : 0;
+    _subscriptions.add(_model.searchArtical(key, page).listen((event) {
+      curPager = event;
+      if (event.isLoadMore()) {
+        searchDatas.addAll(event.datas);
+        if(event.curPage>=event.pageCount){
+          _refreshController.loadNoData();
+        }else{
+          _refreshController.loadComplete();
+        }
+      } else {
+        searchDatas.clear();
+        searchDatas.addAll(event.datas);
+        _refreshController.refreshCompleted(resetFooterState: true);
+      }
+      notifyListeners();
+    }));
+  }
 
   @override
   void dispose() {
     _subscriptions.dispose();
     _searchTextController.removeListener(_searchTextChanged);
     _searchTextController.dispose();
+    _refreshController.dispose();
     super.dispose();
   }
 }

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/http/HttpManager.dart';
 import 'package:wanandroid/model/artical.dart';
@@ -34,6 +37,27 @@ class HomeModel {
    * */
   Stream<Pager<Artical>> loadHomeArticals(int page) async* {
     yield* _httpManager.get("/article/list/$page/json").map((event) {
+      Pager<dynamic> pager = Pager.fromJson(event.dataJson);
+      List<dynamic> datasList = pager.datas;
+      List<Artical> articals = [];
+      datasList.forEach((element) {
+        if (element is Map<String, dynamic>) {
+          articals.add(Artical.fromJson(element));
+        }
+      });
+      var result = Pager<Artical>.copyWith(pager, articals);
+      return result;
+    });
+  }
+
+
+  /**
+   * 搜索文章
+   * */
+  Stream<Pager<Artical>> searchArtical(String key,int page) async*{
+    var data = {"k":key};
+    yield* _httpManager.post("/article/query/$page/json",data)
+    .map((event){
       Pager<dynamic> pager = Pager.fromJson(event.dataJson);
       List<dynamic> datasList = pager.datas;
       List<Artical> articals = [];

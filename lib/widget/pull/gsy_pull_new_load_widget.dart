@@ -1,18 +1,16 @@
 import 'package:flare_flutter/flare_actor.dart';
-
-import 'gsy_refresh_sliver.dart'
-    as IOS;
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'custom_bouncing_scroll_physics.dart';
 import 'gsy_flare_pull_controller.dart';
+import 'gsy_refresh_sliver.dart' as IOS;
 
 const double iosRefreshHeight = 140;
 const double iosRefreshIndicatorExtent = 100;
 
 ///通用下上刷新控件
-class GSYPullLoadWidget extends StatefulWidget {
+class GSYPullLoadWidget<T> extends StatefulWidget {
   ///item渲染
   final IndexedWidgetBuilder itemBuilder;
 
@@ -249,12 +247,14 @@ class _GSYPullLoadWidgetState extends State<GSYPullLoadWidget>
 
   ///空页面
   Widget _buildEmpty() {
-
+    return Center(child: Text("Empty Result"));
   }
 
   ///上拉加载更多
   Widget _buildProgressIndicator() {
-
+    return Container(
+        height: ScreenUtil().setWidth(30),
+        child: Center(child: Text("加载更多...")));
   }
 
   bool playAuto = false;
@@ -302,13 +302,13 @@ class _GSYPullLoadWidgetState extends State<GSYPullLoadWidget>
   }
 }
 
-class GSYPullLoadWidgetControl extends ChangeNotifier {
+class GSYPullLoadWidgetControl<T> extends ChangeNotifier {
   ///数据，对齐增减，不能替换
-  List _dataList = new List();
+  List<T> _dataList = new List();
 
   get dataList => _dataList;
 
-  set dataList(List value) {
+  set dataList(List<T> value) {
     _dataList.clear();
     if (value != null) {
       _dataList.addAll(value);
@@ -316,7 +316,7 @@ class GSYPullLoadWidgetControl extends ChangeNotifier {
     }
   }
 
-  addList(List value) {
+  addList(List<T> value) {
     if (value != null) {
       _dataList.addAll(value);
       notifyListeners();
