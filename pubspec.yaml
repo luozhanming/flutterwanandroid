@@ -43,7 +43,7 @@ dependencies:
   connectivity: ^0.4.8+6
   video_player: ^0.10.11
   carousel_slider: ^2.1.0
-  pull_to_refresh: ^1.6.0
+  pull_to_refresh: ^1.6.1
   file_picker: ^1.9.0+1
   flutter_slidable: ^0.5.4
   fluro: ^1.6.3

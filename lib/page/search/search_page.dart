@@ -141,6 +141,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
               ],
             );
           } else {
+            var itemCount = context.select<SearchViewModel,int>((value) => value.searchDatas.length);
             return SmartRefresher(
               controller: mViewModel._refreshController,
               enablePullUp: true,
@@ -151,15 +152,9 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
               onLoading: () {
                 mViewModel.search(true);
               },
-              child: Builder(
-                builder:(context){
-                  var itemCount = context.select<SearchViewModel,int>((value) => value.searchDatas.length);
-                  return ListView.builder(itemBuilder: (context,index){
+              child: ListView.builder(itemBuilder: (context,index){
                     return _searchItemResultBuilder(context, index);
-                  },itemCount:itemCount);
-                }
-              ),
-              scrollController: _scrollController,
+                  },itemCount:itemCount)
             );
           }
         }),
@@ -189,7 +184,10 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
                 borderRadius: BorderRadius.circular(ScreenUtil().setWidth(15)),
                 side: BorderSide(
                     width: 0, color: Colors.grey, style: BorderStyle.none)),
-            onPressed: () {},
+            onPressed: () {
+              mViewModel._searchTextController.text = element.name;
+              mViewModel.search(false);
+            },
           ),
         ));
       });

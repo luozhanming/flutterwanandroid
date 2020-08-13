@@ -17,6 +17,8 @@ class ErrorPage extends StatefulWidget {
 class _ErrorPageState extends State<ErrorPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Text(widget.errorMessage),
+    );
   }
 }
