@@ -79,49 +79,33 @@ class _HomePageState extends BaseState<HomePage,_HomeViewModel> {
                       padding:
                           EdgeInsets.only(left: ScreenUtil().setWidth(8))),
                   Expanded(
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.black54,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(ScreenUtil().setWidth(3))),
-                      onTap: () async{
-                        await Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
-                      },
-                      child: Container(
-                        margin:
-                            EdgeInsets.only(right: ScreenUtil().setWidth(8)),
-                        height: ScreenUtil().setWidth(26),
-                        decoration: BoxDecoration(
-                            color: Colors.black26,
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(ScreenUtil().setWidth(3))),
-                            border: Border.all(color: Colors.black12)),
-                        child: Row(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: ScreenUtil().setWidth(6)),
-                                child: Icon(Icons.search,
-                                    size: ScreenUtil().setWidth(20),
-                                    color: context
-                                        .select<GlobalState, ThemeData>(
-                                            (value) => value.themeData)
-                                        .primaryTextTheme
-                                        .title
-                                        .color),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: ScreenUtil().setWidth(4)),
-                                child: Text(
-                                  S.of(context).search_website_content,
-                                  style: TextStyle(
-                                      fontSize: ScreenUtil().setSp(14),
+                    child: Container(
+                      margin:
+                      EdgeInsets.only(right: ScreenUtil().setWidth(8)),
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.black54,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(ScreenUtil().setWidth(3))),
+                        onTap: () async{
+                          await Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
+                        },
+                        child: Container(
+                          height: ScreenUtil().setWidth(26),
+                          decoration: BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(ScreenUtil().setWidth(3))),
+                              border: Border.all(color: Colors.black12)),
+                          child: Row(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: ScreenUtil().setWidth(6)),
+                                  child: Icon(Icons.search,
+                                      size: ScreenUtil().setWidth(20),
                                       color: context
                                           .select<GlobalState, ThemeData>(
                                               (value) => value.themeData)
@@ -130,8 +114,26 @@ class _HomePageState extends BaseState<HomePage,_HomeViewModel> {
                                           .color),
                                 ),
                               ),
-                            )
-                          ],
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: ScreenUtil().setWidth(4)),
+                                  child: Text(
+                                    S.of(context).search_website_content,
+                                    style: TextStyle(
+                                        fontSize: ScreenUtil().setSp(14),
+                                        color: context
+                                            .select<GlobalState, ThemeData>(
+                                                (value) => value.themeData)
+                                            .primaryTextTheme
+                                            .title
+                                            .color),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

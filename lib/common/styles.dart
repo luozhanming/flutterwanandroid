@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /**
  * 字体样式
  * */
 class TextStyles {
-  static const  TextStyle titleTextStyle =
-      TextStyle(fontSize:18.0, color: Colors.white,);
+  static TextStyle titleTextStyle = TextStyle(
+    fontSize: ScreenUtil().setSp(14),
+    color: Colors.white,
+  );
+
+  static TextStyle h1TextStyle = TextStyle(
+    fontSize: ScreenUtil().setSp(12),
+    color: Colors.black54,
+  );
 }

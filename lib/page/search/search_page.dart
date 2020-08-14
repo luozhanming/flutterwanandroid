@@ -8,10 +8,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
+import 'package:wanandroid/common/styles.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/model/search_hot.dart';
+import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/repository/home_repository.dart';
 import 'package:wanandroid/widget/artical_item_widget.dart';
 import 'package:wanandroid/widget/common_appbar.dart';
@@ -24,16 +26,13 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
-
-
   ScrollController _scrollController;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _scrollController = ScrollController();
   }
-
 
   PreferredSize _buildAppBar(BuildContext context) {
     return MyAppBar(
@@ -93,7 +92,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
             alignment: Alignment.center,
             child: GestureDetector(
               onTap: () {
-                if(mViewModel._searchTextController.text.isNotEmpty){
+                if (mViewModel._searchTextController.text.isNotEmpty) {
                   mViewModel.search(false);
                 }
               },
@@ -118,6 +117,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
         body: Builder(builder: (context) {
           bool searchEmpty = context
               .select<SearchViewModel, bool>((value) => value._searchEmpty);
+
           //1.搜索词为空   2.正在搜索   3.正在加载更多   4.无法搜索结果   5.正常
           if (searchEmpty) {
             //搜索词为空
@@ -128,34 +128,41 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
                       left: ScreenUtil().setWidth(16),
                       top: ScreenUtil().setWidth(8)),
                   alignment: Alignment.topLeft,
-                  child: Text(S.of(context).search_hots),
+                  child: Text(S.of(context).search_hots,
+                  style: TextStyles.h1TextStyle,),
                 ),
+                Padding(padding: EdgeInsets.only(top: ScreenUtil().setWidth(6)),),
                 _buildSearchHots(context),
                 Container(
                   margin: EdgeInsets.only(
                       left: ScreenUtil().setWidth(16),
                       top: ScreenUtil().setWidth(8)),
                   alignment: Alignment.topLeft,
-                  child: Text(S.of(context).search_record),
+                  child: Text(S.of(context).search_record,
+                      style: TextStyles.h1TextStyle),
                 )
               ],
             );
           } else {
-            var itemCount = context.select<SearchViewModel,int>((value) => value.searchDatas.length);
+            var itemCount = context.select<SearchViewModel, int>(
+                (value) => value.searchDatas.length);
+            var articals = context.select<SearchViewModel, List<Artical>>(
+                (value) => value.searchDatas);
             return SmartRefresher(
-              controller: mViewModel._refreshController,
-              enablePullUp: true,
-              enablePullDown: true,
-              onRefresh: () {
-                mViewModel.search(false);
-              },
-              onLoading: () {
-                mViewModel.search(true);
-              },
-              child: ListView.builder(itemBuilder: (context,index){
-                    return _searchItemResultBuilder(context, index);
-                  },itemCount:itemCount)
-            );
+                controller: mViewModel._refreshController,
+                enablePullUp: true,
+                enablePullDown: true,
+                onRefresh: () {
+                  mViewModel.search(false);
+                },
+                onLoading: () {
+                  mViewModel.search(true);
+                },
+                child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return _searchItemResultBuilder(context, index, articals);
+                    },
+                    itemCount: itemCount));
           }
         }),
       ),
@@ -192,9 +199,10 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
         ));
       });
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+        padding:EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
         child: Wrap(
-          spacing: ScreenUtil().setWidth(20),
+          spacing: ScreenUtil().setWidth(16),
+          runSpacing: ScreenUtil().setWidth(5),
           children: <Widget>[...hotWidget],
         ),
       );
@@ -204,14 +212,15 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
   /**
    * 创建搜索控件
    * */
-  Widget _searchItemResultBuilder(BuildContext context, int index) {
-    return Builder(
-      builder: (context) {
-        var artical = context.select<SearchViewModel, Artical>(
-            (value) => value.searchDatas[index]);
-        return ArticalItemWidget(artical);
-      },
-    );
+  Widget _searchItemResultBuilder(
+      BuildContext context, int index, List<Artical> articals) {
+    return ArticalItemWidget(articals[index],onArticalTap:(artical) async{
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => WebviewPage(
+            url: artical.link,
+            title: artical.title,
+          )));
+    });
   }
 }
 
@@ -223,9 +232,9 @@ class SearchViewModel extends BaseViewModel {
   CompositeSubscription _subscriptions;
   StreamSubscription _searchSubscription;
 
-
   //最近一次刷新的数据
   Pager<Artical> curPager;
+
   //搜索列表控件
   List<Artical> searchDatas = [];
   List<SearchHot> hots = [];
@@ -247,6 +256,7 @@ class SearchViewModel extends BaseViewModel {
     _searchEmpty = _searchTextController.text.isEmpty;
     _searchSubscription?.cancel();
     if (isSearchChanged) {
+      searchDatas.clear();
       notifyListeners();
     }
   }
@@ -265,9 +275,9 @@ class SearchViewModel extends BaseViewModel {
       curPager = event;
       if (event.isLoadMore()) {
         searchDatas.addAll(event.datas);
-        if(event.curPage>=event.pageCount){
+        if (event.curPage >= event.pageCount) {
           _refreshController.loadNoData();
-        }else{
+        } else {
           _refreshController.loadComplete();
         }
       } else {

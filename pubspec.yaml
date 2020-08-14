@@ -53,6 +53,7 @@ dependencies:
   rxdart : ^0.24.1
   dio_cookie_manager: 1.0.0
   flare_flutter: ^1.8.3
+  flutter_html: ^1.0.0
 
 
   battery :

@@ -1,12 +1,13 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/styles.dart';
 import 'package:wanandroid/widget/common_appbar.dart';
-import 'package:wanandroid/widget/progressbar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewPage extends StatefulWidget {
@@ -48,16 +49,10 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
       },
       child: Scaffold(
         appBar: _buildAppBar(context),
-        body: Column(
-          children: <Widget>[
-            ProgressBar(
-                backgroundColor: Colors.grey,
-                progress: 50,
-                progressColor: Theme.of(context).accentColor,
-                size: Size(double.infinity, ScreenUtil().setWidth(2))),
-            Expanded(
-              flex: 1,
-              child: WebView(
+        body: Builder(builder: (context) {
+          return Stack(
+            children: <Widget>[
+              WebView(
                   onWebViewCreated: (controller) {
                     _webViewController = controller;
                   },
@@ -70,12 +65,29 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
                       return NavigationDecision.prevent;
                     }
                   },
+                  onPageFinished: (url) {
+                    mViewModel.firstLaunch = true;
+                  },
                   initialUrl: widget.url,
                   javascriptMode: JavascriptMode.unrestricted,
                   gestureNavigationEnabled: true),
-            ),
-          ],
-        ),
+              Center(
+                child: Builder(builder: (context) {
+                  bool firstLauch = context.select<WebviewViewModel, bool>(
+                      (value) => value.firstLaunch);
+                  if (!firstLauch) {
+                    return FlareActor(
+                      "static/file/bob.flr",
+                      animation: "Wave",
+                    );
+                  } else {
+                    return Center();
+                  }
+                }),
+              )
+            ],
+          );
+        }),
       ),
     );
   }
@@ -121,6 +133,15 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
 }
 
 class WebviewViewModel extends BaseViewModel {
+  bool _firstLaunch = false;
+
+  bool get firstLaunch => _firstLaunch;
+
+  set firstLaunch(bool value) {
+    _firstLaunch = value;
+    notifyListeners();
+  }
+
   @override
   void initState() {}
 }

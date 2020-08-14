@@ -67,9 +67,11 @@ class ArticalItemWidget extends StatelessWidget {
                     children: <Widget>[
                       Hero(
                           tag: artical.title,
-                          child: Text(
-                            artical.title,
-                            style: titleTextStyle,
+                          child: Text.rich(
+                            TextSpan(
+                              text: artical.title,
+                              style: titleTextStyle,
+                            ),
                             maxLines: 2,
                           )),
                       Padding(
