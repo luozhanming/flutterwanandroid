@@ -5,6 +5,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:wanandroid/model/resource.dart';
 import 'package:wanandroid/model/result.dart';
 
 class HttpManager {
@@ -56,7 +57,7 @@ class HttpManager {
         return Stream.value(result);
       } else {
         return Stream.error(
-            Result(errorCode: event.statusCode, errorMsg: event.statusMessage));
+            Resource.error(NetError(event.statusCode, event.statusMessage)));
       }
     });
   }
@@ -73,15 +74,15 @@ class HttpManager {
         return Stream.value(result);
       } else {
         return Stream.error(
-            Result(errorCode: event.statusCode, errorMsg: event.statusMessage));
+          Resource.error(NetError(event.statusCode, event.statusMessage)));
       }
     });
   }
 }
 
-class NetError {
+class NetError implements Exception{
   final int statusCode;
   final String message;
 
-  const NetError({this.statusCode, this.message});
+  const NetError(this.statusCode, this.message);
 }

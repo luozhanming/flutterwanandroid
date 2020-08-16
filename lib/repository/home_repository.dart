@@ -2,7 +2,8 @@ import 'dart:async';
 
 
 import 'package:wanandroid/common/config/config.dart';
-import 'package:wanandroid/common/http/HttpManager.dart';
+import 'package:wanandroid/common/http/http_manager.dart';
+import 'package:wanandroid/common/http/url.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/pager.dart';
@@ -19,7 +20,7 @@ class HomeModel {
    * 加载首页Banner
    * */
   Stream<List<HomeBanner>> refreshBanner() async* {
-    yield* _httpManager.get(Config.HOME_BANNER).map((event) {
+    yield* _httpManager.get(WanandroidUrl.homeBanner).map((event) {
       List<dynamic> rawList = event.dataList;
       List<HomeBanner> banners = [];
       rawList.forEach((element) {
@@ -36,7 +37,7 @@ class HomeModel {
    * 加载首页文章
    * */
   Stream<Pager<Artical>> loadHomeArticals(int page) async* {
-    yield* _httpManager.get("/article/list/$page/json").map((event) {
+    yield* _httpManager.get(WanandroidUrl.homeArtical(page)).map((event) {
       Pager<dynamic> pager = Pager.fromJson(event.dataJson);
       List<dynamic> datasList = pager.datas;
       List<Artical> articals = [];
@@ -56,7 +57,7 @@ class HomeModel {
    * */
   Stream<Pager<Artical>> searchArtical(String key,int page) async*{
     var data = {"k":key};
-    yield* _httpManager.post("/article/query/$page/json",data)
+    yield* _httpManager.post(WanandroidUrl.searchArtical(page),data)
     .map((event){
       Pager<dynamic> pager = Pager.fromJson(event.dataJson);
       List<dynamic> datasList = pager.datas;
@@ -76,7 +77,7 @@ class HomeModel {
    * 搜索热词
    * */
   Stream<List<SearchHot>> loadSearchHot() async* {
-    yield* _httpManager.get(Config.SEARCH_HOT).map((event) {
+    yield* _httpManager.get(WanandroidUrl.searchHots).map((event) {
       var  list = event.dataList;
       List<SearchHot> searchHots = [];
       list.forEach((element) {

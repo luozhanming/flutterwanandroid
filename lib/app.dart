@@ -8,7 +8,6 @@ import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home/home_page.dart';
 import 'package:wanandroid/page/search/search_page.dart';
 import 'package:wanandroid/page/webview/webview_page.dart';
-import 'package:wanandroid/redux/app_redux.dart';
 
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
