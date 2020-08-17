@@ -23,6 +23,7 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
   Widget build(BuildContext context) {
     return RefreshConfiguration(
       hideFooterWhenNotFull: true,
+
       child: MaterialApp(
         localizationsDelegates: [
           S.delegate,

@@ -185,7 +185,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
             label: Text(
               element.name,
               style: TextStyle(
-                  fontSize: ScreenUtil().setWidth(14), color: Colors.black54),
+                  fontSize: ScreenUtil().setWidth(10), color: Colors.black54),
             ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(ScreenUtil().setWidth(15)),
@@ -193,6 +193,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
                     width: 0, color: Colors.grey, style: BorderStyle.none)),
             onPressed: () {
               mViewModel._searchTextController.text = element.name;
+              FocusScope.of(context).requestFocus(new FocusNode());
               mViewModel.search(false);
             },
           ),
@@ -201,7 +202,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
       return Padding(
         padding:EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
         child: Wrap(
-          spacing: ScreenUtil().setWidth(16),
+          spacing: ScreenUtil().setWidth(10),
           runSpacing: ScreenUtil().setWidth(5),
           children: <Widget>[...hotWidget],
         ),
@@ -292,7 +293,6 @@ class SearchViewModel extends BaseViewModel {
   @override
   void dispose() {
     _subscriptions.dispose();
-    _searchTextController.removeListener(_searchTextChanged);
     _searchTextController.dispose();
     _refreshController.dispose();
     super.dispose();

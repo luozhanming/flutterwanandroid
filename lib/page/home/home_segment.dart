@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
@@ -23,7 +24,6 @@ class HomeSegment extends StatefulWidget {
 
 class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
   ScrollController _scrollController;
-  GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey();
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
     ///if loading, lock to await
     doDelayed() async {
       await Future.delayed(Duration(seconds: 1)).then((_) async {
-        if (mViewModel.state==DataState.refresh) {
+        if (mViewModel.state == DataState.refresh) {
           return await doDelayed();
         } else {
           return null;
@@ -91,77 +91,64 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
 
   Widget _buildHomeArticals() {
     return Builder(builder: (context) {
-      int itemCount = context
-          .select<HomeSegmentViewModel, int>((value) => value.articals.length);
-      //没有更多或加载更多状态，item视图加一
-      DataState state =
-          context.select<HomeSegmentViewModel, DataState>((value) => value.state);
-      if (state == DataState.nomore ||
-          state == DataState.loadmore) {
-        itemCount++;
-      }
+      var itemCount = context.select<HomeSegmentViewModel, int>(
+          (value) => value.articals.length);
+//      List<Artical> articals = context.select<HomeSegmentViewModel, List<Artical>>(
+//              (value) => value.articals);
       return SliverList(
-          delegate: SliverChildBuilderDelegate(_articalItemBuilder,
-              childCount: itemCount));
+          delegate: SliverChildBuilderDelegate((context,index){
+        //    var artical = articals[index];
+            return Builder(
+              builder: (context){
+                Artical artical = context.select<HomeSegmentViewModel, Artical>(
+                        (value) => value.articals[index]);
+                return ArticalItemWidget(
+                artical,
+                onArticalTap: (artical) async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => WebviewPage(
+                        url: artical.link,
+                        title: artical.title,
+                      )));
+                },
+              );}
+            );
+          }, childCount: itemCount));
     });
   }
 
-  Widget _articalItemBuilder(BuildContext context, int index) {
-    return Builder(builder: (context) {
-      //数据为空
-      DataState state =
-          context.select<HomeSegmentViewModel, DataState>((value) => value.state);
-      if (mViewModel.articals.isEmpty) {
-        return Center();
-      } else if (state == DataState.loadmore &&
-          index == mViewModel.articals.length) {
-        //加载更多视图
-        return Container(
-          alignment: Alignment.center,
-          height: 60,
-          child: Text("加载更多...."),
-        );
-      } else {
-        //普通选项
-        Artical artical = context.select<HomeSegmentViewModel, Artical>(
-            (value) => value.articals[index]);
-        return ArticalItemWidget(
-          artical,
-          onArticalTap: (artical) async {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => WebviewPage(
-                      url: artical.link,
-                      title: artical.title,
-                    )));
-          },
-        );
-      }
-    });
-  }
-
-  bool _onScrollNotification(ScrollNotification notification) {
-    if (notification.metrics.extentAfter == 0.0) {
-      //滑到最底部
-      mViewModel.loadHomeArticals(true);
-    } else if (notification.metrics.extentBefore == 0.0) {
-      //滑到最顶部
-    }
-  }
+//  Widget _articalItemBuilder(BuildContext context, int index) {
+//    return Builder(builder: (context) {
+//        //普通选项
+//        Artical artical = context.select<HomeSegmentViewModel, Artical>(
+//            (value) => value.articals[index]);
+//        return ArticalItemWidget(
+//          artical,
+//          onArticalTap: (artical) async {
+//            Navigator.of(context).push(MaterialPageRoute(
+//                builder: (context) => WebviewPage(
+//                      url: artical.link,
+//                      title: artical.title,
+//                    )));
+//          },
+//        );
+//    });
+//  }
 
   @override
   Widget buildBody(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: _onScrollNotification,
-      child: RefreshIndicator(
-        onRefresh: () async {
-          mViewModel.refreshData();
-          await _lockToAwait();
-        },
-        child: CustomScrollView(
-          controller: _scrollController,
-          scrollDirection: Axis.vertical,
-          slivers: <Widget>[_buildBanner(), _buildHomeArticals()],
-        ),
+    return SmartRefresher(
+      controller: mViewModel._refreshController,
+      enablePullUp: true,
+      onRefresh: () {
+        mViewModel.refreshData();
+      },
+      onLoading: () {
+        mViewModel.loadHomeArticals(true);
+      },
+      child: CustomScrollView(
+        scrollDirection: Axis.vertical,
+        slivers: <Widget>[_buildBanner(), _buildHomeArticals()],
       ),
     );
   }
@@ -173,6 +160,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
 }
 
 class HomeSegmentViewModel extends BaseViewModel {
+  RefreshController _refreshController;
   CompositeSubscription _subscriptions;
   HomeModel _model;
 
@@ -182,6 +170,7 @@ class HomeSegmentViewModel extends BaseViewModel {
 
   @override
   void initState() {
+    _refreshController = RefreshController();
     _subscriptions = CompositeSubscription();
     _model = HomeModel();
     banners = [];
@@ -205,15 +194,13 @@ class HomeSegmentViewModel extends BaseViewModel {
 
   void loadHomeArticals(bool isLoadMore) {
     //没有更多数据
-    if (curPager?.over ?? false) {
-      state = DataState.nomore;
-      notifyListeners();
-    }
+//    if (curPager?.over ?? false) {
+//      state = DataState.nomore;
+//      notifyListeners();
+//    }
     //同一时间只能有1个此类请求
-    if (state == DataState.refresh ||
-        state == DataState.loadmore) return;
-    state =
-        isLoadMore ? DataState.loadmore : DataState.refresh;
+    if (state == DataState.refresh || state == DataState.loadmore) return;
+    state = isLoadMore ? DataState.loadmore : DataState.refresh;
     notifyListeners();
     _subscriptions.add(_model
         .loadHomeArticals(isLoadMore ? curPager?.curPage ?? 0 + 1 : 0)
@@ -222,8 +209,14 @@ class HomeSegmentViewModel extends BaseViewModel {
         if (curPager.curPage != event.curPage) {
           curPager = event;
           articals.addAll(event.datas);
+          if (event.curPage >= event.pageCount) {
+            _refreshController.loadNoData();
+          } else {
+            _refreshController.loadComplete();
+          }
         }
       } else {
+        //刷新
         articals.clear();
         articals.addAll(curPager.datas);
       }
@@ -245,9 +238,11 @@ class HomeSegmentViewModel extends BaseViewModel {
       articals.clear();
       articals.addAll(curPager.datas);
       state = DataState.success;
+      _refreshController.refreshCompleted(resetFooterState: true);
       notifyListeners();
     }).listen((event) {}, onError: (error) {
       state = DataState.failed;
+      _refreshController.refreshFailed();
       notifyListeners();
     }));
   }
