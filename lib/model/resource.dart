@@ -15,12 +15,12 @@ class Resource<T> {
     return Resource(ResourceStatus.success,data: data);
   }
 
-  factory Resource.failed(Exception e){
-    return Resource(ResourceStatus.failed,exception: e);
+  factory Resource.error([Exception e]){
+    return Resource(ResourceStatus.error,exception: e);
   }
 
   factory Resource.empty(){
-    return Resource(ResourceStatus.idel);
+    return Resource(ResourceStatus.empty);
   }
 
   factory Resource.copyWith(Resource src,  {ResourceStatus state, T data, Exception exception}){
@@ -32,4 +32,4 @@ class Resource<T> {
 
 }
 
-enum ResourceStatus { idel,loading, success, failed }
+enum ResourceStatus { empty,loading, success, error }

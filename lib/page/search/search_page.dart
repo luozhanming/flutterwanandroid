@@ -56,6 +56,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
         children: <Widget>[
           Container(
             width: ScreenUtil().setWidth(240),
+            alignment: Alignment.centerLeft,
             child: TextField(
               controller: mViewModel._searchTextController,
               textInputAction: TextInputAction.search,
@@ -186,6 +187,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
               element.name,
               style: TextStyle(
                   fontSize: ScreenUtil().setWidth(10), color: Colors.black54),
+                height: 1,
             ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(ScreenUtil().setWidth(15)),
