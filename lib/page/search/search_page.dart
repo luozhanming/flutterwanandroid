@@ -129,10 +129,14 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
                       left: ScreenUtil().setWidth(16),
                       top: ScreenUtil().setWidth(8)),
                   alignment: Alignment.topLeft,
-                  child: Text(S.of(context).search_hots,
-                  style: TextStyles.h1TextStyle,),
+                  child: Text(
+                    S.of(context).search_hots,
+                    style: TextStyles.h1TextStyle,
+                  ),
                 ),
-                Padding(padding: EdgeInsets.only(top: ScreenUtil().setWidth(6)),),
+                Padding(
+                  padding: EdgeInsets.only(top: ScreenUtil().setWidth(6)),
+                ),
                 _buildSearchHots(context),
                 Container(
                   margin: EdgeInsets.only(
@@ -181,33 +185,32 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
           .select<SearchViewModel, List<SearchHot>>((value) => value.hots);
       List<Widget> hotWidget = [];
       hots.forEach((element) {
-        hotWidget.add(Container(
-          child: InputChip(
-            label: Text(
+        hotWidget.add(InputChip(
+          label: Padding(
+            padding:  EdgeInsets.symmetric(vertical:ScreenUtil().setWidth(5),horizontal: ScreenUtil().setWidth(10)),
+            child: Text(
               element.name,
               style: TextStyle(
-                  fontSize: ScreenUtil().setWidth(10), color: Colors.black54),
-                height: 1,
+                  height: 1,
+                  fontSize: ScreenUtil().setWidth(12),
+                  color: Colors.black54),
             ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ScreenUtil().setWidth(15)),
-                side: BorderSide(
-                    width: 0, color: Colors.grey, style: BorderStyle.none)),
-            onPressed: () {
-              mViewModel._searchTextController.text = element.name;
-              FocusScope.of(context).requestFocus(new FocusNode());
-              mViewModel.search(false);
-            },
           ),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(ScreenUtil().setWidth(15)),
+              side: BorderSide(
+                  width: 0, color: Colors.grey, style: BorderStyle.none)),
+          onPressed: () {
+            mViewModel._searchTextController.text = element.name;
+            FocusScope.of(context).requestFocus(new FocusNode());
+            mViewModel.search(false);
+          },
         ));
       });
-      return Padding(
-        padding:EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-        child: Wrap(
-          spacing: ScreenUtil().setWidth(10),
-          runSpacing: ScreenUtil().setWidth(5),
-          children: <Widget>[...hotWidget],
-        ),
+      return Wrap(
+        spacing: ScreenUtil().setWidth(10),
+        runSpacing: ScreenUtil().setWidth(5),
+        children: <Widget>[...hotWidget],
       );
     });
   }
@@ -217,12 +220,12 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
    * */
   Widget _searchItemResultBuilder(
       BuildContext context, int index, List<Artical> articals) {
-    return ArticalItemWidget(articals[index],onArticalTap:(artical) async{
+    return ArticalItemWidget(articals[index], onArticalTap: (artical) async {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => WebviewPage(
-            url: artical.link,
-            title: artical.title,
-          )));
+                url: artical.link,
+                title: artical.title,
+              )));
     });
   }
 }
@@ -273,12 +276,12 @@ class SearchViewModel extends BaseViewModel {
 
   void search(bool isLoadMore) {
     var key = _searchTextController.text;
-    var page = isLoadMore ? curPager.curPage + 1 : 0;
+    var page = isLoadMore ? curPager.curPage : 0;
     _subscriptions.add(_model.searchArtical(key, page).listen((event) {
       curPager = event;
       if (event.isLoadMore()) {
         searchDatas.addAll(event.datas);
-        if (event.curPage >= event.pageCount) {
+        if (event.over) {
           _refreshController.loadNoData();
         } else {
           _refreshController.loadComplete();

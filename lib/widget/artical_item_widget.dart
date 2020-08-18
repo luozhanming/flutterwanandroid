@@ -116,18 +116,18 @@ class ArticalItemWidget extends StatelessWidget {
   Widget _buildAuthorWidget(BuildContext context) {
     var isYC = artical.author != "";
     if (isYC) {
-      return Text("${S.of(context).author}${artical.author}");
+      return Text("${S.of(context).author}${artical.author}",style: authorTextStyle,);
     } else {
-      return Text("${S.of(context).shareUser}${artical.shareUser}");
+      return Text("${S.of(context).shareUser}${artical.shareUser}",style: authorTextStyle);
     }
   }
 
   Widget _buildTimeWidget(BuildContext context) {
     var isYC = artical.author != "";
     if (isYC) {
-      return Text("${S.of(context).time}${artical.niceDate}");
+      return Text("${S.of(context).time}${artical.niceDate}",style: authorTextStyle);
     } else {
-      return Text("${S.of(context).time}${artical.niceShareDate}");
+      return Text("${S.of(context).time}${artical.niceShareDate}",style: authorTextStyle);
     }
   }
 
@@ -135,7 +135,7 @@ class ArticalItemWidget extends StatelessWidget {
   TextStyle tagTextStyle =
       TextStyle(fontSize: ScreenUtil().setSp(10), color: Colors.greenAccent);
   TextStyle authorTextStyle =
-      TextStyle(fontSize: ScreenUtil().setSp(14), color: Colors.grey);
+      TextStyle(fontSize: ScreenUtil().setSp(10), color: Colors.black87);
 }
 
 /**收藏按钮点击*/

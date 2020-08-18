@@ -11,7 +11,7 @@ class SystemKnowlodge {
   final int parentChapterId;
   final bool userControlSetTop;
   final int visible;
-  final List<dynamic> children;
+  final List<SystemKnowlodge> children;
 
   const SystemKnowlodge({this.courseId, this.id, this.name, this.order,
       this.parentChapterId, this.userControlSetTop, this.visible,

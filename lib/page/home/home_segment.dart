@@ -203,13 +203,13 @@ class HomeSegmentViewModel extends BaseViewModel {
     state = isLoadMore ? DataState.loadmore : DataState.refresh;
     notifyListeners();
     _subscriptions.add(_model
-        .loadHomeArticals(isLoadMore ? curPager?.curPage ?? 0 + 1 : 0)
+        .loadHomeArticals(isLoadMore ? curPager?.curPage ?? 0 : 0)
         .listen((event) {
       if (isLoadMore) {
         if (curPager.curPage != event.curPage) {
           curPager = event;
           articals.addAll(event.datas);
-          if (event.curPage >= event.pageCount) {
+          if (event.over) {
             _refreshController.loadNoData();
           } else {
             _refreshController.loadComplete();

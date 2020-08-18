@@ -11,7 +11,8 @@ class GlobalState with ChangeNotifier {
 
   GlobalState({this.loginUser, this.isLogin, this.locale});
 
-  ThemeData themeData = ThemeData();
+  ThemeData themeData = ThemeData(
+  );
 
   void setLoginUser(User user) {
     if (user != loginUser) {

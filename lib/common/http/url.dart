@@ -23,4 +23,6 @@ class WanandroidUrl {
   static const String systemTree = "https://www.wanandroid.com/tree/json";
 
   static String systemArtical(int cid,int page)=>"https://www.wanandroid.com/article/list/$page/json";
+
+  static String authorArticals(String name,int page)=>"https://wanandroid.com/article/list/$page/json";
 }
