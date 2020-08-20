@@ -54,6 +54,7 @@ dependencies:
   dio_cookie_manager: 1.0.0
   flare_flutter: ^1.8.3
   flutter_html: ^1.0.0
+  event_bus: ^1.1.1
 
 
   battery :

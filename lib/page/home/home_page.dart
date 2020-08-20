@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
+import 'package:wanandroid/common/base/event_bus.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
@@ -194,8 +195,11 @@ class _HomeViewModel extends BaseViewModel {
   }
 
   void changeSelectedIndex(index) {
+    Bus.getEventBus().fire(HomeIndexChangedEvent(selectedIndex, index));
+
     selectedIndex = index;
     notifyListeners();
+
   }
 
   @override

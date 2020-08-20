@@ -1,6 +1,7 @@
 
 
 
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';

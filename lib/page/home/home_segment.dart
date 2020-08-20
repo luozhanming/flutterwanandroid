@@ -6,6 +6,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
+import 'package:wanandroid/common/base/event_bus.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
@@ -58,16 +59,6 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
           margin: EdgeInsets.all(ScreenUtil().setWidth(8)),
           height: ScreenUtil().setWidth(200),
           child: Builder(builder: (context) {
-            List<BannerItem> items = [];
-            List<HomeBanner> banners =
-                context.select<HomeSegmentViewModel, List<HomeBanner>>(
-                    (value) => value.banners);
-            int length = banners.length;
-            for (int i = 0; i < length; i++) {
-              var banner = banners[i];
-              items.add(BannerItem(NetworkImage(banner.imagePath),
-                  message: banner.title));
-            }
             return BannerView(
               callback: (index) async {
                 var banner = mViewModel.banners[index];
@@ -82,7 +73,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
               borderColor: context
                   .select<GlobalState, ThemeData>((value) => value.themeData)
                   .primaryColor,
-              items: items,
+              controller: mViewModel._bannerController,
             );
             //  }
           })),
@@ -93,8 +84,6 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
     return Builder(builder: (context) {
       var itemCount = context.select<HomeSegmentViewModel, int>(
           (value) => value.articals.length);
-//      List<Artical> articals = context.select<HomeSegmentViewModel, List<Artical>>(
-//              (value) => value.articals);
       return SliverList(
           delegate: SliverChildBuilderDelegate((context,index){
         //    var artical = articals[index];
@@ -160,7 +149,9 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
 }
 
 class HomeSegmentViewModel extends BaseViewModel {
+  BannerController _bannerController;
   RefreshController _refreshController;
+
   CompositeSubscription _subscriptions;
   HomeModel _model;
 
@@ -168,15 +159,25 @@ class HomeSegmentViewModel extends BaseViewModel {
   List<Artical> articals;
   Pager<Artical> curPager;
 
+
   @override
   void initState() {
+    _bannerController = BannerController(BannerInfo(canLoop: true));
     _refreshController = RefreshController();
     _subscriptions = CompositeSubscription();
     _model = HomeModel();
     banners = [];
     articals = [];
     refreshData();
-    // loadData();
+    Bus.getEventBus().on<HomeIndexChangedEvent>().listen((event) {
+      if(event.lastIndex!=event.newIndex){
+        if(event.newIndex==0){
+          _bannerController.startLoop();
+        }else{
+          _bannerController.stopLoop();
+        }
+      }
+    });
   }
 
   @override
@@ -194,10 +195,6 @@ class HomeSegmentViewModel extends BaseViewModel {
 
   void loadHomeArticals(bool isLoadMore) {
     //没有更多数据
-//    if (curPager?.over ?? false) {
-//      state = DataState.nomore;
-//      notifyListeners();
-//    }
     //同一时间只能有1个此类请求
     if (state == DataState.refresh || state == DataState.loadmore) return;
     state = isLoadMore ? DataState.loadmore : DataState.refresh;
@@ -239,6 +236,15 @@ class HomeSegmentViewModel extends BaseViewModel {
       articals.addAll(curPager.datas);
       state = DataState.success;
       _refreshController.refreshCompleted(resetFooterState: true);
+
+      List<BannerItem> bannerItems = [];
+      int length = banners.length;
+      for (int i = 0; i < length; i++) {
+        var banner = banners[i];
+        bannerItems.add(BannerItem(NetworkImage(banner.imagePath),
+            message: banner.title));
+      }
+      _bannerController.refreshData(bannerItems);
       notifyListeners();
     }).listen((event) {}, onError: (error) {
       state = DataState.failed;
