@@ -8,7 +8,7 @@ import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/tag.dart';
 
 /**
- * 文章item Widget
+ * [Artical] item Widget.
  * */
 
 class ArticalItemWidget extends StatelessWidget {
@@ -18,11 +18,34 @@ class ArticalItemWidget extends StatelessWidget {
   final bool isLogin;
 
   ArticalItemWidget(this.artical,
-      {this.onArticalTap, this.onCollectTap, this.isLogin})
+      {this.onArticalTap, this.onCollectTap, this.isLogin=false})
       : super(key: ObjectKey(artical));
 
   @override
   Widget build(BuildContext context) {
+    if(!isLogin){
+      return _buildArticalContent(context);
+    }else{
+      return Slidable(
+        actionPane: SlidableDrawerActionPane(),
+        actionExtentRatio: 0.15,
+        secondaryActions: <Widget>[
+          IconSlideAction(
+            color: Theme.of(context).primaryColor,
+            iconWidget: Icon(
+              MyIcons.love,
+              color: artical.collect ? Colors.yellow : Colors.white,
+            ),
+            onTap: () {},
+          )
+        ],
+        child: _buildArticalContent(context),
+      );
+    }
+
+  }
+
+  InkWell _buildArticalContent(BuildContext context) {
     List<Widget> rowWidget = [];
     List<Tag> tags = artical.tags;
     tags.forEach((element) {
@@ -34,66 +57,51 @@ class ArticalItemWidget extends StatelessWidget {
     rowWidget.add(
         Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(10))));
     rowWidget.add(_buildTimeWidget(context));
-
-    return Slidable(
-      actionPane: SlidableDrawerActionPane(),
-      actionExtentRatio: 0.15,
-      secondaryActions: <Widget>[
-        IconSlideAction(
-          color: Theme.of(context).primaryColor,
-          iconWidget: Icon(
-            MyIcons.love,
-            color: artical.collect ? Colors.yellow : Colors.white,
-          ),
-          onTap: () {},
-        )
-      ],
-      child: InkWell(
-        onTap: () {
-          onArticalTap?.call(artical);
-        },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: ScreenUtil().setWidth(8),
-                  horizontal: ScreenUtil().setWidth(12)),
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Hero(
-                          tag: artical.title,
-                          child: Text.rich(
-                            TextSpan(
-                              text: artical.title,
-                              style: titleTextStyle,
-                            ),
-                            maxLines: 2,
-                          )),
-                      Padding(
-                        padding: EdgeInsets.only(top: ScreenUtil().setWidth(8)),
-                      ),
-                      Row(
-                        children: rowWidget,
-                      )
-                    ],
-                  ),
-                ],
-              ),
+    return InkWell(
+      onTap: () {
+        onArticalTap?.call(artical);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: ScreenUtil().setWidth(8),
+                horizontal: ScreenUtil().setWidth(12)),
+            child: Stack(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Hero(
+                        tag: artical.title,
+                        child: Text.rich(
+                          TextSpan(
+                            text: artical.title,
+                            style: titleTextStyle,
+                          ),
+                          maxLines: 2,
+                        )),
+                    Padding(
+                      padding: EdgeInsets.only(top: ScreenUtil().setWidth(8)),
+                    ),
+                    Row(
+                      children: rowWidget,
+                    )
+                  ],
+                ),
+              ],
             ),
-            Container(
-              margin: EdgeInsets.only(
-                  left: ScreenUtil().setWidth(8),
-                  right: ScreenUtil().setWidth(8)),
-              height: 1,
-              color: Colors.black12,
-            )
-          ],
-        ),
+          ),
+          Container(
+            margin: EdgeInsets.only(
+                left: ScreenUtil().setWidth(8),
+                right: ScreenUtil().setWidth(8)),
+            height: 1,
+            color: Colors.black12,
+          )
+        ],
       ),
     );
   }

@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wanandroid/common/base/base_state.dart';
+import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/styles.dart';
 import 'package:wanandroid/generated/l10n.dart';
@@ -14,7 +16,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with LoginState {
+class _LoginPageState extends BaseState<LoginPage,LoginViewModel> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: Config.DESIGN_WIDTH);
@@ -50,7 +52,7 @@ class _LoginPageState extends State<LoginPage> with LoginState {
                     children: <Widget>[
                       Container(
                         child: MyTextField(
-                            controller: _usernameController,
+                            controller: mViewModel._usernameController,
                             hint: S.of(context).hint_input_username,
                             fontSize: 16,
                             icon: Icons.account_circle),
@@ -58,7 +60,7 @@ class _LoginPageState extends State<LoginPage> with LoginState {
                       ),
                       Container(
                         child: MyTextField(
-                          controller: _passwordController,
+                          controller:  mViewModel._passwordController,
                           hint: S.of(context).hint_input_password,
                           fontSize: 16,
                           icon: Icons.panorama_vertical,
@@ -94,9 +96,19 @@ class _LoginPageState extends State<LoginPage> with LoginState {
       ),
     );
   }
+
+  @override
+  Widget buildBody(BuildContext context) {
+    throw UnimplementedError();
+  }
+
+  @override
+  buildViewModel(BuildContext context) {
+    return LoginViewModel();
+  }
 }
 
-mixin LoginState on State<LoginPage> {
+class LoginViewModel extends BaseViewModel {
   TextEditingController _usernameController;
   TextEditingController _passwordController;
 
@@ -104,7 +116,7 @@ mixin LoginState on State<LoginPage> {
   void initState() {
     _usernameController = TextEditingController(text: "");
     _passwordController = TextEditingController(text: "");
-    super.initState();
+
   }
 
   @override

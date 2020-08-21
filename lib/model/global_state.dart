@@ -12,6 +12,7 @@ class GlobalState with ChangeNotifier {
   GlobalState({this.loginUser, this.isLogin, this.locale});
 
   ThemeData themeData = ThemeData(
+    primaryColor: Colors.yellow,
   );
 
   void setLoginUser(User user) {

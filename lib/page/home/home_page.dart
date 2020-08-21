@@ -75,14 +75,14 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                 child: Container(
                   height: ScreenUtil().setWidth(26),
                   decoration: BoxDecoration(
-                      color: Colors.black26,
+                      color:Color.fromARGB(40, 0, 0, 0),
                       borderRadius: BorderRadius.all(
                           Radius.circular(ScreenUtil().setWidth(3))),
                       border: Border.all(color: Colors.black12)),
                   margin: EdgeInsets.only(right: ScreenUtil().setWidth(8)),
                   child: InkWell(
                     splashColor: Colors.transparent,
-                    highlightColor: Colors.black26,
+                    highlightColor: Color.fromARGB(40, 0, 0, 0),
                     borderRadius: BorderRadius.all(
                         Radius.circular(ScreenUtil().setWidth(3))),
                     onTap: () async {

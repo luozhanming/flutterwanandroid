@@ -264,7 +264,7 @@ class BannerItem {
 }
 
 /**
- * Banner控制器
+ * Controller which controls [BannerView] state.
  * */
 class BannerController extends ValueNotifier<BannerInfo> {
   BannerController(BannerInfo value) : super(value);

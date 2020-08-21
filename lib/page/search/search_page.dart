@@ -11,6 +11,7 @@ import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/styles.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
+import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/model/search_hot.dart';
 import 'package:wanandroid/page/webview/webview_page.dart';
@@ -47,7 +48,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
       alignment: Alignment.center,
       margin: EdgeInsets.only(right: ScreenUtil().setWidth(16)),
       decoration: ShapeDecoration(
-          color: Colors.lightBlueAccent,
+          color: Color.fromARGB(30, 0, 0, 0),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                   Radius.circular(ScreenUtil().setWidth(15))))),

@@ -1,6 +1,7 @@
 
-
-
+/**
+ * Global [EventBus] which manager event to send or receive;
+ **/
 import 'package:event_bus/event_bus.dart';
 
 class Bus{
