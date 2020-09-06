@@ -2,6 +2,7 @@ import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
@@ -11,6 +12,7 @@ import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home/home_segment.dart';
 import 'package:wanandroid/page/home/system_segment.dart';
+import 'package:wanandroid/page/login/login_page.dart';
 import 'package:wanandroid/page/search/search_page.dart';
 import 'package:wanandroid/widget/circle_widget.dart';
 
@@ -38,6 +40,7 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
         duration: const Duration(milliseconds: 300),
       )
     ]);
+    mViewModel.requestPermissions();
   }
 
   @override
@@ -47,6 +50,7 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
+
     return AppBar(
       leading: Center(),
       flexibleSpace: Padding(
@@ -59,7 +63,8 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                 //将context范围缩到Scaffold
                 builder: (context) => InkWell(
                   onTap: () {
-                    Scaffold.of(context).openDrawer();
+                    Navigator.of(context).pushNamed(LoginPage.NAME);
+                   // Scaffold.of(context).openDrawer();
                   },
                   child: OvalWidget(
                       width: ScreenUtil().setWidth(30),
@@ -208,4 +213,8 @@ class _HomeViewModel extends BaseViewModel {
   }
 
   void refreshData() {}
+
+  void requestPermissions() async{
+    await Permission.storage.request();
+  }
 }

@@ -23,6 +23,7 @@ void main() {
     runApp(EnvWrapper(env: DevEnv(), 
         child: ChangeNotifierProvider(
           create: (context)=>GlobalState(),
+            builder: (context,child)=>child,
             child: FlutterReduxApp()
         )
     )

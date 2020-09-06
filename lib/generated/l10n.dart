@@ -172,6 +172,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Register`
+  String get register_new_user {
+    return Intl.message(
+      'Register',
+      name: 'register_new_user',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AutoLogin`
+  String get auto_login {
+    return Intl.message(
+      'AutoLogin',
+      name: 'auto_login',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

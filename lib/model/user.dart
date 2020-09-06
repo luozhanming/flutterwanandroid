@@ -6,13 +6,13 @@ part 'user.g.dart';
 @JsonSerializable(createToJson: true)
 class User{
 
-  final String admin;
+  final bool admin;
 
   final String email;
 
   final String icon;
 
-  final String id;
+  final int id;
 
   final String nickname;
 
@@ -29,6 +29,19 @@ class User{
 
 
   factory User.fromJson(Map<String,dynamic> json)=>_$UserFromJson(json);
+
+
+  static Map<String,dynamic> toJson(User user)=>{
+    "admin":user.admin,
+    "email":user.email,
+    "icon":user.icon,
+    "id":user.id,
+    "nickname":user.nickname,
+    "publicNmae":user.publicName,
+    "token":user.token,
+    "type":user.type,
+    "username":user.username
+  };
 
 
 }

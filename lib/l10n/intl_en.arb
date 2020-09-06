@@ -12,5 +12,7 @@
   "time": "Time:",
   "tip_can_not_open_link": "Can not open this link.",
   "search_hots": "Hots",
-  "search_record": "Records"
+  "search_record": "Records",
+  "register_new_user": "Register",
+  "auto_login": "AutoLogin"
 }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:simple_html_css/simple_html_css.dart';
 import 'package:wanandroid/common/my_icons.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
@@ -77,9 +78,9 @@ class ArticalItemWidget extends StatelessWidget {
                     Hero(
                         tag: artical.title,
                         child: Text.rich(
-                          TextSpan(
-                            text: artical.title,
-                            style: titleTextStyle,
+                          HTML.toTextSpan(context,
+                            "<p>${artical.title}</p>",
+                            defaultTextStyle: titleTextStyle,
                           ),
                           maxLines: 2,
                         )),

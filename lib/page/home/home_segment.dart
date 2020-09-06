@@ -84,6 +84,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
     return Builder(builder: (context) {
       var itemCount = context.select<HomeSegmentViewModel, int>(
           (value) => value.articals.length);
+      bool isLogin = context.select<GlobalState,bool>((value) => value.isLogin);
       return SliverList(
           delegate: SliverChildBuilderDelegate((context,index){
         //    var artical = articals[index];
@@ -93,6 +94,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
                         (value) => value.articals[index]);
                 return ArticalItemWidget(
                 artical,
+                isLogin: isLogin,
                 onArticalTap: (artical) async {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => WebviewPage(

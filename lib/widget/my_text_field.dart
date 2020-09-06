@@ -13,7 +13,7 @@ class MyTextField extends StatefulWidget {
   final bool isVisible;
 
 
-  final int fontSize;
+  final double fontSize;
 
   const MyTextField(
       {this.controller,

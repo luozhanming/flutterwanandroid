@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:wanandroid/model/user.dart';
 
 class GlobalState with ChangeNotifier {
+
+  GlobalState();
+
+  ThemeData themeData = ThemeData(
+    primaryColor: Colors.yellow,
+  );
+
   User loginUser = null;
 
   bool isLogin = false;
 
   Locale locale = Locale("zh", "CN");
-
-
-  GlobalState({this.loginUser, this.isLogin, this.locale});
-
-  ThemeData themeData = ThemeData(
-    primaryColor: Colors.yellow,
-  );
 
   void setLoginUser(User user) {
     if (user != loginUser) {

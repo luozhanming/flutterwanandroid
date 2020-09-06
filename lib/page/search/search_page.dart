@@ -60,6 +60,9 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
             alignment: Alignment.centerLeft,
             child: TextField(
               controller: mViewModel._searchTextController,
+              onSubmitted: (text){
+                mViewModel.search(false);
+              },
               textInputAction: TextInputAction.search,
               style: TextStyle(
                   fontSize: ScreenUtil().setSp(14), color: Colors.white),
@@ -150,10 +153,6 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
               ],
             );
           } else {
-            var itemCount = context.select<SearchViewModel, int>(
-                (value) => value.searchDatas.length);
-            var articals = context.select<SearchViewModel, List<Artical>>(
-                (value) => value.searchDatas);
             return SmartRefresher(
                 controller: mViewModel._refreshController,
                 enablePullUp: true,
@@ -164,16 +163,34 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
                 onLoading: () {
                   mViewModel.search(true);
                 },
-                child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return _searchItemResultBuilder(context, index, articals);
-                    },
-                    itemCount: itemCount));
+                child: Builder(
+                  builder: (context) {
+                    var itemCount = context.select<SearchViewModel, int>(
+                            (value) => value.searchDatas.length);
+                    var articals = context.select<SearchViewModel,
+                        List<Artical>>(
+                            (value) => value.searchDatas);
+                    var showNoData = context.select<SearchViewModel, bool>((value) => value.searchNoData);
+                    if(showNoData){
+                      return _buildNoSearchData();
+                    }else{
+                      return ListView.builder(
+                          itemBuilder: (context, index) {
+                            return _searchItemResultBuilder(
+                                context, index, articals);
+                          },
+                          itemCount: itemCount);
+                    }
+
+                  }
+                ));
           }
         }),
       ),
     );
   }
+
+  Center _buildNoSearchData() => Center(child: Text("Empty Search"));
 
   @override
   buildViewModel(BuildContext context) {
@@ -188,7 +205,9 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
       hots.forEach((element) {
         hotWidget.add(InputChip(
           label: Padding(
-            padding:  EdgeInsets.symmetric(vertical:ScreenUtil().setWidth(5),horizontal: ScreenUtil().setWidth(10)),
+            padding: EdgeInsets.symmetric(
+                vertical: ScreenUtil().setWidth(5),
+                horizontal: ScreenUtil().setWidth(10)),
             child: Text(
               element.name,
               style: TextStyle(
@@ -221,13 +240,17 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
    * */
   Widget _searchItemResultBuilder(
       BuildContext context, int index, List<Artical> articals) {
-    return ArticalItemWidget(articals[index], onArticalTap: (artical) async {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => WebviewPage(
-                url: artical.link,
-                title: artical.title,
-              )));
-    });
+    return Builder(
+      builder:(context)=> ArticalItemWidget(articals[index],
+          isLogin: context.select<GlobalState, bool>((value) => value.isLogin),
+          onArticalTap: (artical) async {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => WebviewPage(
+                  url: artical.link,
+                  title: artical.title,
+                )));
+      }),
+    );
   }
 }
 
@@ -235,10 +258,11 @@ class SearchViewModel extends BaseViewModel {
   TextEditingController _searchTextController;
   RefreshController _refreshController;
 
+  //region s
   HomeModel _model;
   CompositeSubscription _subscriptions;
   StreamSubscription _searchSubscription;
-
+  //end region
   //最近一次刷新的数据
   Pager<Artical> curPager;
 
@@ -246,6 +270,7 @@ class SearchViewModel extends BaseViewModel {
   List<Artical> searchDatas = [];
   List<SearchHot> hots = [];
   bool _searchEmpty = true;
+  bool searchNoData = false;
 
   @override
   void initState() {
@@ -278,6 +303,7 @@ class SearchViewModel extends BaseViewModel {
   void search(bool isLoadMore) {
     var key = _searchTextController.text;
     var page = isLoadMore ? curPager.curPage : 0;
+
     _subscriptions.add(_model.searchArtical(key, page).listen((event) {
       curPager = event;
       if (event.isLoadMore()) {
@@ -288,9 +314,14 @@ class SearchViewModel extends BaseViewModel {
           _refreshController.loadComplete();
         }
       } else {
-        searchDatas.clear();
-        searchDatas.addAll(event.datas);
-        _refreshController.refreshCompleted(resetFooterState: true);
+        if(event.datas==null||event.datas.length==0){
+          searchNoData = true;
+        }else{
+          searchNoData = false;
+          searchDatas.clear();
+          searchDatas.addAll(event.datas);
+          _refreshController.refreshCompleted(resetFooterState: true);
+        }
       }
       notifyListeners();
     }));

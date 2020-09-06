@@ -10,6 +10,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/model/artical.dart';
+import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/model/resource.dart';
 import 'package:wanandroid/model/system_knowlodge.dart';
@@ -133,14 +134,17 @@ class _SystemSegmentState extends BaseState<SystemSegment, SystemViewModel> {
                 child: ListView.builder(
                     itemBuilder: (context, index) {
                       var artical = articals[index];
-                      return ArticalItemWidget(artical,
-                        onArticalTap: (artical) async {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => WebviewPage(
-                                url: artical.link,
-                                title: artical.title,
-                              )));
-                        },);
+                      return Builder(
+                        builder:(context)=> ArticalItemWidget(artical,
+                          isLogin: context.select<GlobalState,bool>((value) => value.isLogin),
+                          onArticalTap: (artical) async {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => WebviewPage(
+                                  url: artical.link,
+                                  title: artical.title,
+                                )));
+                          },),
+                      );
                     },
                     itemCount: itemCount)),
           );

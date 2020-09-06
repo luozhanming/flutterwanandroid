@@ -6,6 +6,7 @@ import 'package:redux/redux.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home/home_page.dart';
+import 'package:wanandroid/page/login/login_page.dart';
 import 'package:wanandroid/page/search/search_page.dart';
 import 'package:wanandroid/page/webview/webview_page.dart';
 
@@ -20,9 +21,10 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
 
   @override
   Widget build(BuildContext context) {
+    var themeData = context.select<GlobalState, ThemeData>((value) => value.themeData);
+    var locale = context.select<GlobalState, Locale>((value) => value.locale);
     return RefreshConfiguration(
       hideFooterWhenNotFull: true,
-
       child: MaterialApp(
         localizationsDelegates: [
           S.delegate,
@@ -32,13 +34,16 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
         ],
         supportedLocales: [
           const Locale("zh", "CN"),
-          //   ...S.delegate.supportedLocales
+             ...S.delegate.supportedLocales
         ],
-        locale: context.select<GlobalState, Locale>((value) => value.locale),
-        theme: context.select<GlobalState, ThemeData>((value) => value.themeData),
+        locale: locale,
+        theme: themeData,
         routes: {
           HomePage.NAME: (context) {
             return HomePage();
+          },
+          LoginPage.NAME:(context){
+            return LoginPage();
           },
           SearchPage.NAME: (context) {
             return SearchPage();

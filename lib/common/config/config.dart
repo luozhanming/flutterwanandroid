@@ -18,16 +18,5 @@ class Config {
   static Env ENV = DevEnv();
 
 
-  /*****************************Wanandroid api*****************************/
-  //首页banner
-  static const String HOME_BANNER = "/banner/json";
-
-  //首页文章
-  static const String HOME_ARTICAL =
-      "https://www.wanandroid.com/article/list/0/json";
-
-  //搜索热词
-  static const String SEARCH_HOT = "/hotkey/json";
-
 
 }

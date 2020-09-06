@@ -12,5 +12,7 @@
   "time": "时间：",
   "tip_can_not_open_link": "无法打开该链接",
   "search_hots": "搜索热词",
-  "search_record": "搜索记录"
+  "search_record": "搜索记录",
+  "register_new_user": "注册新用户",
+  "auto_login": "自动登录"
 }
