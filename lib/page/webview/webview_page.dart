@@ -106,7 +106,7 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
 
   @override
   buildViewModel(BuildContext context) {
-    return WebviewViewModel();
+    return WebviewViewModel(context);
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -134,6 +134,8 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
 
 class WebviewViewModel extends BaseViewModel {
   bool _firstLaunch = false;
+
+  WebviewViewModel(BuildContext context) : super(context);
 
   bool get firstLaunch => _firstLaunch;
 

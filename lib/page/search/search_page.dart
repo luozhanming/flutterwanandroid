@@ -194,7 +194,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
 
   @override
   buildViewModel(BuildContext context) {
-    return SearchViewModel();
+    return SearchViewModel(context);
   }
 
   Widget _buildSearchHots(BuildContext context) {
@@ -242,6 +242,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
       BuildContext context, int index, List<Artical> articals) {
     return Builder(
       builder:(context)=> ArticalItemWidget(articals[index],
+          index: index,
           isLogin: context.select<GlobalState, bool>((value) => value.isLogin),
           onArticalTap: (artical) async {
         Navigator.of(context).push(MaterialPageRoute(
@@ -271,6 +272,8 @@ class SearchViewModel extends BaseViewModel {
   List<SearchHot> hots = [];
   bool _searchEmpty = true;
   bool searchNoData = false;
+
+  SearchViewModel(BuildContext context) : super(context);
 
   @override
   void initState() {

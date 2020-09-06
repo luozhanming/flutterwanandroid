@@ -35,7 +35,7 @@ class _SystemSegmentState extends BaseState<SystemSegment, SystemViewModel> {
   }
 
   @override
-  buildViewModel(BuildContext context) => SystemViewModel();
+  buildViewModel(BuildContext context) => SystemViewModel(context);
 
   _buildChapterTree() {
     return Builder(builder: (context) {
@@ -136,6 +136,7 @@ class _SystemSegmentState extends BaseState<SystemSegment, SystemViewModel> {
                       var artical = articals[index];
                       return Builder(
                         builder:(context)=> ArticalItemWidget(artical,
+                          index: index,
                           isLogin: context.select<GlobalState,bool>((value) => value.isLogin),
                           onArticalTap: (artical) async {
                             Navigator.of(context).push(MaterialPageRoute(
@@ -213,6 +214,8 @@ class SystemViewModel extends BaseViewModel {
 
   Resource<Pager<Artical>> articalPageRes;
   List<Artical> articals = [];
+
+  SystemViewModel(BuildContext context) : super(context);
 
   @override
   void initState() {

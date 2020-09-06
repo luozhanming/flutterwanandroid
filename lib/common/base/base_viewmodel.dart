@@ -21,6 +21,15 @@ abstract class BaseViewModel with ChangeNotifier{
 
   DataState get state => _state;
 
+
+  BuildContext _context;
+
+  BuildContext get context =>_context;
+
+  BaseViewModel(BuildContext context){
+    _context = context;
+  }
+
   set state(DataState value) {
     _state = value;
   }
@@ -29,6 +38,7 @@ abstract class BaseViewModel with ChangeNotifier{
 
   void dispose(){
     super.dispose();
+    _context = null;
   }
 
 

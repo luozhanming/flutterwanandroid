@@ -95,6 +95,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
                 return ArticalItemWidget(
                 artical,
                 isLogin: isLogin,
+                index: index,
                 onArticalTap: (artical) async {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => WebviewPage(
@@ -146,7 +147,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
 
   @override
   HomeSegmentViewModel buildViewModel(BuildContext context) {
-    return HomeSegmentViewModel();
+    return HomeSegmentViewModel(context);
   }
 }
 
@@ -160,6 +161,8 @@ class HomeSegmentViewModel extends BaseViewModel {
   List<HomeBanner> banners;
   List<Artical> articals;
   Pager<Artical> curPager;
+
+  HomeSegmentViewModel(BuildContext context) : super(context);
 
 
   @override

@@ -165,7 +165,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
 
   @override
   buildViewModel(BuildContext context) {
-    return LoginViewModel();
+    return LoginViewModel(context);
   }
 }
 
@@ -178,6 +178,8 @@ class LoginViewModel extends BaseViewModel {
   bool isAutoLogin = false;
 
   LiveData<Resource<User>> loginRes = LiveData(Resource.empty());
+
+  LoginViewModel(BuildContext context) : super(context);
 
   @override
   void initState() {

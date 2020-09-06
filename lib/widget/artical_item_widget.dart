@@ -17,9 +17,10 @@ class ArticalItemWidget extends StatelessWidget {
   final OnCollectTap onCollectTap;
   final OnArticalTap onArticalTap;
   final bool isLogin;
+  final int index;
 
   ArticalItemWidget(this.artical,
-      {this.onArticalTap, this.onCollectTap, this.isLogin=false})
+      {this.onArticalTap, this.onCollectTap, this.isLogin=false,this.index = 0})
       : super(key: ObjectKey(artical));
 
   @override
@@ -35,9 +36,11 @@ class ArticalItemWidget extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             iconWidget: Icon(
               MyIcons.love,
-              color: artical.collect ? Colors.yellow : Colors.white,
+              color: artical.collect ? Colors.redAccent : Colors.white,
             ),
-            onTap: () {},
+            onTap: () {
+              onCollectTap?.call(artical,index);
+            },
           )
         ],
         child: _buildArticalContent(context),
