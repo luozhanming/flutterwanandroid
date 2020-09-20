@@ -31,7 +31,7 @@ class CommonPreference {
   Future<T> get<T>(String key, T defValue) async{
     SharedPreferences _sp = await SharedPreferences.getInstance();
     dynamic res = null;
-    switch (defValue.runtimeType) {
+    switch (T) {
       case int:
         res = _sp.getInt(key);
         break;
@@ -48,10 +48,10 @@ class CommonPreference {
         res = _sp.getStringList(key);
         break;
       default:
-        throw new Exception("No support this type.");
+        res = null;
         break;
     }
-    if (res == null) res = defValue;
+    if (res == null) return null;
     return res as T;
   }
 

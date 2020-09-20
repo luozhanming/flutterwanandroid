@@ -93,14 +93,14 @@ flutter:
     - static/images/
     - static/file/
     - static/fonts/
+    - static/db/
 
 
 
   fonts:
     - family: MyIconFont
       fonts:
-        - asset: static/fonts/my_icon_fonts.ttf
-
+        - asset: static/fonts/my_icon_fonts_3.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -8,6 +8,7 @@ import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/base/livedata.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/util/share_preference.dart';
+import 'package:wanandroid/database/db_manager.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/resource.dart';
@@ -106,7 +107,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                                     (value) => value.isAutoLogin);
                             return Container(
                               child: MyCheckBox(
-                                isChecked: isAutoLogin,
+                                isChecked: isAutoLogin??false,
                                 text: S.of(context).auto_login,
                                 onChanged: (value) {
                                   mViewModel.setAutoLogin(value);
@@ -223,6 +224,8 @@ class LoginViewModel extends BaseViewModel {
    * 保存登录用户信息
    * */
   void saveLogin(User data) async {
-    CommonPreference.getPreference().put(CommonPreference.KEY_LOGIN_USER, User.toJson(data));
+    var dao = UserLoginDao();
+    await dao.insert(data);
+    context.read<GlobalState>().setLoginUser(data);
   }
 }

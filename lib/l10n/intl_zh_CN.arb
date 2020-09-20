@@ -14,5 +14,7 @@
   "search_hots": "搜索热词",
   "search_record": "搜索记录",
   "register_new_user": "注册新用户",
-  "auto_login": "自动登录"
+  "auto_login": "自动登录",
+  "project":"项目",
+  "logout": "退出登录"
 }

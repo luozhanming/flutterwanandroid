@@ -32,16 +32,21 @@ class User{
 
 
   static Map<String,dynamic> toJson(User user)=>{
-    "admin":user.admin,
+    "admin":user.admin?1:0,
     "email":user.email,
     "icon":user.icon,
     "id":user.id,
     "nickname":user.nickname,
-    "publicNmae":user.publicName,
+    "publicName":user.publicName,
     "token":user.token,
     "type":user.type,
     "username":user.username
   };
+
+  @override
+  String toString() {
+    return '{admin: "$admin", email: "$email", icon: "$icon", id: $id, nickname: "$nickname", publicName: “$publicName”, token: "$token", type: $type, username: “$username”}';
+  }
 
 
 }

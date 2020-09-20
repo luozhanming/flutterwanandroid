@@ -7,8 +7,9 @@ part of 'user.dart';
 // **************************************************************************
 
 User _$UserFromJson(Map<String, dynamic> json) {
+
   return User(
-    admin: json['admin'] as bool,
+    admin: json['admin'].runtimeType==bool?json['admin'] as bool:json['admin'] as int ,
     email: json['email'] as String,
     icon: json['icon'] as String,
     id: json['id'] as int,

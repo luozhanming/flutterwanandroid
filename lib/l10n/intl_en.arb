@@ -14,5 +14,7 @@
   "search_hots": "Hots",
   "search_record": "Records",
   "register_new_user": "Register",
-  "auto_login": "AutoLogin"
+  "auto_login": "AutoLogin",
+  "project":"Project",
+  "logout": "Logout"
 }

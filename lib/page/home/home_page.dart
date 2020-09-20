@@ -1,19 +1,22 @@
+import 'dart:developer';
+
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/base/event_bus.dart';
 import 'package:wanandroid/common/config/config.dart';
-import 'package:wanandroid/common/util/share_preference.dart';
+import 'package:wanandroid/common/my_icons.dart';
+import 'package:wanandroid/database/db_manager.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/user.dart';
 import 'package:wanandroid/page/home/home_segment.dart';
+import 'package:wanandroid/page/home/project_segment.dart';
 import 'package:wanandroid/page/home/system_segment.dart';
 import 'package:wanandroid/page/login/login_page.dart';
 import 'package:wanandroid/page/search/search_page.dart';
@@ -41,9 +44,12 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
       AnimatedSwitcher(
         child: SystemSegment(),
         duration: const Duration(milliseconds: 300),
-      )
+      ),
+      AnimatedSwitcher(
+        child: ProjectSegment(),
+        duration: const Duration(milliseconds: 300),
+      ),
     ]);
-    mViewModel.requestPermissions();
   }
 
   @override
@@ -56,30 +62,26 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
     return AppBar(
       leading: Center(),
       flexibleSpace: Padding(
-        padding: EdgeInsets.only(top: MediaQuery
-            .of(context)
-            .padding
-            .top),
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Center(
           child: Row(
             children: <Widget>[
               Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
               Builder(
                 //将context范围缩到Scaffold
-                builder: (context) =>
-                    InkWell(
-                      onTap: () {
-                        //   Navigator.of(context).pushNamed(LoginPage.NAME);
-                        Scaffold.of(context).openDrawer();
-                      },
-                      child: OvalWidget(
-                          width: ScreenUtil().setWidth(30),
-                          height: ScreenUtil().setWidth(30),
-                          child: Image.asset(
-                            "${Config.PATH_IMAGE}ic_pic.jpg",
-                            fit: BoxFit.cover,
-                          )),
-                    ),
+                builder: (context) => InkWell(
+                  onTap: () {
+                    //   Navigator.of(context).pushNamed(LoginPage.NAME);
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: OvalWidget(
+                      width: ScreenUtil().setWidth(30),
+                      height: ScreenUtil().setWidth(30),
+                      child: Image.asset(
+                        "${Config.PATH_IMAGE}ic_pic.jpg",
+                        fit: BoxFit.cover,
+                      )),
+                ),
               ),
               Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(8))),
               Expanded(
@@ -108,7 +110,7 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                         Container(
                           alignment: Alignment.centerLeft,
                           padding:
-                          EdgeInsets.only(left: ScreenUtil().setWidth(6)),
+                              EdgeInsets.only(left: ScreenUtil().setWidth(6)),
                           child: Icon(Icons.search,
                               size: ScreenUtil().setWidth(20),
                               color: context
@@ -121,13 +123,11 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                         Container(
                           alignment: Alignment.centerLeft,
                           padding:
-                          EdgeInsets.only(left: ScreenUtil().setWidth(4)),
+                              EdgeInsets.only(left: ScreenUtil().setWidth(4)),
                           child: Text(
-                            S
-                                .of(context)
-                                .search_website_content,
+                            S.of(context).search_website_content,
                             style: TextStyle(
-                              //解决Text不对齐问题
+                                //解决Text不对齐问题
                                 height: 1,
                                 fontSize: ScreenUtil().setSp(14),
                                 color: context
@@ -154,15 +154,15 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
     List<FFNavigationBarItem> items = [];
     items.add(FFNavigationBarItem(
       iconData: Icons.home,
-      label: S
-          .of(context)
-          .home,
+      label: S.of(context).home,
     ));
     items.add(FFNavigationBarItem(
-      iconData: Icons.home,
-      label: S
-          .of(context)
-          .tixi,
+      iconData: MyIcons.tree,
+      label: S.of(context).tixi,
+    ));
+    items.add(FFNavigationBarItem(
+      iconData: MyIcons.project,
+      label: S.of(context).project,
     ));
     return items;
   }
@@ -179,25 +179,22 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
         child: _buildAppBar(context),
       ),
       bottomNavigationBar: Consumer<_HomeViewModel>(
-        builder: (context, value, child) =>
-            FFNavigationBar(
-              selectedIndex: value.selectedIndex,
-              theme: FFNavigationBarTheme(
-                  selectedItemBackgroundColor: Theme
-                      .of(context)
-                      .primaryColor,
-                  showSelectedItemShadow: false,
-                  barHeight: ScreenUtil().setWidth(36),
-                  itemWidth: ScreenUtil().setWidth(30)),
-              items: getNavigationBarItems(),
-              onSelectTab: (index) {
-                value.changeSelectedIndex(index);
-              },
-            ),
+        builder: (context, value, child) => FFNavigationBar(
+          selectedIndex: value.selectedIndex,
+          theme: FFNavigationBarTheme(
+              selectedItemBackgroundColor: Theme.of(context).primaryColor,
+              showSelectedItemShadow: false,
+              barHeight: ScreenUtil().setWidth(36),
+              itemWidth: ScreenUtil().setWidth(30)),
+          items: getNavigationBarItems(),
+          onSelectTab: (index) {
+            value.changeSelectedIndex(index);
+          },
+        ),
       ),
       body: Builder(builder: (context) {
         int selecteIndex =
-        context.select<_HomeViewModel, int>((value) => value.selectedIndex);
+            context.select<_HomeViewModel, int>((value) => value.selectedIndex);
         return IndexedStack(
           index: selecteIndex,
           children: _tabList,
@@ -214,7 +211,7 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
   Widget _buildDrawer() {
     return Builder(builder: (context) {
       bool isLogin =
-      context.select<GlobalState, bool>((value) => value.isLogin);
+          context.select<GlobalState, bool>((value) => value.isLogin);
       User user = context.select<GlobalState, User>((value) => value.loginUser);
       return Container(
         alignment: Alignment.center,
@@ -225,17 +222,17 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
             Container(
               width: double.infinity,
               padding: EdgeInsets.only(
-                  top: (MediaQuery
-                      .of(context)
-                      .padding
-                      .top) +
+                  top: (MediaQuery.of(context).padding.top) +
                       ScreenUtil().setWidth(8),
                   bottom: ScreenUtil().setWidth(8)),
               color: context.select<GlobalState, Color>(
-                      (value) => value.themeData.primaryColor),
+                  (value) => value.themeData.primaryColor),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushNamed(LoginPage.NAME);
+                  var isLogin = context.read<GlobalState>().isLogin;
+                  if (!isLogin) {
+                    Navigator.of(context).pushNamed(LoginPage.NAME);
+                  }
                 },
                 child: Column(
                   children: <Widget>[
@@ -250,12 +247,21 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                     Padding(
                       padding: EdgeInsets.only(top: ScreenUtil().setWidth(8)),
                     ),
-                    Text(isLogin ? user.nickname : "点击头像登录",
-                      style: TextStyle(fontSize: ScreenUtil().setWidth(18),
-                          color: Colors.white),)
+                    Text(
+                      isLogin ? user.nickname : "点击头像登录",
+                      style: TextStyle(
+                          fontSize: ScreenUtil().setWidth(18),
+                          color: Colors.white),
+                    )
                   ],
                 ),
               ),
+            ),
+            FlatButton(
+              child: Text("注销"),
+              onPressed: (){
+                mViewModel.logout();
+              },
             )
           ],
         ),
@@ -275,7 +281,6 @@ class _HomeViewModel extends BaseViewModel {
 
   void changeSelectedIndex(index) {
     Bus.getEventBus().fire(HomeIndexChangedEvent(selectedIndex, index));
-
     selectedIndex = index;
     notifyListeners();
   }
@@ -283,15 +288,19 @@ class _HomeViewModel extends BaseViewModel {
   @override
   void initState() {
     selectedIndex = 0;
-    var loadSp = () async{
-      User user = await CommonPreference.getPreference().get(CommonPreference.KEY_LOGIN_USER, null);
-      bool isLogin = user!=null;
-      if(isLogin){
-        context.read<GlobalState>().setLoginUser(user);
-      }else{
+    var loadSp = () async {
+      var dao = UserLoginDao();
+      var list = await dao.query();
+      if (list != null && list.length > 0) {
+        //已登录过
+        var login = list[0];
+        context.read<GlobalState>().setLoginUser(login);
+        log("App has Login:${login.toString()}", name: "HomePage");
+      } else {
         context.read<GlobalState>().logout();
       }
     };
+    requestPermissions();
     loadSp();
   }
 
@@ -299,5 +308,12 @@ class _HomeViewModel extends BaseViewModel {
 
   void requestPermissions() async {
     await Permission.storage.request();
+  }
+
+  void logout() async{
+    var dao = UserLoginDao();
+    var loginUser = context.read<GlobalState>().loginUser;
+    await dao.delete(loginUser);
+    context.read<GlobalState>().logout();
   }
 }
