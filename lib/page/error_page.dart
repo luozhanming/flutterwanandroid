@@ -18,7 +18,7 @@ class _ErrorPageState extends State<ErrorPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(widget.errorMessage),
+      child: ListView(children:<Widget>[Text(widget.errorMessage)]),
     );
   }
 }

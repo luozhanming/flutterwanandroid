@@ -1,13 +1,4 @@
 /*****************************Wanandroid api*****************************/
-////首页banner
-//static const String HOME_BANNER = "/banner/json";
-//
-////首页文章
-//static const String HOME_ARTICAL =
-//    "https://www.wanandroid.com/article/list/0/json";
-//
-////搜索热词
-//static const String SEARCH_HOT = "/hotkey/json";
 
 class WanandroidUrl {
   //首页Banner GET
@@ -30,4 +21,9 @@ class WanandroidUrl {
   static String register = "https://www.wanandroid.com/user/register";
   //退出登录
   static String logout = "https://www.wanandroid.com/user/logout/json";
+
+
+  static const String projectTree = "https://www.wanandroid.com/project/tree/json";
+
+  static String projectArtical(int cid,int page) => "https://www.wanandroid.com/project/list/$page/json?cid=$cid";
 }
