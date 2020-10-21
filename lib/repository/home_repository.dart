@@ -25,7 +25,7 @@ class HomeModel {
       List<HomeBanner> banners = [];
       rawList.forEach((element) {
         if (element is Map<String, dynamic>) {
-          HomeBanner banner = HomeBanner.formJson(element);
+          HomeBanner banner = HomeBanner.fromJson(element);
           banners.add(banner);
         }
       });

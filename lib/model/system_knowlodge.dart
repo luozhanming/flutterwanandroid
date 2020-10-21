@@ -1,37 +1,81 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'system_knowlodge.g.dart';
-
-@JsonSerializable(createToJson: false)
 class SystemKnowlodge {
-  final int courseId;
-  final int id;
-  final String name;
-  final int order;
-  final int parentChapterId;
-  final bool userControlSetTop;
-  final int visible;
-  final List<SystemKnowlodge> children;
+  List<SystemKnowlodge> _children;
+  int _courseId;
+  int _id;
+  String _name;
+  int _order;
+  int _parentChapterId;
+  bool _userControlSetTop;
+  int _visible;
 
-  const SystemKnowlodge({this.courseId, this.id, this.name, this.order,
-      this.parentChapterId, this.userControlSetTop, this.visible,
-      this.children});
+  SystemKnowlodge(
+      {List<SystemKnowlodge> children,
+        int courseId,
+        int id,
+        String name,
+        int order,
+        int parentChapterId,
+        bool userControlSetTop,
+        int visible}) {
+    this._children = children;
+    this._courseId = courseId;
+    this._id = id;
+    this._name = name;
+    this._order = order;
+    this._parentChapterId = parentChapterId;
+    this._userControlSetTop = userControlSetTop;
+    this._visible = visible;
+  }
 
-  factory SystemKnowlodge.fromJson(Map<String,dynamic> json) =>_$SystemKnowlodgeFromJson(json);
+  List<SystemKnowlodge> get children => _children;
+  set children(List<SystemKnowlodge> children) => _children = children;
+  int get courseId => _courseId;
+  set courseId(int courseId) => _courseId = courseId;
+  int get id => _id;
+  set id(int id) => _id = id;
+  String get name => _name;
+  set name(String name) => _name = name;
+  int get order => _order;
+  set order(int order) => _order = order;
+  int get parentChapterId => _parentChapterId;
+  set parentChapterId(int parentChapterId) =>
+      _parentChapterId = parentChapterId;
+  bool get userControlSetTop => _userControlSetTop;
+  set userControlSetTop(bool userControlSetTop) =>
+      _userControlSetTop = userControlSetTop;
+  int get visible => _visible;
+  set visible(int visible) => _visible = visible;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is SystemKnowlodge &&
-              runtimeType == other.runtimeType &&
-              courseId == other.courseId &&
-              id == other.id &&
-              parentChapterId == other.parentChapterId;
+  SystemKnowlodge.fromJson(Map<String, dynamic> json) {
+    if (json['children'] != null) {
+      _children = new List<SystemKnowlodge>();
+      json['children'].forEach((v) {
+        _children.add(new SystemKnowlodge.fromJson(v));
+      });
+    }
+    _courseId = json['courseId'];
+    _id = json['id'];
+    _name = json['name'];
+    _order = json['order'];
+    _parentChapterId = json['parentChapterId'];
+    _userControlSetTop = json['userControlSetTop'];
+    _visible = json['visible'];
+  }
 
-  @override
-  int get hashCode =>
-      courseId.hashCode ^
-      id.hashCode ^
-      parentChapterId.hashCode;
-
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this._children != null) {
+      data['children'] = this._children.map((v) => v.toJson()).toList();
+    }
+    data['courseId'] = this._courseId;
+    data['id'] = this._id;
+    data['name'] = this._name;
+    data['order'] = this._order;
+    data['parentChapterId'] = this._parentChapterId;
+    data['userControlSetTop'] = this._userControlSetTop;
+    data['visible'] = this._visible;
+    return data;
+  }
 }

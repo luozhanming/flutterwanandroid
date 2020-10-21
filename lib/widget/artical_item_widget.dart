@@ -6,7 +6,6 @@ import 'package:simple_html_css/simple_html_css.dart';
 import 'package:wanandroid/common/my_icons.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
-import 'package:wanandroid/model/tag.dart';
 
 /**
  * [Artical] item Widget.

@@ -1,7 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'result.g.dart';
-
 @JsonSerializable(createToJson: false)
 class Result {
    Map<String, dynamic> dataJson;

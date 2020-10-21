@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
@@ -13,7 +15,10 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
 /** BatteryPlugin */
-class BatteryPlugin: FlutterPlugin {
+class BatteryPlugin: FlutterPlugin,ActivityAware {
+
+
+
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -26,11 +31,12 @@ class BatteryPlugin: FlutterPlugin {
   }
 
   private fun setupChannel(binaryMessenger: BinaryMessenger, applicationContext: Context) {
-    channel = MethodChannel(binaryMessenger,"battery")
-    eventChannel = EventChannel(binaryMessenger,"battery")
+    channel = MethodChannel(binaryMessenger,METHOD_CHANNEL)
+    eventChannel = EventChannel(binaryMessenger, EVENT_CHANNEL)
     val battery = Battery(applicationContext)
     val methodHandler = BatteryMethodHandler(battery)
     channel.setMethodCallHandler(methodHandler)
+
   }
 
   // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -43,6 +49,11 @@ class BatteryPlugin: FlutterPlugin {
   // depending on the user's project. onAttachedToEngine or registerWith must both be defined
   // in the same class.
   companion object {
+    const val METHOD_CHANNEL = "cn.luozhanming.battery_method"
+    const val EVENT_CHANNEL = "cn.luozhanming.battery_event"
+
+
+
     @JvmStatic
     fun registerWith(registrar: Registrar) {
       val plugin = BatteryPlugin()
@@ -52,5 +63,21 @@ class BatteryPlugin: FlutterPlugin {
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
+  }
+
+  override fun onDetachedFromActivity() {
+
+  }
+
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+
+  }
+
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+
+  }
+
+  override fun onDetachedFromActivityForConfigChanges() {
+
   }
 }

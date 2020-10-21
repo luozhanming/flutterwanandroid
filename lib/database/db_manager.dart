@@ -74,7 +74,7 @@ class UserLoginDao extends Dao<User> {
   @override
   Future<int> insert(User model) async {
     await Dao.open();
-    return Dao._database.insert(UserLoginTable.TABLE_NAME, User.toJson(model));
+    return Dao._database.insert(UserLoginTable.TABLE_NAME, model.toJson());
   }
 
   @override
@@ -92,7 +92,7 @@ class UserLoginDao extends Dao<User> {
   @override
   Future<int> update(User model) async {
     await Dao.open();
-    return Dao._database.update(UserLoginTable.TABLE_NAME, User.toJson(model),
+    return Dao._database.update(UserLoginTable.TABLE_NAME, model.toJson(),
         where: "id=?", whereArgs: [model.id]);
   }
 
