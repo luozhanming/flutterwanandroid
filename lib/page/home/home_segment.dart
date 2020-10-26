@@ -156,7 +156,7 @@ class HomeSegmentViewModel extends BaseViewModel {
   RefreshController _refreshController;
 
   CompositeSubscription _subscriptions;
-  HomeModel _model;
+  RemoteHomeRepository _model;
 
   List<HomeBanner> banners;
   List<Artical> articals;
@@ -170,7 +170,7 @@ class HomeSegmentViewModel extends BaseViewModel {
     _bannerController = BannerController(BannerInfo(canLoop: true));
     _refreshController = RefreshController();
     _subscriptions = CompositeSubscription();
-    _model = HomeModel();
+    _model = RemoteHomeRepository();
     banners = [];
     articals = [];
     refreshData();

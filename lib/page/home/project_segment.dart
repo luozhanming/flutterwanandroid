@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
@@ -25,7 +26,6 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -35,38 +35,40 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
 
   @override
   Widget buildBody(BuildContext context) {
-    return Builder(builder: (context){
+    return Builder(
+      builder: (context) {
+        Resource<List<ProChapter>> chapters =
+            context.select<ProjectViewModel, Resource<List<ProChapter>>>(
+                (value) => value.chaptersRes);
+        if (chapters != null && chapters.status == ResourceStatus.success) {
+          var tabDatas = chapters.data;
+          var tabs = getTabs(tabDatas);
+          _tabController?.dispose();
+          _tabController = TabController(
+              initialIndex: mViewModel.selectedIndex,
+              length: tabs.length,
+              vsync: this);
+          return Column(
+            children: <Widget>[
+              Container(
+                height: ScreenUtil().setWidth(30),
+                child: TabBar(
+                  isScrollable: true,
+                  controller: _tabController,
+                  //注意Provider作用域
+                  tabs: tabs,
+                  onTap: (index) {
 
-      Resource<List<ProChapter>> chapters =
-      context.select<ProjectViewModel, Resource<List<ProChapter>>>(
-              (value) => value.chaptersRes);
-      if (chapters != null && chapters.status == ResourceStatus.success) {
-        var tabDatas = chapters.data;
-        var tabs = getTabs(tabDatas);
-        _tabController?.dispose();
-        _tabController = TabController(initialIndex:mViewModel.selectedIndex,
-            length: tabs.length, vsync: this);
-        return Column(
-          children: <Widget>[
-            Container(
-              height: ScreenUtil().setWidth(30),
-              child: TabBar(
-                isScrollable: true,
-                controller: _tabController,
-                //注意Provider作用域
-                tabs: tabs,
-                onTap: (index){
-
-                },
-              ),
-            )
-          ],
-        );
-      }else{
-        return Container();
-      }
-
-    },);
+                  },
+                ),
+              )
+            ],
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 
   @override
@@ -77,39 +79,43 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
   List<Widget> getTabs(List<ProChapter> chapter) {
     List<Tab> tabs = [];
     chapter.forEach((element) {
-      tabs.add(Tab(text: element.name,));
+      tabs.add(Tab(
+        text: element.name,
+      ));
     });
     return tabs;
   }
 }
 
 class ProjectViewModel extends BaseViewModel {
-
   IProjectRepository _projectRepository;
   CompositeSubscription _subscriptions;
+
+  RefreshController _refreshController;
 
   Resource<List<ProChapter>> chaptersRes;
 
   Resource<Pager<Artical>> projectsRes;
+
+  //显示中的项目
   List<Artical> projects;
 
   int selectedIndex = 0;
 
   /**
-   * 存放所选chapter加载的页码数
+   * 存放所选chapter加载的页码数（id->page)
    * */
-  Map<int,int> chapterIndexs;
-  
+  Map<int, int> chapterIndexs;
+
   /**
    * 缓存每个chapter的数据
    * */
-  Map<int,List<Artical>> chapterDatas;
-
-
+  Map<int, List<Artical>> chapterDatas;
 
   ProjectViewModel(BuildContext context) : super(context) {
     _projectRepository = RemoteProjectRepository();
     _subscriptions = CompositeSubscription();
+    _refreshController = RefreshController();
   }
 
   @override
@@ -121,39 +127,76 @@ class ProjectViewModel extends BaseViewModel {
 
   @override
   void dispose() {
+    _subscriptions.dispose();
     super.dispose();
   }
 
   void loadProjectTree() {
     _subscriptions.add(_projectRepository.loadProjectTree().listen((event) {
       chaptersRes = event;
-      loadProjects(true);
+      //选择默认的chapter
+      var chapters = event.data;
+      //初始化各个专题页码
+      chapters.forEach((element) {
+        chapterIndexs[element.id] = 1;
+        chapterDatas[element.id] = [];
+      });
+      loadProjects(false);
       notifyListeners();
     }, onError: (error) {}));
   }
 
   void loadProjects(bool isLoadMore) {
     var chapter = chaptersRes.data[selectedIndex];
-    var page = 0;
+    var page = 1;
     if (isLoadMore) {
       if (projectsRes != null) {
-        page = projectsRes.data.curPage ;
+        page = chapterIndexs[chapter.id] + 1;
       }
     }
-    _subscriptions.add(_projectRepository.loadProject(chapter.id, page).listen((event) {
+    _subscriptions
+        .add(_projectRepository.loadProject(chapter.id, page).listen((event) {
       projectsRes = event;
-
+      chapterIndexs.remove(chapter.id);
+      chapterIndexs[chapter.id] = projectsRes.data.curPage;
+      var showDatas = chapterDatas[chapter.id];
+      if (isLoadMore) {
+        //加载更多成功
+        if (projectsRes.data.datas.isNotEmpty) {
+          _refreshController.loadComplete();
+          showDatas.addAll(projectsRes.data.datas);
+        } else {
+          _refreshController.loadNoData();
+        }
+      } else {
+        //刷新成功
+        _refreshController.refreshCompleted(resetFooterState: true);
+        showDatas.clear();
+        showDatas.addAll(projectsRes.data.datas);
+      }
+      projects = chapterDatas[chapter.id];
       notifyListeners();
-    }, onError: (error) {}));
+    }, onError: (error) {
+      if (isLoadMore)
+        _refreshController.loadFailed();
+      else
+        _refreshController.refreshFailed();
+    }));
   }
-
 
   /**
    * 选择专题
    * */
-  void selectChapter(int index){
+  void selectChapter(int index) {
+    selectedIndex = index;
     var chapters = chaptersRes.data;
     var chapter = chapters[index];
-
+    var articals = chapterDatas[chapter.id];
+    if(articals.isNotEmpty){
+      loadProjects(false);
+    }else{
+      projects = articals;
+      notifyListeners();
+    }
   }
 }

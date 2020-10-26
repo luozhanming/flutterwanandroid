@@ -260,7 +260,7 @@ class SearchViewModel extends BaseViewModel {
   RefreshController _refreshController;
 
   //region s
-  HomeModel _model;
+  IHomeRepository _model;
   CompositeSubscription _subscriptions;
   StreamSubscription _searchSubscription;
   //end region
@@ -277,7 +277,7 @@ class SearchViewModel extends BaseViewModel {
 
   @override
   void initState() {
-    _model = HomeModel();
+    _model = RemoteHomeRepository();
     _refreshController = RefreshController();
     _searchTextController = TextEditingController();
     _searchTextController.addListener(_searchTextChanged);

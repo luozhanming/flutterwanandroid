@@ -9,10 +9,19 @@ import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/model/search_hot.dart';
 
-class HomeModel {
+
+
+abstract class IHomeRepository{
+  Stream<List<HomeBanner>> refreshBanner();
+  Stream<Pager<Artical>> loadHomeArticals(int page);
+  Stream<Pager<Artical>> searchArtical(String key,int page);
+  Stream<List<SearchHot>> loadSearchHot();
+}
+
+class RemoteHomeRepository extends IHomeRepository {
   HttpManager _httpManager;
 
-  HomeModel() {
+  RemoteHomeRepository() {
     _httpManager = HttpManager.getManager(Config.ENV.baseUrl);
   }
 

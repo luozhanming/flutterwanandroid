@@ -9,7 +9,6 @@ import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/error_page.dart';
 
 import 'env/env.dart';
-import 'model/user.dart';
 
 void main() {
   runZonedGuarded(() {
