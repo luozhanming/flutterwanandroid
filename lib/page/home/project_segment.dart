@@ -13,6 +13,7 @@ import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/model/prochapter.dart';
 import 'package:wanandroid/model/resource.dart';
 import 'package:wanandroid/repository/project_repository.dart';
+import 'package:wanandroid/widget/artical_item_widget.dart';
 
 class ProjectSegment extends StatefulWidget {
   @override
@@ -58,10 +59,11 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
                   //注意Provider作用域
                   tabs: tabs,
                   onTap: (index) {
-
+                    mViewModel.selectChapter(index);
                   },
                 ),
-              )
+              ),
+              _buildProjectList()
             ],
           );
         } else {
@@ -84,6 +86,32 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
       ));
     });
     return tabs;
+  }
+
+  Widget _buildProjectList() {
+    return Expanded(
+      child: Builder(
+        builder:(context) {
+          var projects = context.select<ProjectViewModel, List<Artical>>((
+              value) => value.projects);
+         return SmartRefresher(
+            controller: mViewModel._refreshController,
+            enablePullUp: true,
+            enablePullDown: true,
+            onRefresh: () {
+              mViewModel.loadProjects(false);
+            },
+            onLoading: () {
+              mViewModel.loadProjects(true);
+            },
+              child: ListView.builder(itemBuilder: (context, index) {
+                  var project = projects[index];
+                  return ArticalItemWidget(project);
+                },itemCount: projects.length,)
+          );
+        }
+      ),
+    );
   }
 }
 
