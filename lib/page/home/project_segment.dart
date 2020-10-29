@@ -90,11 +90,10 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
 
   Widget _buildProjectList() {
     return Expanded(
-      child: Builder(
-        builder:(context) {
-          var projects = context.select<ProjectViewModel, List<Artical>>((
-              value) => value.projects);
-         return SmartRefresher(
+      child: Builder(builder: (context) {
+        var projects = context
+            .select<ProjectViewModel, List<Artical>>((value) => value.projects);
+        return SmartRefresher(
             controller: mViewModel._refreshController,
             enablePullUp: true,
             enablePullDown: true,
@@ -104,13 +103,14 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
             onLoading: () {
               mViewModel.loadProjects(true);
             },
-              child: ListView.builder(itemBuilder: (context, index) {
-                  var project = projects[index];
-                  return ArticalItemWidget(project);
-                },itemCount: projects.length,)
-          );
-        }
-      ),
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                var project = projects[index];
+                return ArticalItemWidget(project);
+              },
+              itemCount: projects.length,
+            ));
+      }),
     );
   }
 }
@@ -133,7 +133,7 @@ class ProjectViewModel extends BaseViewModel {
   /**
    * 存放所选chapter加载的页码数（id->page)
    * */
-  Map<int, int> chapterIndexs;
+  Map<int, Resource<Pager<Artical>>> chapterIndexs;
 
   /**
    * 缓存每个chapter的数据
@@ -166,7 +166,7 @@ class ProjectViewModel extends BaseViewModel {
       var chapters = event.data;
       //初始化各个专题页码
       chapters.forEach((element) {
-        chapterIndexs[element.id] = 1;
+        chapterIndexs[element.id] = null;
         chapterDatas[element.id] = [];
       });
       loadProjects(false);
@@ -178,15 +178,13 @@ class ProjectViewModel extends BaseViewModel {
     var chapter = chaptersRes.data[selectedIndex];
     var page = 1;
     if (isLoadMore) {
-      if (projectsRes != null) {
-        page = chapterIndexs[chapter.id] + 1;
-      }
+      page = chapterIndexs[chapter.id]?.data?.curPage ?? 0 + 1;
     }
     _subscriptions
         .add(_projectRepository.loadProject(chapter.id, page).listen((event) {
       projectsRes = event;
       chapterIndexs.remove(chapter.id);
-      chapterIndexs[chapter.id] = projectsRes.data.curPage;
+      chapterIndexs[chapter.id] = projectsRes;
       var showDatas = chapterDatas[chapter.id];
       if (isLoadMore) {
         //加载更多成功
@@ -202,7 +200,7 @@ class ProjectViewModel extends BaseViewModel {
         showDatas.clear();
         showDatas.addAll(projectsRes.data.datas);
       }
-      projects = chapterDatas[chapter.id];
+      projects = showDatas;
       notifyListeners();
     }, onError: (error) {
       if (isLoadMore)
@@ -220,9 +218,10 @@ class ProjectViewModel extends BaseViewModel {
     var chapters = chaptersRes.data;
     var chapter = chapters[index];
     var articals = chapterDatas[chapter.id];
-    if(articals.isNotEmpty){
+    projectsRes = chapterIndexs[chapter.id];
+    if (articals.isNotEmpty) {
       loadProjects(false);
-    }else{
+    } else {
       projects = articals;
       notifyListeners();
     }
