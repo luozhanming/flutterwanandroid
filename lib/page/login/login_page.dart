@@ -84,13 +84,13 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                       MyTextField(
                         controller: mViewModel._usernameController,
                         icon: Icons.account_circle,
-                        fontSize: ScreenUtil().setWidth(12.0),
+                        fontSize: ScreenUtil().setSp(10.0),
                         hint: S.of(context).hint_input_username,
                       ),
                       MyTextField(
                         controller: mViewModel._passwordController,
                         icon: Icons.account_circle,
-                        fontSize: ScreenUtil().setWidth(12.0),
+                        fontSize: ScreenUtil().setSp(10.0),
                         hint: S.of(context).hint_input_password,
                       ),
                       Padding(
@@ -107,6 +107,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                                     (value) => value.isAutoLogin);
                             return Container(
                               child: MyCheckBox(
+                                textStyle: TextStyle(fontSize: ScreenUtil().setWidth(10),height: 1),
                                 isChecked: isAutoLogin??false,
                                 text: S.of(context).auto_login,
                                 onChanged: (value) {
@@ -122,7 +123,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                                 padding: EdgeInsets.symmetric(
                                     vertical: ScreenUtil().setWidth(5),
                                     horizontal: ScreenUtil().setWidth(10)),
-                                child: Text(S.of(context).register_new_user),
+                                child: Text(S.of(context).register_new_user,style: TextStyle(fontSize: ScreenUtil().setWidth(10)),),
                               ),
                               onTap: () {},
                             ),
@@ -148,7 +149,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                               mViewModel.login();
                             },
                             child: Center(
-                              child: Text(S.of(context).login),
+                              child: Text(S.of(context).login,style: TextStyle(fontSize: ScreenUtil().setWidth(10)),),
                             ),
                           ),
                         ),

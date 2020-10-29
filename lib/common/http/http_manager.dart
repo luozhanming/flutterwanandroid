@@ -50,7 +50,7 @@ class HttpManager {
       if(await Permission.storage.request().isGranted){
         var directory = await getApplicationDocumentsDirectory();
         String appDocPath = directory.path;
-        _cookieJar = PersistCookieJar(dir: "${appDocPath}/.cookies/");
+        _cookieJar = PersistCookieJar(dir: "$appDocPath/.cookies/");
         _dio.interceptors.add(CookieManager(_cookieJar));
       }else{
         _cookieJar = DefaultCookieJar();

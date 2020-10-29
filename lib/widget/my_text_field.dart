@@ -37,12 +37,12 @@ class _MyTextFieldState extends State<MyTextField> {
         setState(() {});
       },
       obscureText: !widget.isVisible,
-      style: TextStyle(fontSize: ScreenUtil().setSp(widget.fontSize)),
+      style: TextStyle(fontSize: widget.fontSize),
       controller: widget.controller,
       decoration: InputDecoration(
           hintText: widget.hint,
-          hintStyle: TextStyle(fontSize: ScreenUtil().setSp(widget.fontSize)),
-          prefixIcon: Icon(widget.icon, size: ScreenUtil().setWidth(widget.fontSize*3/2)),
+          hintStyle: TextStyle(fontSize: widget.fontSize),
+          prefixIcon: Icon(widget.icon, size: widget.fontSize*3/2),
           suffixIcon: Container(
             child: Offstage(
               offstage: widget.controller.text == "",

@@ -9,9 +9,11 @@ import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/model/artical.dart';
+import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/model/prochapter.dart';
 import 'package:wanandroid/model/resource.dart';
+import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/repository/project_repository.dart';
 import 'package:wanandroid/widget/artical_item_widget.dart';
 
@@ -91,6 +93,8 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
   Widget _buildProjectList() {
     return Expanded(
       child: Builder(builder: (context) {
+        var length = context.select<ProjectViewModel, int>(
+            (value) => value.projects?.length ?? 0);
         var projects = context
             .select<ProjectViewModel, List<Artical>>((value) => value.projects);
         return SmartRefresher(
@@ -104,9 +108,22 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
               mViewModel.loadProjects(true);
             },
             child: ListView.builder(
+              controller: mViewModel._scrollController,
               itemBuilder: (context, index) {
                 var project = projects[index];
-                return ArticalItemWidget(project);
+                return Builder(builder: (context) {
+                  return ArticalItemWidget(
+                    project,
+                    onArticalTap: (artical) async {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => WebviewPage(
+                                url: artical.link,
+                                title: artical.title,
+                              )));
+                    },
+                    isLogin: context.select<GlobalState,bool>((value) => value.isLogin),
+                  );
+                });
               },
               itemCount: projects.length,
             ));
@@ -120,6 +137,7 @@ class ProjectViewModel extends BaseViewModel {
   CompositeSubscription _subscriptions;
 
   RefreshController _refreshController;
+  ScrollController _scrollController;
 
   Resource<List<ProChapter>> chaptersRes;
 
@@ -130,26 +148,29 @@ class ProjectViewModel extends BaseViewModel {
 
   int selectedIndex = 0;
 
-  /**
-   * 存放所选chapter加载的页码数（id->page)
-   * */
+  /// 存放所选chapter加载的页码数（id->page)
+  ///
   Map<int, Resource<Pager<Artical>>> chapterIndexs;
 
-  /**
-   * 缓存每个chapter的数据
-   * */
+  /// 缓存每个chapter的数据
+  ///
   Map<int, List<Artical>> chapterDatas;
+
+  /// 临时存放每个栏目的浏览位置
+  Map<int, double> scrollPostions;
 
   ProjectViewModel(BuildContext context) : super(context) {
     _projectRepository = RemoteProjectRepository();
     _subscriptions = CompositeSubscription();
     _refreshController = RefreshController();
+    _scrollController = ScrollController();
+    chapterIndexs = HashMap();
+    chapterDatas = HashMap();
+    scrollPostions = HashMap();
   }
 
   @override
   void initState() {
-    chapterIndexs = HashMap();
-    chapterDatas = HashMap();
     loadProjectTree();
   }
 
@@ -168,6 +189,7 @@ class ProjectViewModel extends BaseViewModel {
       chapters.forEach((element) {
         chapterIndexs[element.id] = null;
         chapterDatas[element.id] = [];
+        scrollPostions[element.id] = 0;
       });
       loadProjects(false);
       notifyListeners();
@@ -178,7 +200,7 @@ class ProjectViewModel extends BaseViewModel {
     var chapter = chaptersRes.data[selectedIndex];
     var page = 1;
     if (isLoadMore) {
-      page = chapterIndexs[chapter.id]?.data?.curPage ?? 0 + 1;
+      page = ++chapterIndexs[chapter.id].data.curPage;
     }
     _subscriptions
         .add(_projectRepository.loadProject(chapter.id, page).listen((event) {
@@ -200,6 +222,8 @@ class ProjectViewModel extends BaseViewModel {
         showDatas.clear();
         showDatas.addAll(projectsRes.data.datas);
       }
+      projects = [];
+      projects.addAll(showDatas);
       projects = showDatas;
       notifyListeners();
     }, onError: (error) {
@@ -214,16 +238,30 @@ class ProjectViewModel extends BaseViewModel {
    * 选择专题
    * */
   void selectChapter(int index) {
+    var lastChapter = chaptersRes.data[selectedIndex];
+    //先存放浏览位置
+    var position = _scrollController.offset;
+    scrollPostions[lastChapter.id] = position;
+
     selectedIndex = index;
     var chapters = chaptersRes.data;
     var chapter = chapters[index];
     var articals = chapterDatas[chapter.id];
     projectsRes = chapterIndexs[chapter.id];
-    if (articals.isNotEmpty) {
+    var pager = projectsRes?.data;
+    if (pager?.over ?? false) {
+      _refreshController.loadNoData();
+    } else {
+      _refreshController.refreshCompleted(resetFooterState: true);
+    }
+    if (articals.isEmpty) {
       loadProjects(false);
     } else {
       projects = articals;
       notifyListeners();
     }
+    //滚动到上一个位置
+    var jumpPosition = scrollPostions[chapter.id];
+    _scrollController.jumpTo(jumpPosition);
   }
 }
