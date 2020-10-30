@@ -30,7 +30,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
   void initState() {
     super.initState();
     mViewModel.loginRes.observe((value) {
-      if (value.status == ResourceStatus.success) {
+      if (value.status == ResourceStatus.success) {  //请求成功
         Fluttertoast.showToast(msg: "登录成功");
         context.read<GlobalState>().setLoginUser(value.data);
         //1.保存用户json到SharePreference
@@ -40,11 +40,11 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
 
         Navigator.of(context)
             .popUntil((route) => route.settings.name == HomePage.NAME);
-      } else if (value.status == ResourceStatus.loading) {
+      } else if (value.status == ResourceStatus.loading) {   //加载中
         showDialog(
             context: context,
             builder: (context) => Center(child: Text("Loading")));
-      } else if (value.status != ResourceStatus.empty) {
+      } else if (value.status != ResourceStatus.empty) {   //请求失败
         Fluttertoast.showToast(msg: "登录失败");
         //关闭对话框的方式代码
         Navigator.of(context)
@@ -221,9 +221,7 @@ class LoginViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  /**
-   * 保存登录用户信息
-   * */
+  /// 保存登录用户信息
   void saveLogin(User data) async {
     var dao = UserLoginDao();
     await dao.insert(data);

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-/**
- * 错误页面定义
- * */
+/// 错误页面定义
 class ErrorPage extends StatefulWidget {
   final String errorMessage;
   final FlutterErrorDetails details;

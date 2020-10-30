@@ -14,9 +14,7 @@ class SystemRepository {
     _httpManager = HttpManager.getManager(Config.ENV.baseUrl);
   }
 
-  /**
-   * 加载专题树结构
-   * */
+  /// 加载专题树结
   Stream<Resource<List<SystemKnowlodge>>> loadSystemTree() async* {
     yield* _httpManager.get(WanandroidUrl.systemTree)
         .map((event) {
@@ -33,9 +31,7 @@ class SystemRepository {
     });
   }
 
-  /**
-   * 加载专题树下专题文章
-   * */
+  /// 加载专题树下专题文章
   Stream<Resource<Pager<Artical>>> loadSystemArtical(int page,int cid) async*{
     yield* _httpManager.get(WanandroidUrl.systemArtical(cid, page),{"cid":cid}).map((event) {
       Pager<dynamic> pager = Pager.fromJson(event.dataJson);
@@ -51,9 +47,7 @@ class SystemRepository {
     });
   }
 
-  /**
-   * 加载作者文章
-   * */
+  /// 加载作者文章
   Stream<Resource<Pager<Artical>>> loadAuthorArticals(String name,int page) async*{
     yield* _httpManager.get(WanandroidUrl.authorArticals(name, page)).map((event) {
       Pager<dynamic> pager = Pager.fromJson(event.dataJson);

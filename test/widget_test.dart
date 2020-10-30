@@ -33,6 +33,6 @@ void main() {
 
 testMyCheckBox() {
  testWidgets("testMyCheckBox", (WidgetTester tester) async{
-   await tester.pumpWidget(MyCheckBox(true,text: "sdfsdf",onChanged: (value){},));
+   await tester.pumpWidget(MyCheckBox());
  });
 }
