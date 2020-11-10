@@ -60,7 +60,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
             alignment: Alignment.centerLeft,
             child: TextField(
               controller: mViewModel._searchTextController,
-              onSubmitted: (text){
+              onSubmitted: (text) {
                 mViewModel.search(false);
               },
               textInputAction: TextInputAction.search,
@@ -163,27 +163,25 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
                 onLoading: () {
                   mViewModel.search(true);
                 },
-                child: Builder(
-                  builder: (context) {
-                    var itemCount = context.select<SearchViewModel, int>(
-                            (value) => value.searchDatas.length);
-                    var articals = context.select<SearchViewModel,
-                        List<Artical>>(
-                            (value) => value.searchDatas);
-                    var showNoData = context.select<SearchViewModel, bool>((value) => value.searchNoData);
-                    if(showNoData){
-                      return _buildNoSearchData();
-                    }else{
-                      return ListView.builder(
-                          itemBuilder: (context, index) {
-                            return _searchItemResultBuilder(
-                                context, index, articals);
-                          },
-                          itemCount: itemCount);
-                    }
-
+                child: Builder(builder: (context) {
+                  var itemCount = context.select<SearchViewModel, int>(
+                      (value) => value.searchDatas.length);
+                  var articals = context.select<SearchViewModel, List<Artical>>(
+                      (value) => value.searchDatas);
+                  var showNoData = context.select<SearchViewModel, bool>(
+                      (value) => value.searchNoData);
+                  if (showNoData) {
+                    return _buildNoSearchData();
+                  } else {
+                    return ListView.builder(
+                        controller: _scrollController,
+                        itemBuilder: (context, index) {
+                          return _searchItemResultBuilder(
+                              context, index, articals);
+                        },
+                        itemCount: itemCount);
                   }
-                ));
+                }));
           }
         }),
       ),
@@ -241,7 +239,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
   Widget _searchItemResultBuilder(
       BuildContext context, int index, List<Artical> articals) {
     return Builder(
-      builder:(context)=> ArticalItemWidget(articals[index],
+      builder: (context) => ArticalItemWidget(articals[index],
           index: index,
           isLogin: context.select<GlobalState, bool>((value) => value.isLogin),
           onArticalTap: (artical) async {
@@ -258,11 +256,13 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
 class SearchViewModel extends BaseViewModel {
   TextEditingController _searchTextController;
   RefreshController _refreshController;
+  ScrollController _scrollController;
 
   //region s
   IHomeRepository _model;
   CompositeSubscription _subscriptions;
   StreamSubscription _searchSubscription;
+
   //end region
   //最近一次刷新的数据
   Pager<Artical> curPager;
@@ -279,6 +279,7 @@ class SearchViewModel extends BaseViewModel {
   void initState() {
     _model = RemoteHomeRepository();
     _refreshController = RefreshController();
+    _scrollController = ScrollController();
     _searchTextController = TextEditingController();
     _searchTextController.addListener(_searchTextChanged);
     _subscriptions = CompositeSubscription();
@@ -317,9 +318,9 @@ class SearchViewModel extends BaseViewModel {
           _refreshController.loadComplete();
         }
       } else {
-        if(event.datas==null||event.datas.length==0){
+        if (event.datas == null || event.datas.length == 0) {
           searchNoData = true;
-        }else{
+        } else {
           searchNoData = false;
           searchDatas.clear();
           searchDatas.addAll(event.datas);
@@ -335,6 +336,7 @@ class SearchViewModel extends BaseViewModel {
     _subscriptions.dispose();
     _searchTextController.dispose();
     _refreshController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }

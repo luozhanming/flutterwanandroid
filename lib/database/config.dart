@@ -14,7 +14,7 @@ class UserLoginTable {
 
   static const String CREATE_TABLE = "create table ${TABLE_NAME}"
       "("
-      "${COLUMN_ID} integer primary key,"
+      "${COLUMN_ID} integer,"
       "${COLUMN_USERNAME} text,"
       "${COLUMN_NICKNAME} text,"
       "${COLUMN_PUBLIC_NAME} text,"

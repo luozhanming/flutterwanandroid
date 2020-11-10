@@ -81,7 +81,7 @@ class ArticalItemWidget extends StatelessWidget {
                         tag: artical.title,
                         child: Text.rich(
                           HTML.toTextSpan(context,
-                            "<p>${artical.title}</p>",
+                            "<div>${artical.title}</div>",
                             defaultTextStyle: titleTextStyle,
                           ),
                           maxLines: 2,

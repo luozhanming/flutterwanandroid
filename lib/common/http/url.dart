@@ -21,9 +21,11 @@ class WanandroidUrl {
   static String register = "https://www.wanandroid.com/user/register";
   //退出登录
   static String logout = "https://www.wanandroid.com/user/logout/json";
-
-
+  //项目树
   static const String projectTree = "https://www.wanandroid.com/project/tree/json";
-
+  //项目文章
   static String projectArtical(int cid,int page) => "https://www.wanandroid.com/project/list/$page/json?cid=$cid";
+  //我的收藏
+  static String myCollectionArtical(int page) => "https://www.wanandroid.com/lg/collect/list/$page/json";
+
 }

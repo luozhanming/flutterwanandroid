@@ -93,7 +93,6 @@ flutter:
     - static/images/
     - static/file/
     - static/fonts/
-    - static/db/
 
 
 

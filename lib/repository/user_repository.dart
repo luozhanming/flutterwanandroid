@@ -35,11 +35,11 @@ class RemoteUserRepository implements IUserRepository {
   }
 
   @override
-  Stream<Resource<bool>> logout() async*{
-    yield* _httpManager.get(WanandroidUrl.logout).map((event){
-      if(event.errorCode==0){
+  Stream<Resource<bool>> logout() async* {
+    yield* _httpManager.get(WanandroidUrl.logout).map((event) {
+      if (event.errorCode == 0) {
         return Resource.success(true);
-      }else{
+      } else {
         return Resource.failed();
       }
     });
@@ -47,8 +47,12 @@ class RemoteUserRepository implements IUserRepository {
 
   @override
   Stream<Resource<User>> register(
-      String username, String password, String repassword) async*{
-    var params = {"username": username, "password": password,"repassword":repassword};
+      String username, String password, String repassword) async* {
+    var params = {
+      "username": username,
+      "password": password,
+      "repassword": repassword
+    };
     yield* _httpManager.post(WanandroidUrl.register, params).map((event) {
       var data = event.dataJson;
       if (data is Map<String, dynamic>) {
