@@ -82,30 +82,30 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
 
   Widget _buildHomeArticals() {
     return Builder(builder: (context) {
-      var itemCount = context.select<HomeSegmentViewModel, int>(
-          (value) => value.articals.length);
-      bool isLogin = context.select<GlobalState,bool>((value) => value.isLogin);
+      var itemCount = context
+          .select<HomeSegmentViewModel, int>((value) => value.articals.length);
+      bool isLogin =
+          context.select<GlobalState, bool>((value) => value.isLogin);
+      List<Artical> articals = context.select<HomeSegmentViewModel, List<Artical>>(
+              (value) => value.articals);
       return SliverList(
-          delegate: SliverChildBuilderDelegate((context,index){
-        //    var artical = articals[index];
-            return Builder(
-              builder: (context){
-                Artical artical = context.select<HomeSegmentViewModel, Artical>(
-                        (value) => value.articals[index]);
-                return ArticalItemWidget(
-                artical,
-                isLogin: isLogin,
-                index: index,
-                onArticalTap: (artical) async {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => WebviewPage(
+          delegate: SliverChildBuilderDelegate((context, index) {
+        return Builder(builder: (context) {
+
+          return ArticalItemWidget(
+            articals[index],
+            isLogin: isLogin,
+            index: index,
+            onArticalTap: (artical) async {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => WebviewPage(
                         url: artical.link,
                         title: artical.title,
                       )));
-                },
-              );}
-            );
-          }, childCount: itemCount));
+            },
+          );
+        });
+      }, childCount: itemCount));
     });
   }
 
@@ -164,7 +164,6 @@ class HomeSegmentViewModel extends BaseViewModel {
 
   HomeSegmentViewModel(BuildContext context) : super(context);
 
-
   @override
   void initState() {
     _bannerController = BannerController(BannerInfo(canLoop: true));
@@ -174,11 +173,12 @@ class HomeSegmentViewModel extends BaseViewModel {
     banners = [];
     articals = [];
     refreshData();
+    //接收到EventBus事件后，停止banner的滑动
     Bus.getEventBus().on<HomeIndexChangedEvent>().listen((event) {
-      if(event.lastIndex!=event.newIndex){
-        if(event.newIndex==0){
+      if (event.lastIndex != event.newIndex) {
+        if (event.newIndex == 0) {
           _bannerController.startLoop();
-        }else{
+        } else {
           _bannerController.stopLoop();
         }
       }
@@ -246,8 +246,8 @@ class HomeSegmentViewModel extends BaseViewModel {
       int length = banners.length;
       for (int i = 0; i < length; i++) {
         var banner = banners[i];
-        bannerItems.add(BannerItem(NetworkImage(banner.imagePath),
-            message: banner.title));
+        bannerItems.add(
+            BannerItem(NetworkImage(banner.imagePath), message: banner.title));
       }
       _bannerController.refreshData(bannerItems);
       notifyListeners();

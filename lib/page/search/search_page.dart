@@ -122,7 +122,6 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
         body: Builder(builder: (context) {
           bool searchEmpty = context
               .select<SearchViewModel, bool>((value) => value._searchEmpty);
-
           //1.搜索词为空   2.正在搜索   3.正在加载更多   4.无法搜索结果   5.正常
           if (searchEmpty) {
             //搜索词为空
@@ -163,32 +162,73 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
                 onLoading: () {
                   mViewModel.search(true);
                 },
-                child: Builder(builder: (context) {
-                  var itemCount = context.select<SearchViewModel, int>(
-                      (value) => value.searchDatas.length);
-                  var articals = context.select<SearchViewModel, List<Artical>>(
-                      (value) => value.searchDatas);
-                  var showNoData = context.select<SearchViewModel, bool>(
-                      (value) => value.searchNoData);
-                  if (showNoData) {
-                    return _buildNoSearchData();
-                  } else {
-                    return ListView.builder(
-                        controller: _scrollController,
-                        itemBuilder: (context, index) {
-                          return _searchItemResultBuilder(
-                              context, index, articals);
+                child: CustomScrollView(
+                    scrollDirection: Axis.vertical,
+                    slivers: <Widget>[
+                      Builder(
+                        builder: (context) {
+                          var itemCount = context.select<SearchViewModel, int>(
+                              (value) => value.searchDatas.length);
+                          var showNoData =
+                              context.select<SearchViewModel, bool>(
+                                  (value) => value.searchNoData);
+                          var articals = context.select<SearchViewModel, List<Artical>>(
+                                  (value) => value.searchDatas);
+                          if (showNoData) {
+                            return _buildNoSearchData();
+                          } else {
+                            return SliverList(
+                              delegate:
+                                  SliverChildBuilderDelegate((context, index) {
+                                return Builder(
+                                  builder: (context){
+                                    return  _searchItemResultBuilder(context, index, articals);
+                                  },
+                                );
+                              }, childCount: itemCount),
+                            );
+                          }
                         },
-                        itemCount: itemCount);
-                  }
-                }));
+                      )
+                    ],
+                  )
+                );
+
+            // return Builder(builder: (context) {
+            //   var itemCount = context.select<SearchViewModel, int>(
+            //       (value) => value.searchDatas.length);
+            //   var articals = context.select<SearchViewModel, List<Artical>>(
+            //       (value) => value.searchDatas);
+            //   var showNoData = context
+            //       .select<SearchViewModel, bool>((value) => value.searchNoData);
+            //   if (showNoData) {
+            //     return _buildNoSearchData();
+            //   } else {
+            //     return SmartRefresher(
+            //         controller: mViewModel._refreshController,
+            //         enablePullUp: true,
+            //         enablePullDown: true,
+            //         onRefresh: () {
+            //           mViewModel.search(false);
+            //         },
+            //         onLoading: () {
+            //           mViewModel.search(true);
+            //         },
+            //         child: ListView.builder(
+            //           controller: mViewModel._scrollController,
+            //           itemBuilder: (context, i) =>
+            //               _searchItemResultBuilder(context, i, articals),
+            //           itemCount: itemCount,
+            //         ));
+            //   }
+            // });
           }
         }),
       ),
     );
   }
 
-  Center _buildNoSearchData() => Center(child: Text("Empty Search"));
+  Widget _buildNoSearchData() => SliverToBoxAdapter(child:Center(child: Text("Empty Search")));
 
   @override
   buildViewModel(BuildContext context) {
@@ -238,8 +278,7 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
    * */
   Widget _searchItemResultBuilder(
       BuildContext context, int index, List<Artical> articals) {
-    return Builder(
-      builder: (context) => ArticalItemWidget(articals[index],
+    return ArticalItemWidget(articals[index],
           index: index,
           isLogin: context.select<GlobalState, bool>((value) => value.isLogin),
           onArticalTap: (artical) async {
@@ -248,8 +287,8 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
                   url: artical.link,
                   title: artical.title,
                 )));
-      }),
-    );
+      });
+
   }
 }
 

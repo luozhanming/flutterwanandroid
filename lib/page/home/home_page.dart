@@ -280,6 +280,7 @@ class _HomeViewModel extends BaseViewModel {
   }
 
   void changeSelectedIndex(index) {
+    //flutter因为没有像Android那样的fragment的生命周期，所以切换这种要保留状态的需要这样发送事件
     Bus.getEventBus().fire(HomeIndexChangedEvent(selectedIndex, index));
     selectedIndex = index;
     notifyListeners();

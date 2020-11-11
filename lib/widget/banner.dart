@@ -271,7 +271,6 @@ class BannerController extends ValueNotifier<BannerInfo> {
 
   void refreshData(List<BannerItem> datas) {
     value.items = datas;
-
     notifyListeners();
   }
 

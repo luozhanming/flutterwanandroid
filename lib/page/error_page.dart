@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 /// 错误页面定义
@@ -16,7 +17,7 @@ class _ErrorPageState extends State<ErrorPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(children:<Widget>[Text(widget.errorMessage)]),
+      child: ListView(children:<Widget>[Text(widget.errorMessage,style: TextStyle(fontSize: ScreenUtil().setSp(14)),)]),
     );
   }
 }
