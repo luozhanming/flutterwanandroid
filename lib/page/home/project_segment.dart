@@ -125,7 +125,7 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
                   );
                 });
               },
-              itemCount: projects.length,
+              itemCount: projects==null?0:projects.length,
             ));
       }),
     );

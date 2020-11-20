@@ -9,6 +9,7 @@ class TextStyles {
   static TextStyle titleTextStyle = TextStyle(
     fontSize: ScreenUtil().setSp(14),
     color: Colors.white,
+    decoration: TextDecoration.none
   );
 
   static TextStyle h1TextStyle = TextStyle(

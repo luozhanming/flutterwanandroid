@@ -7,9 +7,9 @@ import 'package:wanandroid/common/my_icons.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
 
-/**
- * [Artical] item Widget.
- * */
+///
+/// [Artical] item Widget.
+///
 
 class ArticalItemWidget extends StatelessWidget {
   final Artical artical;

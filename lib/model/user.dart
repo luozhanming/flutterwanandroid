@@ -56,7 +56,11 @@ class User {
   set username(String username) => _username = username;
 
   User.fromJson(Map<String, dynamic> json) {
-    _admin = json['admin'];
+    if(json["admin"] is int){
+      _admin = json['admin'];
+    }else if(json['admin'] is bool){
+      _admin = json['admin']?1:0;
+    }
     _email = json['email'];
     _icon = json['icon'];
     _id = json['id'];

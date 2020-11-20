@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wanandroid/common/config/config.dart';
+import 'package:wanandroid/common/http/http_manager.dart';
 import 'package:wanandroid/model/user.dart';
 
 class GlobalState with ChangeNotifier {
@@ -27,6 +29,8 @@ class GlobalState with ChangeNotifier {
   void logout(){
     loginUser = null;
     isLogin = false;
+    //清理cookie
+    HttpManager.getManager(Config.ENV.baseUrl).getCookieJar().delete(Uri.parse(Config.ENV.baseUrl));
     notifyListeners();
   }
 

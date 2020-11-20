@@ -30,7 +30,7 @@ class CommonPreference {
 
   Future<T> get<T>(String key, T defValue) async{
     SharedPreferences _sp = await SharedPreferences.getInstance();
-    dynamic res = null;
+    dynamic res;
     switch (T) {
       case int:
         res = _sp.getInt(key);

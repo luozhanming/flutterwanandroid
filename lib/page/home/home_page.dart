@@ -178,17 +178,16 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
             ScreenUtil().setWidth(40)),
         child: _buildAppBar(context),
       ),
-      bottomNavigationBar: Consumer<_HomeViewModel>(
+      bottomNavigationBar: Selector<_HomeViewModel,int>(
+          selector:(context,value)=>value.selectedIndex,
         builder: (context, value, child) => FFNavigationBar(
-          selectedIndex: value.selectedIndex,
+          selectedIndex: value,
           theme: FFNavigationBarTheme(
               selectedItemBackgroundColor: Theme.of(context).primaryColor,
-              showSelectedItemShadow: false,
-              barHeight: ScreenUtil().setWidth(36),
-              itemWidth: ScreenUtil().setWidth(30)),
+              showSelectedItemShadow: false),
           items: getNavigationBarItems(),
           onSelectTab: (index) {
-            value.changeSelectedIndex(index);
+            mViewModel.changeSelectedIndex(index);
           },
         ),
       ),

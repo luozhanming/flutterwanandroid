@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/base/event_bus.dart';
+import 'package:wanandroid/common/my_network_image.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
@@ -247,7 +248,7 @@ class HomeSegmentViewModel extends BaseViewModel {
       for (int i = 0; i < length; i++) {
         var banner = banners[i];
         bannerItems.add(
-            BannerItem(NetworkImage(banner.imagePath), message: banner.title));
+            BannerItem(MyNetWorkImage(banner.imagePath), message: banner.title));
       }
       _bannerController.refreshData(bannerItems);
       notifyListeners();

@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
@@ -13,8 +12,7 @@ import 'package:wanandroid/model/resource.dart';
 import 'package:wanandroid/model/result.dart';
 
 class HttpManager {
-
-  static Map<String,HttpManager> _sCaches = HashMap();
+  static Map<String, HttpManager> _sCaches = HashMap();
 
   final String baseUrl;
   final int connectTimeout;
@@ -23,7 +21,9 @@ class HttpManager {
   final Map<String, dynamic> headers;
 
   Dio _dio;
-  CookieJar _cookieJar;
+  DefaultCookieJar _cookieJar;
+
+  bool isAddCookieJar = false;
 
   HttpManager._(
       {this.baseUrl,
@@ -46,30 +46,34 @@ class HttpManager {
         error: true,
         compact: true,
         maxWidth: 90));
-    var addCookieJar =() async{
-      if(await Permission.storage.request().isGranted){
-        var directory = await getApplicationDocumentsDirectory();
+    var addCookieJar = () async {
+      if (await Permission.storage.request().isGranted) {
+        var directory = await getTemporaryDirectory();
         String appDocPath = directory.path;
         _cookieJar = PersistCookieJar(dir: "$appDocPath/.cookies/");
         _dio.interceptors.add(CookieManager(_cookieJar));
-      }else{
+      } else {
         _cookieJar = DefaultCookieJar();
         _dio.interceptors.add(CookieManager(_cookieJar));
       }
+      isAddCookieJar = true;
     };
-   addCookieJar();
+    addCookieJar();
   }
 
-  factory HttpManager.getManager(String baseUrl,[Map<String,dynamic> headers]){
-    if(_sCaches.containsKey(baseUrl)){
+  factory HttpManager.getManager(String baseUrl,
+      [Map<String, dynamic> headers]) {
+    if (_sCaches.containsKey(baseUrl)) {
       return _sCaches[baseUrl];
-    }else{
-      HttpManager manager = HttpManager._(baseUrl:baseUrl,headers:headers);
+    } else {
+      HttpManager manager = HttpManager._(baseUrl: baseUrl, headers: headers);
+      _sCaches[baseUrl] = manager;
       return manager;
     }
   }
 
   Stream<Result> get(String path, [Map<String, dynamic> queries]) async* {
+    await waitCheckCookieJar();
     Stream<Response> stream =
         Stream.fromFuture(_dio.get(path, queryParameters: queries));
     yield* stream.flatMap((event) {
@@ -85,6 +89,7 @@ class HttpManager {
   }
 
   Stream<Result> post(String path, [Map<String, dynamic> data]) async* {
+    await waitCheckCookieJar();
     Stream<Response> stream =
         Stream.fromFuture(_dio.post(path, data: FormData.fromMap(data)));
     yield* stream.flatMap((event) {
@@ -96,20 +101,31 @@ class HttpManager {
         return Stream.value(result);
       } else {
         return Stream.error(
-          Resource.error(NetError(event.statusCode, event.statusMessage)));
+            Resource.error(NetError(event.statusCode, event.statusMessage)));
       }
     });
   }
+
+  ///
+  /// 用来同步cookieJar
+  ///
+  waitCheckCookieJar() async {
+    while (!isAddCookieJar) {
+      await Future.delayed(Duration(milliseconds: 10));
+    }
+  }
+
+  DefaultCookieJar getCookieJar() => _cookieJar;
 }
 
-class NetError implements Exception{
+class NetError implements Exception {
   final int statusCode;
   final String message;
 
   const NetError(this.statusCode, this.message);
 }
 
-class HttpLogInterceptor extends Interceptor{
+class HttpLogInterceptor extends Interceptor {
   static const TAG = "dio_log";
 
   @override
@@ -120,7 +136,7 @@ class HttpLogInterceptor extends Interceptor{
     headers: ${options.headers}
     data: ${options.data}
     extra:${options.extra}
-    """,name: TAG);
+    """, name: TAG);
     return super.onRequest(options);
   }
 
@@ -134,7 +150,7 @@ class HttpLogInterceptor extends Interceptor{
     headers: ${response.headers}
     data: ${response.data}
     extra:${response.extra}
-    """,name: TAG);
+    """, name: TAG);
     return super.onResponse(response);
   }
 }

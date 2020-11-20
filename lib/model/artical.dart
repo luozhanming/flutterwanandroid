@@ -248,6 +248,18 @@ class Artical {
     data['zan'] = this._zan;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Artical &&
+          runtimeType == other.runtimeType &&
+          _collect == other._collect &&
+          _id == other._id &&
+          _zan == other._zan;
+
+  @override
+  int get hashCode => _collect.hashCode ^ _id.hashCode ^ _zan.hashCode;
 }
 
 class Tag {

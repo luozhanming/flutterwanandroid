@@ -30,6 +30,7 @@ class _MyCheckBoxState extends State<MyCheckBox> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Checkbox(
             value: widget.isChecked,

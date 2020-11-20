@@ -37,7 +37,6 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
         //2.保存token
         //3.更新状态
         mViewModel.saveLogin(value.data);
-
         Navigator.of(context)
             .popUntil((route) => route.settings.name == HomePage.NAME);
       } else if (value.status == ResourceStatus.loading) {   //加载中
@@ -69,8 +68,8 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              padding:
-                  EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(12)),
+              margin:
+                  EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(24)),
               child: Card(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -107,7 +106,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                                     (value) => value.isAutoLogin);
                             return Container(
                               child: MyCheckBox(
-                                textStyle: TextStyle(fontSize: ScreenUtil().setWidth(10),height: 1),
+                                textStyle: TextStyle(fontSize: ScreenUtil().setSp(10),height: 0.9,textBaseline: TextBaseline.alphabetic),
                                 isChecked: isAutoLogin??false,
                                 text: S.of(context).auto_login,
                                 onChanged: (value) {
@@ -123,7 +122,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                                 padding: EdgeInsets.symmetric(
                                     vertical: ScreenUtil().setWidth(5),
                                     horizontal: ScreenUtil().setWidth(10)),
-                                child: Text(S.of(context).register_new_user,style: TextStyle(fontSize: ScreenUtil().setWidth(10)),),
+                                child: Text(S.of(context).register_new_user,style: TextStyle(height:0.9,fontSize: ScreenUtil().setSp(10)),),
                               ),
                               onTap: () {},
                             ),

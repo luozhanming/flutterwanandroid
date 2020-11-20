@@ -19,7 +19,7 @@ class SystemRepository {
     yield* _httpManager.get(WanandroidUrl.systemTree)
         .map((event) {
       List<SystemKnowlodge> knowlodges = [];
-      if (event.dataList?.isNotEmpty) {
+      if (event.dataList.isNotEmpty) {
         event.dataList.forEach((element) {
           var knowlodge = SystemKnowlodge.fromJson(element);
           if(knowlodge.children.isNotEmpty){

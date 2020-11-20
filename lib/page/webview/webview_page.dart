@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_html_css/simple_html_css.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
@@ -119,8 +120,8 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
         padding: EdgeInsets.only(right: ScreenUtil().setWidth(16)),
         child: Hero(
           tag: widget.title,
-          child: Text(
-            widget.title,
+          child: Text.rich(
+            HTML.toTextSpan(context,"<div>${widget.title}</div>",defaultTextStyle: TextStyles.titleTextStyle),
             overflow: TextOverflow.ellipsis,
             softWrap: true,
             maxLines: 1,
