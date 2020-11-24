@@ -47,15 +47,15 @@ class HttpManager {
         compact: true,
         maxWidth: 90));
     var addCookieJar = () async {
-      if (await Permission.storage.request().isGranted) {
+      // if (await Permission.storage.request().isGranted) {
         var directory = await getTemporaryDirectory();
         String appDocPath = directory.path;
         _cookieJar = PersistCookieJar(dir: "$appDocPath/.cookies/");
         _dio.interceptors.add(CookieManager(_cookieJar));
-      } else {
-        _cookieJar = DefaultCookieJar();
-        _dio.interceptors.add(CookieManager(_cookieJar));
-      }
+      // } else {
+      //   _cookieJar = DefaultCookieJar();
+      //   _dio.interceptors.add(CookieManager(_cookieJar));
+      // }
       isAddCookieJar = true;
     };
     addCookieJar();

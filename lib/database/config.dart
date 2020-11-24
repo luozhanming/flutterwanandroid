@@ -11,6 +11,7 @@ class UserLoginTable {
   static const String COLUMN_ADMIN = "admin";
   static const String COLUMN_ICON = "icon";
   static const String COLUMN_TYPE= "type";
+  static const String COLUMN_COLLECTIDS = "collectIds";
 
   static const String CREATE_TABLE = "create table ${TABLE_NAME}"
       "("
@@ -22,6 +23,7 @@ class UserLoginTable {
       "${COLUMN_EMAIL} text,"
       "${COLUMN_ICON} text,"
       "${COLUMN_TYPE} integer,"
-      "${COLUMN_ADMIN} integer"
+      "${COLUMN_ADMIN} integer,"
+      "${COLUMN_COLLECTIDS} text"
       ")";
 }

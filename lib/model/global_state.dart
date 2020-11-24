@@ -1,5 +1,8 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:wanandroid/common/base/event_bus.dart';
 import 'package:wanandroid/common/config/config.dart';
+import 'package:wanandroid/common/event.dart';
 import 'package:wanandroid/common/http/http_manager.dart';
 import 'package:wanandroid/model/user.dart';
 
@@ -30,7 +33,7 @@ class GlobalState with ChangeNotifier {
     loginUser = null;
     isLogin = false;
     //清理cookie
-    HttpManager.getManager(Config.ENV.baseUrl).getCookieJar().delete(Uri.parse(Config.ENV.baseUrl));
+    Bus.getEventBus().fire(Logout());
     notifyListeners();
   }
 

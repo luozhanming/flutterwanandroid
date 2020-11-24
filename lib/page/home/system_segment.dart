@@ -135,16 +135,23 @@ class _SystemSegmentState extends BaseState<SystemSegment, SystemViewModel> {
                     itemBuilder: (context, index) {
                       var artical = articals[index];
                       return Builder(
-                        builder:(context)=> ArticalItemWidget(artical,
-                          index: index,
-                          isLogin: context.select<GlobalState,bool>((value) => value.isLogin),
-                          onArticalTap: (artical) async {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => WebviewPage(
-                                  url: artical.link,
-                                  title: artical.title,
-                                )));
-                          },),
+                        builder:(context) {
+                          var artical = articals[index];
+                          bool isCollect = context.select<GlobalState,bool>((value) => value.loginUser!=null?artical.id==value.loginUser.collectIds.contains(artical.id):false);
+                          artical.collect = isCollect;
+                          return ArticalItemWidget(artical,
+                            index: index,
+                            isLogin: context.select<GlobalState, bool>((
+                                value) => value.isLogin),
+                            onArticalTap: (artical) async {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      WebviewPage(
+                                        url: artical.link,
+                                        title: artical.title,
+                                      )));
+                            },);
+                        }
                       );
                     },
                     itemCount: itemCount)),

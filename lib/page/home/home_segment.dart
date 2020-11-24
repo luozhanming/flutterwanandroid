@@ -92,7 +92,9 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
       return SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
         return Builder(builder: (context) {
-
+          var artical = articals[index];
+          bool isCollect = context.select<GlobalState,bool>((value) => value.loginUser!=null?value.loginUser.collectIds.contains(artical.id):false);
+          artical.collect = isCollect;
           return ArticalItemWidget(
             articals[index],
             isLogin: isLogin,

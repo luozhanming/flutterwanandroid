@@ -1,8 +1,6 @@
-
-import 'package:json_annotation/json_annotation.dart';
-
 class User {
   int _admin;
+  List<int> _collectIds;
   String _email;
   String _icon;
   int _id;
@@ -14,16 +12,17 @@ class User {
 
   User(
       {int admin,
+        List<int> collectIds,
         String email,
         String icon,
         int id,
         String nickname,
-        String password,
         String publicName,
         String token,
         int type,
         String username}) {
     this._admin = admin;
+    this._collectIds = collectIds;
     this._email = email;
     this._icon = icon;
     this._id = id;
@@ -36,7 +35,8 @@ class User {
 
   int get admin => _admin;
   set admin(int admin) => _admin = admin;
-
+  List<int> get collectIds => _collectIds;
+  set collectIds(List<int> collectIds) => _collectIds = collectIds;
   String get email => _email;
   set email(String email) => _email = email;
   String get icon => _icon;
@@ -45,7 +45,6 @@ class User {
   set id(int id) => _id = id;
   String get nickname => _nickname;
   set nickname(String nickname) => _nickname = nickname;
-
   String get publicName => _publicName;
   set publicName(String publicName) => _publicName = publicName;
   String get token => _token;
@@ -56,10 +55,18 @@ class User {
   set username(String username) => _username = username;
 
   User.fromJson(Map<String, dynamic> json) {
-    if(json["admin"] is int){
-      _admin = json['admin'];
-    }else if(json['admin'] is bool){
-      _admin = json['admin']?1:0;
+    _admin = json['admin'] is bool?json['admin']?1:0:json['admin'];
+    var collectIds = json['collectIds'];
+    if(collectIds is String){
+      var split = collectIds.split(";");
+      split.removeLast();
+      var list = [];
+      split.forEach((element) {
+        list.add(int.parse(element));
+      });
+      _collectIds = list.cast<int>();
+    }else{
+      _collectIds = collectIds.cast<int>();
     }
     _email = json['email'];
     _icon = json['icon'];
@@ -74,6 +81,12 @@ class User {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['admin'] = this._admin;
+    StringBuffer buffer = StringBuffer();
+    int length = this._collectIds.length;
+    for(int i=0;i<this._collectIds.length;i++){
+      buffer.write(length==i-1?"${collectIds[i]}":"${collectIds[i]};");
+    }
+    data['collectIds'] = buffer.toString();
     data['email'] = this._email;
     data['icon'] = this._icon;
     data['id'] = this._id;

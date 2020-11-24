@@ -112,6 +112,9 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
               itemBuilder: (context, index) {
                 var project = projects[index];
                 return Builder(builder: (context) {
+                  var artical = project;
+                  bool isCollect = context.select<GlobalState,bool>((value) => value.loginUser!=null?value.loginUser.collectIds.contains(artical.id):false);
+                  artical.collect = isCollect;
                   return ArticalItemWidget(
                     project,
                     onArticalTap: (artical) async {
