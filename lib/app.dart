@@ -6,6 +6,7 @@ import 'package:wanandroid/common/base/event_bus.dart';
 import 'package:wanandroid/common/http/http_manager.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/global_state.dart';
+import 'package:wanandroid/page/home/author_artical_page.dart';
 import 'package:wanandroid/page/home/home_page.dart';
 import 'package:wanandroid/page/login/login_page.dart';
 import 'package:wanandroid/page/search/search_page.dart';
@@ -70,6 +71,9 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
           },
           WebviewPage.NAME: (context) {
             return WebviewPage();
+          },
+          AuthorArticalPage.NAME:(context){
+            return AuthorArticalPage();
           }
         },
         navigatorObservers: [routeObserver],

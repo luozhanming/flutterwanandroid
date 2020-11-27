@@ -27,5 +27,7 @@ class WanandroidUrl {
   static String projectArtical(int cid,int page) => "https://www.wanandroid.com/project/list/$page/json?cid=$cid";
   //我的收藏
   static String myCollectionArtical(int page) => "https://www.wanandroid.com/lg/collect/list/$page/json";
+  //按照作者昵称搜索文章
+  static String searchAuthorArtical(String author,int page)=>"/article/list/$page/json?author=$author";
 
 }

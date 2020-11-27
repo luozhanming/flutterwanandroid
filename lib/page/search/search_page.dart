@@ -265,10 +265,13 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
           },
         ));
       });
-      return Wrap(
-        spacing: ScreenUtil().setWidth(10),
-        runSpacing: ScreenUtil().setWidth(5),
-        children: <Widget>[...hotWidget],
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(8)),
+        child: Wrap(
+          spacing: ScreenUtil().setWidth(10),
+          runSpacing: ScreenUtil().setWidth(5),
+          children: <Widget>[...hotWidget],
+        ),
       );
     });
   }

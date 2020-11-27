@@ -12,6 +12,7 @@ import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
+import 'package:wanandroid/page/home/author_artical_page.dart';
 import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/repository/home_repository.dart';
 import 'package:wanandroid/widget/artical_item_widget.dart';
@@ -99,6 +100,10 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
             articals[index],
             isLogin: isLogin,
             index: index,
+            onAuthorTap: (author){
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>AuthorArticalPage(authorName: author,)));
+            },
             onArticalTap: (artical) async {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => WebviewPage(

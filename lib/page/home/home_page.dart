@@ -214,9 +214,10 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
       User user = context.select<GlobalState, User>((value) => value.loginUser);
       return Container(
         alignment: Alignment.center,
-        color: Color.fromARGB(255, 240, 240, 240),
+        color: Color.fromARGB(255, 255, 255, 255),
         width: ScreenUtil().setWidth(200),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
               width: double.infinity,
@@ -254,6 +255,16 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                     )
                   ],
                 ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              width: double.infinity,
+              child: FlatButton(
+                child: Text("我的收藏"),
+                onPressed: (){
+
+                },
               ),
             ),
             FlatButton(

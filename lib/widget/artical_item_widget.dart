@@ -15,18 +15,23 @@ class ArticalItemWidget extends StatelessWidget {
   final Artical artical;
   final OnCollectTap onCollectTap;
   final OnArticalTap onArticalTap;
+  final OnAuthorTap onAuthorTap;
   final bool isLogin;
   final int index;
 
   ArticalItemWidget(this.artical,
-      {this.onArticalTap, this.onCollectTap, this.isLogin=false,this.index = 0})
+      {this.onArticalTap,
+      this.onCollectTap,
+      this.onAuthorTap,
+      this.isLogin = false,
+      this.index = 0})
       : super(key: ObjectKey(artical));
 
   @override
   Widget build(BuildContext context) {
-    if(!isLogin){
+    if (!isLogin) {
       return _buildArticalContent(context);
-    }else{
+    } else {
       return Slidable(
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.15,
@@ -38,14 +43,13 @@ class ArticalItemWidget extends StatelessWidget {
               color: artical.collect ? Colors.redAccent : Colors.white,
             ),
             onTap: () {
-              onCollectTap?.call(artical,index);
+              onCollectTap?.call(artical, index);
             },
           )
         ],
         child: _buildArticalContent(context),
       );
     }
-
   }
 
   InkWell _buildArticalContent(BuildContext context) {
@@ -80,7 +84,8 @@ class ArticalItemWidget extends StatelessWidget {
                     Hero(
                         tag: artical.title,
                         child: Text.rich(
-                          HTML.toTextSpan(context,
+                          HTML.toTextSpan(
+                            context,
                             "<div>${artical.title}</div>",
                             defaultTextStyle: titleTextStyle,
                           ),
@@ -127,18 +132,34 @@ class ArticalItemWidget extends StatelessWidget {
   Widget _buildAuthorWidget(BuildContext context) {
     var isYC = artical.author != "";
     if (isYC) {
-      return Text("${S.of(context).author}${artical.author}",style: authorTextStyle,);
+      return GestureDetector(
+        child: Text(
+          "${S.of(context).author}${artical.author}",
+          style: authorTextStyle,
+        ),
+        onTap: () {
+          onAuthorTap?.call(artical.author);
+        },
+      );
     } else {
-      return Text("${S.of(context).shareUser}${artical.shareUser}",style: authorTextStyle);
+      return GestureDetector(
+        child: Text("${S.of(context).shareUser}${artical.shareUser}",
+            style: authorTextStyle),
+        onTap: () {
+          onAuthorTap?.call(artical.author);
+        },
+      );
     }
   }
 
   Widget _buildTimeWidget(BuildContext context) {
     var isYC = artical.author != "";
     if (isYC) {
-      return Text("${S.of(context).time}${artical.niceDate}",style: authorTextStyle);
+      return Text("${S.of(context).time}${artical.niceDate}",
+          style: authorTextStyle);
     } else {
-      return Text("${S.of(context).time}${artical.niceShareDate}",style: authorTextStyle);
+      return Text("${S.of(context).time}${artical.niceShareDate}",
+          style: authorTextStyle);
     }
   }
 
@@ -157,3 +178,5 @@ typedef void OnChaperNameTap(String chapter);
 typedef void OnTagTap(String tag);
 /**文章点击*/
 typedef void OnArticalTap(Artical artical);
+/**作者被点击*/
+typedef void OnAuthorTap(String author);

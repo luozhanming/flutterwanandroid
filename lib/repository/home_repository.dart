@@ -81,6 +81,23 @@ class RemoteHomeRepository extends IHomeRepository {
     });
   }
 
+
+  ///搜索作者文章
+  Stream<Pager<Artical>> searchAuthorArtical(String author,int page) async*{
+    yield* _httpManager.get(WanandroidUrl.searchAuthorArtical(author,page)).map((event) {
+      Pager<dynamic> pager = Pager.fromJson(event.dataJson);
+      List<dynamic> datasList = pager.datas;
+      List<Artical> articals = [];
+      datasList.forEach((element) {
+        if (element is Map<String, dynamic>) {
+          articals.add(Artical.fromJson(element));
+        }
+      });
+      var result = Pager<Artical>.copyWith(pager, articals);
+      return result;
+    });
+  }
+
   ///
   /// 搜索热词
   ///
