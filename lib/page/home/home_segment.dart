@@ -102,7 +102,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
             index: index,
             onAuthorTap: (author){
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>AuthorArticalPage(authorName: author,)));
+                  builder: (context) =>AuthorArticalPage(authorName: author)));
             },
             onArticalTap: (artical) async {
               Navigator.of(context).push(MaterialPageRoute(
