@@ -117,6 +117,7 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
                   artical.collect = isCollect;
                   return ArticalItemWidget(
                     project,
+                    type: TYPE_PROJECT,
                     onArticalTap: (artical) async {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => WebviewPage(

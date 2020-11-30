@@ -99,6 +99,7 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
           return ArticalItemWidget(
             articals[index],
             isLogin: isLogin,
+            type: TYPE_MAIN,
             index: index,
             onAuthorTap: (author){
               Navigator.of(context).push(MaterialPageRoute(
@@ -117,23 +118,6 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
     });
   }
 
-//  Widget _articalItemBuilder(BuildContext context, int index) {
-//    return Builder(builder: (context) {
-//        //普通选项
-//        Artical artical = context.select<HomeSegmentViewModel, Artical>(
-//            (value) => value.articals[index]);
-//        return ArticalItemWidget(
-//          artical,
-//          onArticalTap: (artical) async {
-//            Navigator.of(context).push(MaterialPageRoute(
-//                builder: (context) => WebviewPage(
-//                      url: artical.link,
-//                      title: artical.title,
-//                    )));
-//          },
-//        );
-//    });
-//  }
 
   @override
   Widget buildBody(BuildContext context) {

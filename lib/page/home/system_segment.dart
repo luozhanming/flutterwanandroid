@@ -141,6 +141,7 @@ class _SystemSegmentState extends BaseState<SystemSegment, SystemViewModel> {
                           artical.collect = isCollect;
                           return ArticalItemWidget(artical,
                             index: index,
+                            type:TYPE_SYSTEM,
                             isLogin: context.select<GlobalState, bool>((
                                 value) => value.isLogin),
                             onArticalTap: (artical) async {

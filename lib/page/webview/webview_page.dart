@@ -8,16 +8,20 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/styles.dart';
+import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/widget/common_appbar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewPage extends StatefulWidget {
   static const String NAME = "Webview";
 
-  final String url;
-  final String title;
+   String url;
+   String title;
+   int type;
 
-  WebviewPage({@required this.url, this.title});
+
+  WebviewPage({@required this.url, this.title,this.type});
+
 
   @override
   _WebviewPageState createState() => _WebviewPageState();
@@ -119,7 +123,7 @@ class _WebviewPageState extends BaseState<WebviewPage, WebviewViewModel> {
       widget: Padding(
         padding: EdgeInsets.only(right: ScreenUtil().setWidth(16)),
         child: Hero(
-          tag: widget.title,
+          tag: "${widget.title}_${widget.type}",
           child: Text.rich(
             HTML.toTextSpan(context,"<div>${widget.title}</div>",defaultTextStyle: TextStyles.titleTextStyle),
             overflow: TextOverflow.ellipsis,

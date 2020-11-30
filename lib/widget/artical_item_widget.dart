@@ -11,6 +11,10 @@ import 'package:wanandroid/model/artical.dart';
 /// [Artical] item Widget.
 ///
 
+const int TYPE_MAIN = 0;
+const int TYPE_SYSTEM = 1;
+const int TYPE_PROJECT = 2;
+
 class ArticalItemWidget extends StatelessWidget {
   final Artical artical;
   final OnCollectTap onCollectTap;
@@ -18,13 +22,15 @@ class ArticalItemWidget extends StatelessWidget {
   final OnAuthorTap onAuthorTap;
   final bool isLogin;
   final int index;
+  final int type;
 
   ArticalItemWidget(this.artical,
       {this.onArticalTap,
       this.onCollectTap,
       this.onAuthorTap,
       this.isLogin = false,
-      this.index = 0})
+      this.index = 0,
+      this.type = 0})
       : super(key: ObjectKey(artical));
 
   @override
@@ -82,7 +88,7 @@ class ArticalItemWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Hero(
-                        tag: artical.title,
+                        tag: "${artical.title}_${type}",
                         child: Text.rich(
                           HTML.toTextSpan(
                             context,
