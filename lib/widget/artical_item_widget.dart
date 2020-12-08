@@ -14,6 +14,7 @@ import 'package:wanandroid/model/artical.dart';
 const int TYPE_MAIN = 0;
 const int TYPE_SYSTEM = 1;
 const int TYPE_PROJECT = 2;
+const int TYPE_AUTHOR = 3;
 
 class ArticalItemWidget extends StatelessWidget {
   final Artical artical;
@@ -152,7 +153,7 @@ class ArticalItemWidget extends StatelessWidget {
         child: Text("${S.of(context).shareUser}${artical.shareUser}",
             style: authorTextStyle),
         onTap: () {
-          onAuthorTap?.call(artical.author);
+          onAuthorTap?.call(artical.shareUser);
         },
       );
     }

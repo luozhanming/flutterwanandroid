@@ -5,21 +5,23 @@ import 'package:wanandroid/model/artical.dart';
 
 abstract class ICollectionsRepository {
   Stream<List<Artical>> loadMyCollections(int page);
+
+  Stream<bool> collectArtical(Artical artical);
+
+  Stream<bool> uncollectArtical(Artical artical);
 }
 
-
 class RemoteCollectionsRepository extends ICollectionsRepository {
-
   HttpManager _httpManager;
 
   RemoteCollectionsRepository() {
     _httpManager = HttpManager.getManager(Config.ENV.baseUrl);
   }
 
-
   @override
   Stream<List<Artical>> loadMyCollections(int page) async* {
-    yield* _httpManager.get(WanandroidUrl.myCollectionArtical(page))
+    yield* _httpManager
+        .get(WanandroidUrl.myCollectionArtical(page))
         .map((event) {
       List<dynamic> rawList = event.dataList;
       List<Artical> articals = [];
@@ -32,5 +34,24 @@ class RemoteCollectionsRepository extends ICollectionsRepository {
       return articals;
     });
   }
+
+  @override
+  Stream<bool> collectArtical(Artical artical) async* {
+    yield* _httpManager
+        .post(WanandroidUrl.collectArtical(artical.id))
+        .map((event) {
+      return event.errorCode == 0;
+    });
+  }
+
+  @override
+  Stream<bool> uncollectArtical(Artical artical) async* {
+    yield* _httpManager
+        .post(WanandroidUrl.uncollectArtical(artical.id))
+        .map((event) {
+      return event.errorCode == 0;
+    });
+  }
+
 
 }

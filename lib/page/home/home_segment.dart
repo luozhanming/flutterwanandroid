@@ -12,6 +12,7 @@ import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
+import 'package:wanandroid/model/user.dart';
 import 'package:wanandroid/page/home/author_artical_page.dart';
 import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/repository/home_repository.dart';
@@ -101,6 +102,16 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
             isLogin: isLogin,
             type: TYPE_MAIN,
             index: index,
+            onCollectTap: (artical,index){
+              //1.查看Login实体的收藏是否有此收藏id
+              User user = context.read<GlobalState>().loginUser;
+              List<int> collectIds = user.collectIds;
+              if(collectIds.contains(artical.id)){  //取消收藏
+                  mViewModel.uncollect(artical);
+              }else {  //收藏
+                mViewModel.collect(artical);
+              }
+            },
             onAuthorTap: (author){
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) =>AuthorArticalPage(authorName: author)));
@@ -248,5 +259,13 @@ class HomeSegmentViewModel extends BaseViewModel {
       _refreshController.refreshFailed();
       notifyListeners();
     }));
+  }
+
+  void uncollect(Artical artical) {
+    
+  }
+
+  void collect(Artical artical) {
+
   }
 }

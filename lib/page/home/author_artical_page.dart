@@ -8,6 +8,7 @@ import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/styles.dart';
+import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
@@ -86,36 +87,48 @@ class _AuthorArticalPageState
       List<Artical> articals =
           context.select<AuthorArticalViewModel, List<Artical>>(
               (value) => value.articals);
-      return SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-        return Builder(builder: (context) {
-          var artical = articals[index];
-          bool isCollect = context.select<GlobalState, bool>((value) =>
-              value.loginUser != null
-                  ? value.loginUser.collectIds.contains(artical.id)
-                  : false);
-          artical.collect = isCollect;
-          return ArticalItemWidget(
-            articals[index],
-            isLogin: isLogin,
-            index: index,
-            onAuthorTap: (author) {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AuthorArticalPage(
-                        authorName: author,
-                      )));
-            },
-            onArticalTap: (artical) async {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => WebviewPage(
-                        url: artical.link,
-                        title: artical.title,
-                      )));
-            },
-          );
-        });
-      }, childCount: itemCount));
+      if(itemCount>0){
+        return SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return Builder(builder: (context) {
+                var artical = articals[index];
+                bool isCollect = context.select<GlobalState, bool>((value) =>
+                value.loginUser != null
+                    ? value.loginUser.collectIds.contains(artical.id)
+                    : false);
+                artical.collect = isCollect;
+                return ArticalItemWidget(
+                  articals[index],
+                  isLogin: isLogin,
+                  index: index,
+                  type: TYPE_AUTHOR,
+                  onArticalTap: (artical) async {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => WebviewPage(
+                          url: artical.link,
+                          title: artical.title,
+                        )));
+                  },
+                );
+              });
+            }, childCount: itemCount));
+      }else{
+        return _buildEmptyView();
+      }
     });
+  }
+
+  SliverToBoxAdapter _buildEmptyView() {
+    return SliverToBoxAdapter(
+        child: Container(
+          height: MediaQuery.of(context).size.height-ScreenUtil().setWidth(40),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[Text(S.of(context).no_data)],
+          ),
+        ),
+      );
   }
 }
 
@@ -136,6 +149,13 @@ class AuthorArticalViewModel extends BaseViewModel {
     _refreshController = RefreshController();
     _subscriptions = CompositeSubscription();
     _homeRepository = RemoteHomeRepository();
+    loadArticals(false);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subscriptions.dispose();
   }
 
   void loadArticals(bool isLoadMore) {

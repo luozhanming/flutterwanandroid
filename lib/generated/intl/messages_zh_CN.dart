@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "login" : MessageLookupByLibrary.simpleMessage("登录"),
     "logout" : MessageLookupByLibrary.simpleMessage("退出登录"),
     "navigation" : MessageLookupByLibrary.simpleMessage("导航"),
+    "no_data" : MessageLookupByLibrary.simpleMessage("暂无数据"),
     "project" : MessageLookupByLibrary.simpleMessage("项目"),
     "register_new_user" : MessageLookupByLibrary.simpleMessage("注册新用户"),
     "search_hots" : MessageLookupByLibrary.simpleMessage("搜索热词"),

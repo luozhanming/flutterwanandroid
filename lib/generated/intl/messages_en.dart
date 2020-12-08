@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "login" : MessageLookupByLibrary.simpleMessage("Login"),
     "logout" : MessageLookupByLibrary.simpleMessage("Logout"),
     "navigation" : MessageLookupByLibrary.simpleMessage("Navigation"),
+    "no_data" : MessageLookupByLibrary.simpleMessage("Empty data!"),
     "project" : MessageLookupByLibrary.simpleMessage("Project"),
     "register_new_user" : MessageLookupByLibrary.simpleMessage("Register"),
     "search_hots" : MessageLookupByLibrary.simpleMessage("Hots"),

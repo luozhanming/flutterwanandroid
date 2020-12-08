@@ -212,6 +212,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Empty data!`
+  String get no_data {
+    return Intl.message(
+      'Empty data!',
+      name: 'no_data',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

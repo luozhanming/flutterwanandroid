@@ -49,4 +49,11 @@ class GlobalState with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void addCollect(int id){
+    if(loginUser!=null){
+      loginUser.collectIds.add(id);
+      notifyListeners();
+    }
+  }
 }

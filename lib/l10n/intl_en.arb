@@ -16,5 +16,6 @@
   "register_new_user": "Register",
   "auto_login": "AutoLogin",
   "project":"Project",
-  "logout": "Logout"
+  "logout": "Logout",
+  "no_data": "Empty data!"
 }
