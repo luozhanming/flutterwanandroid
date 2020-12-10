@@ -17,5 +17,9 @@
   "auto_login": "AutoLogin",
   "project":"Project",
   "logout": "Logout",
-  "no_data": "Empty data!"
+  "no_data": "Empty data!",
+  "collect_success": "Collect success!",
+  "collect_failed": "Collect failed!",
+  "uncollect_success": "Uncollect success!",
+  "uncollect_failed": "Uncollect failed!"
 }

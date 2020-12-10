@@ -23,6 +23,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "author" : MessageLookupByLibrary.simpleMessage("作者："),
     "auto_login" : MessageLookupByLibrary.simpleMessage("自动登录"),
+    "collect_failed" : MessageLookupByLibrary.simpleMessage("收藏失败"),
+    "collect_success" : MessageLookupByLibrary.simpleMessage("收藏成功"),
     "gongzonghao" : MessageLookupByLibrary.simpleMessage("公众号"),
     "hint_input_password" : MessageLookupByLibrary.simpleMessage("请输入密码"),
     "hint_input_username" : MessageLookupByLibrary.simpleMessage("请输入用户名"),
@@ -39,6 +41,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareUser" : MessageLookupByLibrary.simpleMessage("分享者："),
     "time" : MessageLookupByLibrary.simpleMessage("时间："),
     "tip_can_not_open_link" : MessageLookupByLibrary.simpleMessage("无法打开该链接"),
-    "tixi" : MessageLookupByLibrary.simpleMessage("体系")
+    "tixi" : MessageLookupByLibrary.simpleMessage("体系"),
+    "uncollect_failed" : MessageLookupByLibrary.simpleMessage("取消收藏失败"),
+    "uncollect_success" : MessageLookupByLibrary.simpleMessage("取消收藏成功")
   };
 }

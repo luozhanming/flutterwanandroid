@@ -17,5 +17,9 @@
   "auto_login": "自动登录",
   "project":"项目",
   "logout": "退出登录",
-  "no_data": "暂无数据"
+  "no_data": "暂无数据",
+  "collect_success": "收藏成功",
+  "collect_failed": "收藏失败",
+  "uncollect_success": "取消收藏成功",
+  "uncollect_failed": "取消收藏失败"
 }

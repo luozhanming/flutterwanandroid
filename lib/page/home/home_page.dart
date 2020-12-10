@@ -4,6 +4,7 @@ import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wanandroid/common/base/base_state.dart';
@@ -258,13 +259,27 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
               ),
             ),
             Container(
-              alignment: Alignment.centerLeft,
-              width: double.infinity,
-              child: FlatButton(
-                child: Text("我的收藏"),
-                onPressed: (){
-
-                },
+              height: ScreenUtil().setWidth(36),
+              //如果没有水波纹，在上层套上Material
+              child: Material(
+                //TODO 此处设置color
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  highlightColor: Color.fromARGB(40, 0, 0, 0),
+                  onTap: (){
+                    Fluttertoast.showToast(msg: "sdfsdf");
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.only(right: ScreenUtil().setWidth(12))),
+                      Icon(Icons.collections,size: ScreenUtil().setWidth(16),),
+                      Padding(padding: EdgeInsets.only(right: ScreenUtil().setWidth(12))),
+                      Text("我的收藏")
+                    ],
+                  ),
+                ),
               ),
             ),
             FlatButton(

@@ -23,6 +23,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "author" : MessageLookupByLibrary.simpleMessage("Author:"),
     "auto_login" : MessageLookupByLibrary.simpleMessage("AutoLogin"),
+    "collect_failed" : MessageLookupByLibrary.simpleMessage("Collect failed!"),
+    "collect_success" : MessageLookupByLibrary.simpleMessage("Collect success!"),
     "gongzonghao" : MessageLookupByLibrary.simpleMessage("Pub"),
     "hint_input_password" : MessageLookupByLibrary.simpleMessage("Please input your password."),
     "hint_input_username" : MessageLookupByLibrary.simpleMessage("Please input your username."),
@@ -39,6 +41,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareUser" : MessageLookupByLibrary.simpleMessage("ShareUser:"),
     "time" : MessageLookupByLibrary.simpleMessage("Time:"),
     "tip_can_not_open_link" : MessageLookupByLibrary.simpleMessage("Can not open this link."),
-    "tixi" : MessageLookupByLibrary.simpleMessage("System")
+    "tixi" : MessageLookupByLibrary.simpleMessage("System"),
+    "uncollect_failed" : MessageLookupByLibrary.simpleMessage("Uncollect failed!"),
+    "uncollect_success" : MessageLookupByLibrary.simpleMessage("Uncollect success!")
   };
 }

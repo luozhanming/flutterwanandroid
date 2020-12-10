@@ -56,4 +56,11 @@ class GlobalState with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void removeCollect(int id){
+    if(loginUser!=null){
+      loginUser.collectIds.remove(id);
+      notifyListeners();
+    }
+  }
 }

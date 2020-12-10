@@ -222,6 +222,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Collect success!`
+  String get collect_success {
+    return Intl.message(
+      'Collect success!',
+      name: 'collect_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Collect failed!`
+  String get collect_failed {
+    return Intl.message(
+      'Collect failed!',
+      name: 'collect_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uncollect success!`
+  String get uncollect_success {
+    return Intl.message(
+      'Uncollect success!',
+      name: 'uncollect_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uncollect failed!`
+  String get uncollect_failed {
+    return Intl.message(
+      'Uncollect failed!',
+      name: 'uncollect_failed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

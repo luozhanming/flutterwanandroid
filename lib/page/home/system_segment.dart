@@ -137,7 +137,7 @@ class _SystemSegmentState extends BaseState<SystemSegment, SystemViewModel> {
                       return Builder(
                         builder:(context) {
                           var artical = articals[index];
-                          bool isCollect = context.select<GlobalState,bool>((value) => value.loginUser!=null?artical.id==value.loginUser.collectIds.contains(artical.id):false);
+                          bool isCollect = context.select<GlobalState,bool>((value) => value.loginUser!=null?value.loginUser.collectIds.contains(artical.id):false);
                           artical.collect = isCollect;
                           return ArticalItemWidget(artical,
                             index: index,

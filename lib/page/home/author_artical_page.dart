@@ -44,7 +44,7 @@ class _AuthorArticalPageState
 
   @override
   AuthorArticalViewModel buildViewModel(BuildContext context) {
-    return AuthorArticalViewModel(context,widget.authorName);
+    return AuthorArticalViewModel(context, widget.authorName);
   }
 
   _buildAppBar(BuildContext context) {
@@ -87,32 +87,32 @@ class _AuthorArticalPageState
       List<Artical> articals =
           context.select<AuthorArticalViewModel, List<Artical>>(
               (value) => value.articals);
-      if(itemCount>0){
+      if (itemCount > 0) {
         return SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              return Builder(builder: (context) {
-                var artical = articals[index];
-                bool isCollect = context.select<GlobalState, bool>((value) =>
+          return Builder(builder: (context) {
+            var artical = articals[index];
+            bool isCollect = context.select<GlobalState, bool>((value) =>
                 value.loginUser != null
                     ? value.loginUser.collectIds.contains(artical.id)
                     : false);
-                artical.collect = isCollect;
-                return ArticalItemWidget(
-                  articals[index],
-                  isLogin: isLogin,
-                  index: index,
-                  type: TYPE_AUTHOR,
-                  onArticalTap: (artical) async {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => WebviewPage(
+            artical.collect = isCollect;
+            return ArticalItemWidget(
+              articals[index],
+              isLogin: isLogin,
+              index: index,
+              type: TYPE_AUTHOR,
+              onArticalTap: (artical) async {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => WebviewPage(
                           url: artical.link,
                           title: artical.title,
                         )));
-                  },
-                );
-              });
-            }, childCount: itemCount));
-      }else{
+              },
+            );
+          });
+        }, childCount: itemCount));
+      } else {
         return _buildEmptyView();
       }
     });
@@ -120,15 +120,15 @@ class _AuthorArticalPageState
 
   SliverToBoxAdapter _buildEmptyView() {
     return SliverToBoxAdapter(
-        child: Container(
-          height: MediaQuery.of(context).size.height-ScreenUtil().setWidth(40),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[Text(S.of(context).no_data)],
-          ),
+      child: Container(
+        height: MediaQuery.of(context).size.height - ScreenUtil().setWidth(40),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[Text(S.of(context).no_data)],
         ),
-      );
+      ),
+    );
   }
 }
 
@@ -163,25 +163,26 @@ class AuthorArticalViewModel extends BaseViewModel {
     if (isLoadMore && curPager != null) {
       pageIndex = curPager.curPage + 1;
     }
-    _subscriptions.add(_homeRepository
-        .searchAuthorArtical(author, pageIndex)
-        .listen((event) {
-          curPager = event;
-          if(isLoadMore){
-            articals.addAll(curPager.datas);
-            if(curPager.over){
-              _refreshController.loadNoData();
-            }else{
-              _refreshController.loadComplete();
-            }
-          }else{
-            articals.clear();
-            articals.addAll(curPager.datas);
-            _refreshController.refreshCompleted(resetFooterState: true);
-          }
-          notifyListeners();
-    },onError: (error){
-          isLoadMore?_refreshController.loadFailed():_refreshController.refreshFailed();
+    _subscriptions.add(
+        _homeRepository.searchAuthorArtical(author, pageIndex).listen((event) {
+      curPager = event;
+      if (isLoadMore) {
+        articals.addAll(curPager.datas);
+        if (curPager.over) {
+          _refreshController.loadNoData();
+        } else {
+          _refreshController.loadComplete();
+        }
+      } else {
+        articals.clear();
+        articals.addAll(curPager.datas);
+        _refreshController.refreshCompleted(resetFooterState: true);
+      }
+      notifyListeners();
+    }, onError: (error) {
+      isLoadMore
+          ? _refreshController.loadFailed()
+          : _refreshController.refreshFailed();
     }));
   }
 }

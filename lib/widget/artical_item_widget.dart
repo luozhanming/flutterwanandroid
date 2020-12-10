@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simple_html_css/simple_html_css.dart';
+import 'package:wanandroid/common/collection_helper.dart';
 import 'package:wanandroid/common/my_icons.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
@@ -23,6 +25,8 @@ class ArticalItemWidget extends StatelessWidget {
   final OnAuthorTap onAuthorTap;
   final bool isLogin;
   final int index;
+
+  //Hero冲突解决字段
   final int type;
 
   ArticalItemWidget(this.artical,
@@ -50,7 +54,12 @@ class ArticalItemWidget extends StatelessWidget {
               color: artical.collect ? Colors.redAccent : Colors.white,
             ),
             onTap: () {
-              onCollectTap?.call(artical, index);
+              if(artical.collect){
+                uncollect(context, artical);
+              }else{
+                collect(context, artical);
+              }
+
             },
           )
         ],
@@ -168,6 +177,21 @@ class ArticalItemWidget extends StatelessWidget {
       return Text("${S.of(context).time}${artical.niceShareDate}",
           style: authorTextStyle);
     }
+  }
+
+
+  void uncollect(BuildContext context,Artical artical) {
+    var helper = CollectionHelper.getHelper();
+    helper.uncollect(context, artical,(result){
+      Fluttertoast.showToast(msg: result?S.of(context).uncollect_success:S.of(context).uncollect_failed);
+    });
+  }
+
+  void collect(BuildContext context,Artical artical) {
+    var helper = CollectionHelper.getHelper();
+    helper.collect(context, artical,(result){
+      Fluttertoast.showToast(msg: result?S.of(context).collect_success:S.of(context).collect_failed);
+    });
   }
 
   TextStyle titleTextStyle = TextStyle(fontSize: ScreenUtil().setSp(14));

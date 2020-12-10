@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/base/event_bus.dart';
+import 'package:wanandroid/common/collection_helper.dart';
 import 'package:wanandroid/common/my_network_image.dart';
+import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
@@ -102,16 +105,16 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
             isLogin: isLogin,
             type: TYPE_MAIN,
             index: index,
-            onCollectTap: (artical,index){
-              //1.查看Login实体的收藏是否有此收藏id
-              User user = context.read<GlobalState>().loginUser;
-              List<int> collectIds = user.collectIds;
-              if(collectIds.contains(artical.id)){  //取消收藏
-                  mViewModel.uncollect(artical);
-              }else {  //收藏
-                mViewModel.collect(artical);
-              }
-            },
+            // onCollectTap: (artical,index){
+            //   //1.查看Login实体的收藏是否有此收藏id
+            //   User user = context.read<GlobalState>().loginUser;
+            //   List<int> collectIds = user.collectIds;
+            //   if(collectIds.contains(artical.id)){  //取消收藏
+            //       mViewModel.uncollect(artical);
+            //   }else {  //收藏
+            //     mViewModel.collect(artical);
+            //   }
+            // },
             onAuthorTap: (author){
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) =>AuthorArticalPage(authorName: author)));
@@ -259,13 +262,5 @@ class HomeSegmentViewModel extends BaseViewModel {
       _refreshController.refreshFailed();
       notifyListeners();
     }));
-  }
-
-  void uncollect(Artical artical) {
-    
-  }
-
-  void collect(Artical artical) {
-
   }
 }
