@@ -2,9 +2,11 @@ import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/http/http_manager.dart';
 import 'package:wanandroid/common/http/url.dart';
 import 'package:wanandroid/model/artical.dart';
+import 'package:wanandroid/model/pager.dart';
+import 'package:wanandroid/model/resource.dart';
 
 abstract class ICollectionsRepository {
-  Stream<List<Artical>> loadMyCollections(int page);
+  Stream<Resource<Pager<Artical>>> loadMyCollections(int page);
 
   Stream<bool> collectArtical(Artical artical);
 
@@ -19,21 +21,23 @@ class RemoteCollectionsRepository extends ICollectionsRepository {
   }
 
   @override
-  Stream<List<Artical>> loadMyCollections(int page) async* {
+  Stream<Resource<Pager<Artical>>> loadMyCollections(int page) async* {
     yield* _httpManager
         .get(WanandroidUrl.myCollectionArtical(page))
-        .map((event) {
-      List<dynamic> rawList = event.dataList;
+        .map((event){
+      Pager<dynamic> pager = Pager.fromJson(event.dataJson);
+      List<dynamic> datasList = pager.datas;
       List<Artical> articals = [];
-      rawList.forEach((element) {
+      datasList.forEach((element) {
         if (element is Map<String, dynamic>) {
-          Artical artical = Artical.fromJson(element);
-          articals.add(artical);
+          articals.add(Artical.fromJson(element));
         }
       });
-      return articals;
+      var result = Pager<Artical>.copyWith(pager, articals);
+      return Resource.success(result);
     });
   }
+
 
   @override
   Stream<bool> collectArtical(Artical artical) async* {
@@ -55,3 +59,4 @@ class RemoteCollectionsRepository extends ICollectionsRepository {
 
 
 }
+

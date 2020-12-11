@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home" : MessageLookupByLibrary.simpleMessage("Home"),
     "login" : MessageLookupByLibrary.simpleMessage("Login"),
     "logout" : MessageLookupByLibrary.simpleMessage("Logout"),
+    "my_collection" : MessageLookupByLibrary.simpleMessage("MyCollection"),
     "navigation" : MessageLookupByLibrary.simpleMessage("Navigation"),
     "no_data" : MessageLookupByLibrary.simpleMessage("Empty data!"),
     "project" : MessageLookupByLibrary.simpleMessage("Project"),

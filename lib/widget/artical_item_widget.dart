@@ -17,6 +17,7 @@ const int TYPE_MAIN = 0;
 const int TYPE_SYSTEM = 1;
 const int TYPE_PROJECT = 2;
 const int TYPE_AUTHOR = 3;
+const int TYPE_MY_COLLECTIONS=4;
 
 class ArticalItemWidget extends StatelessWidget {
   final Artical artical;

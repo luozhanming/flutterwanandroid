@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home" : MessageLookupByLibrary.simpleMessage("首页"),
     "login" : MessageLookupByLibrary.simpleMessage("登录"),
     "logout" : MessageLookupByLibrary.simpleMessage("退出登录"),
+    "my_collection" : MessageLookupByLibrary.simpleMessage("我的收藏"),
     "navigation" : MessageLookupByLibrary.simpleMessage("导航"),
     "no_data" : MessageLookupByLibrary.simpleMessage("暂无数据"),
     "project" : MessageLookupByLibrary.simpleMessage("项目"),

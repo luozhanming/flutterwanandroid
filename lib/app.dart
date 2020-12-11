@@ -9,6 +9,7 @@ import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/page/home/author_artical_page.dart';
 import 'package:wanandroid/page/home/home_page.dart';
 import 'package:wanandroid/page/login/login_page.dart';
+import 'package:wanandroid/page/mycollection_page.dart';
 import 'package:wanandroid/page/search/search_page.dart';
 import 'package:wanandroid/page/webview/webview_page.dart';
 
@@ -74,6 +75,9 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
           },
           AuthorArticalPage.NAME:(context){
             return AuthorArticalPage();
+          },
+          MyCollectionPage.NAME:(context){
+            return MyCollectionPage();
           }
         },
         navigatorObservers: [routeObserver],

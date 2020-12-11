@@ -21,5 +21,6 @@
   "collect_success": "Collect success!",
   "collect_failed": "Collect failed!",
   "uncollect_success": "Uncollect success!",
-  "uncollect_failed": "Uncollect failed!"
+  "uncollect_failed": "Uncollect failed!",
+  "my_collection": "MyCollection"
 }

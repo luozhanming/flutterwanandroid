@@ -262,6 +262,16 @@ class S {
       args: [],
     );
   }
+
+  /// `MyCollection`
+  String get my_collection {
+    return Intl.message(
+      'MyCollection',
+      name: 'my_collection',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

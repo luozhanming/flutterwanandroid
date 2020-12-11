@@ -20,6 +20,7 @@ import 'package:wanandroid/page/home/home_segment.dart';
 import 'package:wanandroid/page/home/project_segment.dart';
 import 'package:wanandroid/page/home/system_segment.dart';
 import 'package:wanandroid/page/login/login_page.dart';
+import 'package:wanandroid/page/mycollection_page.dart';
 import 'package:wanandroid/page/search/search_page.dart';
 import 'package:wanandroid/widget/circle_widget.dart';
 
@@ -267,7 +268,7 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                   splashColor: Colors.transparent,
                   highlightColor: Color.fromARGB(40, 0, 0, 0),
                   onTap: (){
-                    Fluttertoast.showToast(msg: "sdfsdf");
+                    Navigator.of(context).pushNamed(MyCollectionPage.NAME);
                   },
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -276,7 +277,7 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                       Padding(padding: EdgeInsets.only(right: ScreenUtil().setWidth(12))),
                       Icon(Icons.collections,size: ScreenUtil().setWidth(16),),
                       Padding(padding: EdgeInsets.only(right: ScreenUtil().setWidth(12))),
-                      Text("我的收藏")
+                      Text(S.of(context).my_collection)
                     ],
                   ),
                 ),
