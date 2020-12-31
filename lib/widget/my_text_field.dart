@@ -21,7 +21,7 @@ class MyTextField extends StatefulWidget {
       this.icon,
       this.defaultText,
       bool isVisible,
-      this.fontSize =20})
+      this.fontSize =20,})
       : assert(controller != null),
         isVisible = isVisible == null ? true : false;
 

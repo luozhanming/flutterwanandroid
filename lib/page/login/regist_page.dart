@@ -133,12 +133,14 @@ class _RegistPageState extends BaseState<RegistPage,_RegistViewModel> {
                     MyTextField(
                       controller: mViewModel._passwordController,
                       icon: Icons.account_circle,
+                      isVisible: false,
                       fontSize: ScreenUtil().setSp(14.0),
                       hint: S.of(context).hint_input_password,
                     ),
                     MyTextField(
                       controller: mViewModel._repasswordController,
                       icon: Icons.account_circle,
+                      isVisible: false,
                       fontSize: ScreenUtil().setSp(14.0),
                       hint: S.of(context).hint_input_repassword,
                     ),

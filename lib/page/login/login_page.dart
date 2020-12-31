@@ -106,6 +106,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                       MyTextField(
                         controller: mViewModel._passwordController,
                         icon: Icons.account_circle,
+                        isVisible: false,
                         fontSize: ScreenUtil().setSp(14.0),
                         hint: S.of(context).hint_input_password,
                       ),
