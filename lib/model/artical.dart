@@ -35,6 +35,7 @@ class Artical {
   int _userId;
   int _visible;
   int _zan;
+  int _originId;
 
   Artical(
       {String apkLink,
@@ -68,7 +69,8 @@ class Artical {
         int type,
         int userId,
         int visible,
-        int zan}) {
+        int zan,
+        int originId}) {
     this._apkLink = apkLink;
     this._audit = audit;
     this._author = author;
@@ -101,6 +103,7 @@ class Artical {
     this._userId = userId;
     this._visible = visible;
     this._zan = zan;
+    this._originId = originId;
   }
 
   String get apkLink => _apkLink;
@@ -170,6 +173,13 @@ class Artical {
   int get zan => _zan;
   set zan(int zan) => _zan = zan;
 
+
+  int get originId => _originId;
+
+  set originId(int value) {
+    _originId = value;
+  }
+
   Artical.fromJson(Map<String, dynamic> json) {
     _apkLink = json['apkLink'];
     _audit = json['audit'];
@@ -197,6 +207,7 @@ class Artical {
     _shareUser = json['shareUser'];
     _superChapterId = json['superChapterId'];
     _superChapterName = json['superChapterName'];
+    _originId = json['originId'];
     if (json['tags'] != null) {
       _tags = new List<Tag>();
       json['tags'].forEach((v) {
@@ -246,6 +257,7 @@ class Artical {
     data['userId'] = this._userId;
     data['visible'] = this._visible;
     data['zan'] = this._zan;
+    data['originId'] = this._originId;
     return data;
   }
 

@@ -14,7 +14,7 @@ abstract class IProjectRepository {
 
 class LocalProjectRepository extends IProjectRepository {
   @override
-  Stream<Resource<Pager<Artical>>>  loadProject(int cid, int page) {
+  Stream<Resource<Pager<Artical>>> loadProject(int cid, int page) {
     throw UnimplementedError();
   }
 
@@ -51,8 +51,7 @@ class RemoteProjectRepository extends IProjectRepository {
 
   @override
   Stream<Resource<List<ProChapter>>> loadProjectTree() {
-    return _httpManager.get(WanandroidUrl.projectTree)
-        .map((event) {
+    return _httpManager.get(WanandroidUrl.projectTree).map((event) {
       List<ProChapter> articals = [];
       var list = event.dataList.map((e) => ProChapter.fromJson(e)).toList();
       return Resource.success(list);

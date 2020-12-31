@@ -29,7 +29,7 @@ class RemoteUserRepository implements IUserRepository {
         var user = User.fromJson(data);
         return Resource.success(user);
       } else {
-        return Resource.failed();
+        return Resource.failed(event.errorCode,event.errorMsg);
       }
     });
   }
@@ -40,7 +40,7 @@ class RemoteUserRepository implements IUserRepository {
       if (event.errorCode == 0) {
         return Resource.success(true);
       } else {
-        return Resource.failed();
+        return Resource.failed(event.errorCode,event.errorMsg);
       }
     });
   }
@@ -59,7 +59,7 @@ class RemoteUserRepository implements IUserRepository {
         var user = User.fromJson(data);
         return Resource.success(user);
       } else {
-        return Resource.failed();
+        return Resource.failed(event.errorCode,event.errorMsg);
       }
     });
   }

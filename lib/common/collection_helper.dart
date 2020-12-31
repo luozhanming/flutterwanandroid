@@ -27,7 +27,8 @@ class CollectionHelper {
     _repository.collectArtical(artical).listen((event) {
       if (event) {
         GlobalState state = context.read<GlobalState>();
-        state.addCollect(artical.id);
+        //由于收藏返回没有id数据只有orginId数据
+        state.addCollect(artical.originId??artical.id);
         var user = state.loginUser;
         _userLoginDao.update(user);
 
@@ -45,7 +46,7 @@ class CollectionHelper {
     _repository.uncollectArtical(artical).listen((event) {
       if (event) {
         GlobalState state = context.read<GlobalState>();
-        state.removeCollect(artical.id);
+        state.removeCollect(artical.originId??artical.id);
         var user = state.loginUser;
         _userLoginDao.update(user);
       }

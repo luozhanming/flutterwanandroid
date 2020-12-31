@@ -6,8 +6,10 @@ class Resource<T> {
   final T data;
   final ResourceStatus status;
   final Exception exception;
+  final int errorCode;
+  final String errorMsg;
 
-   const Resource(this.status, {this.data, this.exception});
+   const Resource(this.status, {this.data,this.exception, this.errorCode,this.errorMsg});
 
   factory Resource.loading(){
     return Resource(ResourceStatus.loading);
@@ -21,8 +23,8 @@ class Resource<T> {
     return Resource(ResourceStatus.error,exception: e);
   }
 
-  factory Resource.failed(){
-    return Resource(ResourceStatus.failed);
+  factory Resource.failed([int errorCode,String errorMsg]){
+    return Resource(ResourceStatus.failed,errorCode: errorCode,errorMsg: errorMsg);
   }
 
   factory Resource.empty(){

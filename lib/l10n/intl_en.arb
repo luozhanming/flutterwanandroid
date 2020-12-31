@@ -22,5 +22,11 @@
   "collect_failed": "Collect failed!",
   "uncollect_success": "Uncollect success!",
   "uncollect_failed": "Uncollect failed!",
-  "my_collection": "MyCollection"
+  "my_collection": "MyCollection",
+  "sign_up": "SignUp",
+  "hint_input_username": "Please input your username.",
+  "hint_input_password": "Please input your password.",
+  "hint_input_repassword": "Please input your password again.",
+  "regist_success": "Regist success.",
+  "regist_failed": "Regist failed"
 }

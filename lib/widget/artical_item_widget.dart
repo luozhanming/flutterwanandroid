@@ -17,7 +17,7 @@ const int TYPE_MAIN = 0;
 const int TYPE_SYSTEM = 1;
 const int TYPE_PROJECT = 2;
 const int TYPE_AUTHOR = 3;
-const int TYPE_MY_COLLECTIONS=4;
+const int TYPE_MY_COLLECTIONS = 4;
 
 class ArticalItemWidget extends StatelessWidget {
   final Artical artical;
@@ -55,12 +55,11 @@ class ArticalItemWidget extends StatelessWidget {
               color: artical.collect ? Colors.redAccent : Colors.white,
             ),
             onTap: () {
-              if(artical.collect){
+              if (artical.collect) {
                 uncollect(context, artical);
-              }else{
+              } else {
                 collect(context, artical);
               }
-
             },
           )
         ],
@@ -72,7 +71,7 @@ class ArticalItemWidget extends StatelessWidget {
   InkWell _buildArticalContent(BuildContext context) {
     List<Widget> rowWidget = [];
     List<Tag> tags = artical.tags;
-    tags.forEach((element) {
+    tags?.forEach((element) {
       rowWidget.add(_buildTagWidget(element.name));
       rowWidget.add(
           Padding(padding: EdgeInsets.only(left: ScreenUtil().setWidth(6))));
@@ -160,7 +159,8 @@ class ArticalItemWidget extends StatelessWidget {
       );
     } else {
       return GestureDetector(
-        child: Text("${S.of(context).shareUser}${artical.shareUser}",
+        child: Text(
+            "${S.of(context).shareUser}${artical.shareUser ?? artical.author}",
             style: authorTextStyle),
         onTap: () {
           onAuthorTap?.call(artical.shareUser);
@@ -175,23 +175,29 @@ class ArticalItemWidget extends StatelessWidget {
       return Text("${S.of(context).time}${artical.niceDate}",
           style: authorTextStyle);
     } else {
-      return Text("${S.of(context).time}${artical.niceShareDate}",
+      return Text(
+          "${S.of(context).time}${artical.niceShareDate ?? artical.niceDate}",
           style: authorTextStyle);
     }
   }
 
-
-  void uncollect(BuildContext context,Artical artical) {
+  void uncollect(BuildContext context, Artical artical) {
     var helper = CollectionHelper.getHelper();
-    helper.uncollect(context, artical,(result){
-      Fluttertoast.showToast(msg: result?S.of(context).uncollect_success:S.of(context).uncollect_failed);
+    helper.uncollect(context, artical, (result) {
+      Fluttertoast.showToast(
+          msg: result
+              ? S.of(context).uncollect_success
+              : S.of(context).uncollect_failed);
     });
   }
 
-  void collect(BuildContext context,Artical artical) {
+  void collect(BuildContext context, Artical artical) {
     var helper = CollectionHelper.getHelper();
-    helper.collect(context, artical,(result){
-      Fluttertoast.showToast(msg: result?S.of(context).collect_success:S.of(context).collect_failed);
+    helper.collect(context, artical, (result) {
+      Fluttertoast.showToast(
+          msg: result
+              ? S.of(context).collect_success
+              : S.of(context).collect_failed);
     });
   }
 

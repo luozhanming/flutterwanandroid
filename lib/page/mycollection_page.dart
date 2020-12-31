@@ -9,10 +9,16 @@ import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/styles.dart';
 import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
+import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
 import 'package:wanandroid/model/resource.dart';
+import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/repository/collect_repository.dart';
+import 'package:wanandroid/widget/artical_item_widget.dart';
 import 'package:wanandroid/widget/common_appbar.dart';
+import 'package:wanandroid/widget/no_data_widget.dart';
+
+import 'home/author_artical_page.dart';
 
 class MyCollectionPage extends StatefulWidget {
   static const String NAME = "/mycollection";
@@ -47,6 +53,7 @@ class _MyCollectionPageState
     );
   }
 
+  //TODO 最佳列表分页写法
   Widget _buildCollectionList() {
     return Builder(
       builder: (context) {
@@ -67,31 +74,46 @@ class _MyCollectionPageState
                   if (itemCount == 0) {
                     return _buildEmptyDataView(context);
                   } else {
-                    return _buildListItem(context,index);
+                    return _buildListItem(context, index);
                   }
                 },
-                itemCount:  1 ));
+                itemCount: itemCount == 0 ? 1 : itemCount));
       },
     );
   }
 
   Widget _buildEmptyDataView(BuildContext context) {
-    return Container(
-      height: ScreenUtil().setWidth(360),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(child: Text("sdfsdf"))
-          ]),
-    );
+    return Padding(
+        padding: EdgeInsets.only(top: ScreenUtil().setWidth(120)),
+        child: NoDataWidget());
   }
 
-  Widget _buildListItem(BuildContext context,int index) {
-    Artical articals = context.select<_MyCollectionViewModel, Artical>(
-            (value) => value.articals[index]);
+  Widget _buildListItem(BuildContext context, int index) {
     return Builder(
-      builder: (context){
-        return Container()
+      builder: (context) {
+        Artical artical = context.select<_MyCollectionViewModel, Artical>(
+            (value) => value.articals[index]);
+        bool isCollect = context.select<GlobalState, bool>((value) =>
+            value.loginUser != null
+                ? value.loginUser.collectIds.contains(artical.originId)
+                : false);
+        artical.collect = isCollect;
+        return ArticalItemWidget(
+          artical,
+          type: TYPE_MY_COLLECTIONS,
+          onArticalTap: (artical) async {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => WebviewPage(
+                      url: artical.link,
+                      title: artical.title,
+                    )));
+          },
+          onAuthorTap: (author){
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>AuthorArticalPage(authorName: author)));
+          },
+          isLogin: context.select<GlobalState, bool>((value) => value.isLogin),
+        );
       },
     );
   }

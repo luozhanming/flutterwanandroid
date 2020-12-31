@@ -18,6 +18,7 @@ import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/repository/home_repository.dart';
 import 'package:wanandroid/widget/artical_item_widget.dart';
 import 'package:wanandroid/widget/common_appbar.dart';
+import 'package:wanandroid/widget/no_data_widget.dart';
 
 class SearchPage extends StatefulWidget {
   static const String NAME = "Search";
@@ -228,7 +229,10 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
     );
   }
 
-  Widget _buildNoSearchData() => SliverToBoxAdapter(child:Center(child: Text("Empty Search")));
+  Widget _buildNoSearchData() => SliverToBoxAdapter(child:Padding(
+    padding:  EdgeInsets.only(top:ScreenUtil().setWidth(120)),
+    child: NoDataWidget(),
+  ));
 
   @override
   buildViewModel(BuildContext context) {

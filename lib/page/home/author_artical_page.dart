@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +17,7 @@ import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/repository/home_repository.dart';
 import 'package:wanandroid/widget/artical_item_widget.dart';
 import 'package:wanandroid/widget/common_appbar.dart';
+import 'package:wanandroid/widget/no_data_widget.dart';
 
 class AuthorArticalPage extends StatefulWidget {
   static const NAME = "AuthorArticals";
@@ -120,14 +122,7 @@ class _AuthorArticalPageState
 
   SliverToBoxAdapter _buildEmptyView() {
     return SliverToBoxAdapter(
-      child: Container(
-        height: MediaQuery.of(context).size.height - ScreenUtil().setWidth(40),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[Text(S.of(context).no_data)],
-        ),
-      ),
+      child: Padding(padding:EdgeInsets.only(top:ScreenUtil().setWidth(120)),child: NoDataWidget()),
     );
   }
 }

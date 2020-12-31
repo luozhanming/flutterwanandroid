@@ -259,11 +259,13 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                 ),
               ),
             ),
+            Padding(padding: EdgeInsets.only(top:ScreenUtil().setWidth(8)),),
             Container(
               height: ScreenUtil().setWidth(36),
               //如果没有水波纹，在上层套上Material
               child: Material(
                 //TODO 此处设置color
+                color:  Colors.transparent,
                 child: InkWell(
                   splashColor: Colors.transparent,
                   highlightColor: Color.fromARGB(40, 0, 0, 0),

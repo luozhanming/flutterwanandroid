@@ -14,6 +14,7 @@ import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/resource.dart';
 import 'package:wanandroid/model/user.dart';
 import 'package:wanandroid/page/home/home_page.dart';
+import 'package:wanandroid/page/login/regist_page.dart';
 import 'package:wanandroid/repository/user_repository.dart';
 import 'package:wanandroid/widget/my_check_box.dart';
 import 'package:wanandroid/widget/my_text_field.dart';
@@ -66,6 +67,22 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
         },
         child: Stack(
           children: <Widget>[
+            Hero(
+              tag: "back",
+              child: Container(
+                width: ScreenUtil().setWidth(32),
+                height: ScreenUtil().setWidth(32),
+                margin: EdgeInsets.only(left: ScreenUtil().setWidth(8),top: ScreenUtil().setWidth(4)+MediaQuery.of(context).padding.top),
+                child: Material(
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: Icon(Icons.arrow_back),
+                  ),
+                ),
+              ),
+            ),
             Container(
               alignment: Alignment.center,
               margin:
@@ -124,7 +141,10 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                                     horizontal: ScreenUtil().setWidth(10)),
                                 child: Text(S.of(context).register_new_user,style: TextStyle(height:0.9,fontSize: ScreenUtil().setSp(14)),),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                  Navigator.of(context).pushNamed(RegistPage.NAME);
+
+                              },
                             ),
                           ),
                         ],
@@ -198,6 +218,15 @@ class LoginViewModel extends BaseViewModel {
   void login() {
     var username = _usernameController.text;
     var password = _passwordController.text;
+    loginRes.value = Resource.loading();
+    _userRepository.login(username, password).listen((event) {
+      loginRes.value = event;
+    }, onError: (error) {
+      loginRes.value = Resource.failed();
+    });
+  }
+
+  void loginByParams(String username,String password) {
     loginRes.value = Resource.loading();
     _userRepository.login(username, password).listen((event) {
       loginRes.value = event;

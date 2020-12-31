@@ -99,9 +99,13 @@ class HttpManager {
         Map<String, dynamic> json = event.data as Map;
         var result = Result.fromJson(json);
         return Stream.value(result);
-      } else {
+      } else if(event.statusCode==200){
+        Map<String, dynamic> json = event.data as Map;
+        var result = Result.fromJson(json);
         return Stream.error(
-            Resource.error(NetError(event.statusCode, event.statusMessage)));
+            NetError(result.errorCode, result.errorMsg));
+      }else{
+        return Stream.error(Exception());
       }
     });
   }
