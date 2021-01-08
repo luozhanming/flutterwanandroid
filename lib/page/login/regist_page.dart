@@ -158,15 +158,18 @@ class _RegistPageState extends BaseState<RegistPage,_RegistViewModel> {
                               Radius.circular(ScreenUtil().setWidth(30))),
                           color: context.select<GlobalState, Color>(
                                   (value) => value.themeData.primaryColor)),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          splashColor: Color.fromARGB(70, 255, 255, 255),
-                          onTap: () {
-                            mViewModel.confirm();
-                          },
-                          child: Center(
-                            child: Text(S.of(context).sign_up,style: TextStyle(fontSize: ScreenUtil().setWidth(16)),),
+                      child: Hero(
+                        tag:"loginsign",
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: Color.fromARGB(70, 255, 255, 255),
+                            onTap: () {
+                              mViewModel.confirm();
+                            },
+                            child: Center(
+                              child: Text(S.of(context).sign_up,style: TextStyle(fontSize: ScreenUtil().setWidth(16)),),
+                            ),
                           ),
                         ),
                       ),

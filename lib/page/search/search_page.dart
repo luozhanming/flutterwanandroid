@@ -164,36 +164,36 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
                   mViewModel.search(true);
                 },
                 child: CustomScrollView(
-                    scrollDirection: Axis.vertical,
-                    slivers: <Widget>[
-                      Builder(
-                        builder: (context) {
-                          var itemCount = context.select<SearchViewModel, int>(
-                              (value) => value.searchDatas.length);
-                          var showNoData =
-                              context.select<SearchViewModel, bool>(
-                                  (value) => value.searchNoData);
-                          var articals = context.select<SearchViewModel, List<Artical>>(
-                                  (value) => value.searchDatas);
-                          if (showNoData) {
-                            return _buildNoSearchData();
-                          } else {
-                            return SliverList(
-                              delegate:
-                                  SliverChildBuilderDelegate((context, index) {
-                                return Builder(
-                                  builder: (context){
-                                    return  _searchItemResultBuilder(context, index, articals);
-                                  },
-                                );
-                              }, childCount: itemCount),
-                            );
-                          }
-                        },
-                      )
-                    ],
-                  )
-                );
+                  scrollDirection: Axis.vertical,
+                  slivers: <Widget>[
+                    Builder(
+                      builder: (context) {
+                        var itemCount = context.select<SearchViewModel, int>(
+                            (value) => value.searchDatas.length);
+                        var showNoData = context.select<SearchViewModel, bool>(
+                            (value) => value.searchNoData);
+                        var articals =
+                            context.select<SearchViewModel, List<Artical>>(
+                                (value) => value.searchDatas);
+                        if (showNoData) {
+                          return _buildNoSearchData();
+                        } else {
+                          return SliverList(
+                            delegate:
+                                SliverChildBuilderDelegate((context, index) {
+                              return Builder(
+                                builder: (context) {
+                                  return _searchItemResultBuilder(
+                                      context, index, articals);
+                                },
+                              );
+                            }, childCount: itemCount),
+                          );
+                        }
+                      },
+                    )
+                  ],
+                ));
 
             // return Builder(builder: (context) {
             //   var itemCount = context.select<SearchViewModel, int>(
@@ -229,10 +229,11 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
     );
   }
 
-  Widget _buildNoSearchData() => SliverToBoxAdapter(child:Padding(
-    padding:  EdgeInsets.only(top:ScreenUtil().setWidth(120)),
-    child: NoDataWidget(),
-  ));
+  Widget _buildNoSearchData() => SliverToBoxAdapter(
+          child: Padding(
+        padding: EdgeInsets.only(top: ScreenUtil().setWidth(120)),
+        child: NoDataWidget(),
+      ));
 
   @override
   buildViewModel(BuildContext context) {
@@ -280,22 +281,22 @@ class _SearchPageState extends BaseState<SearchPage, SearchViewModel> {
     });
   }
 
-  /**
-   * 创建搜索控件
-   * */
+  ///
+  ///创建搜索控件
+  ///
+  ///
   Widget _searchItemResultBuilder(
       BuildContext context, int index, List<Artical> articals) {
     return ArticalItemWidget(articals[index],
-          index: index,
-          isLogin: context.select<GlobalState, bool>((value) => value.isLogin),
-          onArticalTap: (artical) async {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => WebviewPage(
-                  url: artical.link,
-                  title: artical.title,
-                )));
-      });
-
+        index: index,
+        isLogin: context.select<GlobalState, bool>((value) => value.isLogin),
+        onArticalTap: (artical) async {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => WebviewPage(
+                url: artical.link,
+                title: artical.title,
+              )));
+    });
   }
 }
 

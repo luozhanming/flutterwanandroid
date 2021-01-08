@@ -161,15 +161,18 @@ class _LoginPageState extends BaseState<LoginPage, LoginViewModel> {
                                 Radius.circular(ScreenUtil().setWidth(30))),
                             color: context.select<GlobalState, Color>(
                                 (value) => value.themeData.primaryColor)),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            splashColor: Color.fromARGB(70, 255, 255, 255),
-                            onTap: () {
-                              mViewModel.login();
-                            },
-                            child: Center(
-                              child: Text(S.of(context).login,style: TextStyle(fontSize: ScreenUtil().setWidth(16)),),
+                        child: Hero(
+                          tag:"loginsign",
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              splashColor: Color.fromARGB(70, 255, 255, 255),
+                              onTap: () {
+                                mViewModel.login();
+                              },
+                              child: Center(
+                                child: Text(S.of(context).login,style: TextStyle(fontSize: ScreenUtil().setWidth(16)),),
+                              ),
                             ),
                           ),
                         ),
