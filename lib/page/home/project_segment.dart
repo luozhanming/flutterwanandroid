@@ -113,7 +113,10 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
                 var project = projects[index];
                 return Builder(builder: (context) {
                   var artical = project;
-                  bool isCollect = context.select<GlobalState,bool>((value) => value.loginUser!=null?value.loginUser.collectIds.contains(artical.id):false);
+                  bool isCollect = context.select<GlobalState, bool>((value) =>
+                      value.loginUser != null
+                          ? value.loginUser.collectIds.contains(artical.id)
+                          : false);
                   artical.collect = isCollect;
                   return ArticalItemWidget(
                     project,
@@ -125,11 +128,12 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
                                 title: artical.title,
                               )));
                     },
-                    isLogin: context.select<GlobalState,bool>((value) => value.isLogin),
+                    isLogin: context
+                        .select<GlobalState, bool>((value) => value.isLogin),
                   );
                 });
               },
-              itemCount: projects==null?0:projects.length,
+              itemCount: projects == null ? 0 : projects.length,
             ));
       }),
     );

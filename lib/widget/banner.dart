@@ -50,6 +50,7 @@ class BannerState extends RouteAwareWidgetState<BannerView> {
 
   //显示的假数据，用于轮播循环逻辑
   Queue<BannerItem> tempItems = Queue();
+
   //当相同时不会重新渲染
   GlobalKey _pagerKey;
 
@@ -263,9 +264,9 @@ class BannerItem {
   BannerItem(this.image, {this.message = ""});
 }
 
-/**
- * Controller which controls [BannerView] state.
- * */
+///
+///Controller which controls [BannerView] state.
+///
 class BannerController extends ValueNotifier<BannerInfo> {
   BannerController(BannerInfo value) : super(value);
 

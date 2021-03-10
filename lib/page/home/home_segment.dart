@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/base/event_bus.dart';
-import 'package:wanandroid/common/collection_helper.dart';
 import 'package:wanandroid/common/my_network_image.dart';
-import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/banner.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';
-import 'package:wanandroid/model/user.dart';
 import 'package:wanandroid/page/home/author_artical_page.dart';
 import 'package:wanandroid/page/webview/webview_page.dart';
 import 'package:wanandroid/repository/home_repository.dart';
@@ -92,13 +88,17 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
           .select<HomeSegmentViewModel, int>((value) => value.articals.length);
       bool isLogin =
           context.select<GlobalState, bool>((value) => value.isLogin);
-      List<Artical> articals = context.select<HomeSegmentViewModel, List<Artical>>(
+      List<Artical> articals =
+          context.select<HomeSegmentViewModel, List<Artical>>(
               (value) => value.articals);
       return SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
         return Builder(builder: (context) {
           var artical = articals[index];
-          bool isCollect = context.select<GlobalState,bool>((value) => value.loginUser!=null?value.loginUser.collectIds.contains(artical.id):false);
+          bool isCollect = context.select<GlobalState, bool>((value) =>
+              value.loginUser != null
+                  ? value.loginUser.collectIds.contains(artical.id)
+                  : false);
           artical.collect = isCollect;
           return ArticalItemWidget(
             articals[index],
@@ -115,9 +115,9 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
             //     mViewModel.collect(artical);
             //   }
             // },
-            onAuthorTap: (author){
+            onAuthorTap: (author) {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>AuthorArticalPage(authorName: author)));
+                  builder: (context) => AuthorArticalPage(authorName: author)));
             },
             onArticalTap: (artical) async {
               Navigator.of(context).push(MaterialPageRoute(
@@ -131,7 +131,6 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
       }, childCount: itemCount));
     });
   }
-
 
   @override
   Widget buildBody(BuildContext context) {
@@ -252,8 +251,8 @@ class HomeSegmentViewModel extends BaseViewModel {
       int length = banners.length;
       for (int i = 0; i < length; i++) {
         var banner = banners[i];
-        bannerItems.add(
-            BannerItem(MyNetWorkImage(banner.imagePath), message: banner.title));
+        bannerItems.add(BannerItem(MyNetWorkImage(banner.imagePath),
+            message: banner.title));
       }
       _bannerController.refreshData(bannerItems);
       notifyListeners();
