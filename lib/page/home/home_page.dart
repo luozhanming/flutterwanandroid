@@ -115,12 +115,7 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                               EdgeInsets.only(left: ScreenUtil().setWidth(6)),
                           child: Icon(Icons.search,
                               size: ScreenUtil().setWidth(20),
-                              color: context
-                                  .select<GlobalState, ThemeData>(
-                                      (value) => value.themeData)
-                                  .primaryTextTheme
-                                  .title
-                                  .color),
+                              color: Colors.white70),
                         ),
                         Container(
                           alignment: Alignment.centerLeft,
@@ -132,12 +127,7 @@ class _HomePageState extends BaseState<HomePage, _HomeViewModel> {
                                 //解决Text不对齐问题
                                 height: 1,
                                 fontSize: ScreenUtil().setSp(14),
-                                color: context
-                                    .select<GlobalState, ThemeData>(
-                                        (value) => value.themeData)
-                                    .primaryTextTheme
-                                    .title
-                                    .color),
+                                color: Colors.white70),
                           ),
                         )
                       ],
