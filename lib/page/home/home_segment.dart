@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lifecycle/lifecycle.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
@@ -39,6 +42,15 @@ class _HomeSegmentState extends BaseState<HomeSegment, HomeSegmentViewModel> {
     super.dispose();
     _scrollController.dispose();
   }
+
+
+
+
+
+
+
+
+
 
   _lockToAwait() async {
     ///if loading, lock to await

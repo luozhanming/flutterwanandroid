@@ -90,6 +90,7 @@ class HttpManager {
 
   Stream<Result> post(String path, [Map<String, dynamic> data]) async* {
     await waitCheckCookieJar();
+
     Stream<Response> stream =
         Stream.fromFuture(_dio.post(path, data: FormData.fromMap(data)));
     yield* stream.flatMap((event) {

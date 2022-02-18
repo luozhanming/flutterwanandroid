@@ -209,7 +209,7 @@ class Artical {
     _superChapterName = json['superChapterName'];
     _originId = json['originId'];
     if (json['tags'] != null) {
-      _tags = new List<Tag>();
+      _tags = [];
       json['tags'].forEach((v) {
         _tags.add(new Tag.fromJson(v));
       });

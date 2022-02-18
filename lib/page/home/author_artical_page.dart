@@ -9,7 +9,6 @@ import 'package:wanandroid/common/base/base_state.dart';
 import 'package:wanandroid/common/base/base_viewmodel.dart';
 import 'package:wanandroid/common/config/config.dart';
 import 'package:wanandroid/common/styles.dart';
-import 'package:wanandroid/generated/l10n.dart';
 import 'package:wanandroid/model/artical.dart';
 import 'package:wanandroid/model/global_state.dart';
 import 'package:wanandroid/model/pager.dart';

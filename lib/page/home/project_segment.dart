@@ -52,6 +52,7 @@ class _ProjectSegmentState extends BaseState<ProjectSegment, ProjectViewModel>
               length: tabs.length,
               vsync: this);
           return Column(
+
             children: <Widget>[
               Container(
                 height: ScreenUtil().setWidth(30),
@@ -157,11 +158,9 @@ class ProjectViewModel extends BaseViewModel {
   int selectedIndex = 0;
 
   /// 存放所选chapter加载的页码数（id->page)
-  ///
   Map<int, Resource<Pager<Artical>>> chapterIndexs;
 
   /// 缓存每个chapter的数据
-  ///
   Map<int, List<Artical>> chapterDatas;
 
   /// 临时存放每个栏目的浏览位置

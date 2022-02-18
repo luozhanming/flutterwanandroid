@@ -58,6 +58,7 @@ dependencies:
   pretty_dio_logger: ^1.1.1
   simple_html_css: ^2.0.0+2
   crypto: ^2.1.4
+  lifecycle: ^0.4.2
 
 
   flutter_localizations:

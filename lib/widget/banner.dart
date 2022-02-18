@@ -242,7 +242,6 @@ class BannerState extends RouteAwareWidgetState<BannerView> {
       _loopTimer?.cancel();
       if (widget.canLoop) {
         _loopTimer = Timer.periodic(widget.duration, (timer) {
-          log("BannerView loop", name: "BannerView");
           int curPagePos = _pageController.page.toInt();
           _pageController.animateToPage(curPagePos + 1,
               duration: Duration(milliseconds: 200), curve: Curves.linear);

@@ -10,6 +10,7 @@ class User {
   int _type;
   String _username;
 
+
   User(
       {int admin,
         List<int> collectIds,

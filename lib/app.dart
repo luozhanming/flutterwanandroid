@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,8 @@ import 'package:wanandroid/page/login/regist_page.dart';
 import 'package:wanandroid/page/mycollection_page.dart';
 import 'package:wanandroid/page/search/search_page.dart';
 import 'package:wanandroid/page/webview/webview_page.dart';
+import 'package:lifecycle/lifecycle.dart';
+
 
 import 'common/config/config.dart';
 import 'common/event.dart';
@@ -25,11 +29,13 @@ class FlutterReduxApp extends StatefulWidget {
 }
 
 class _FlutterReduxAppState extends State<FlutterReduxApp> {
+
+  StreamSubscription _subscription;
   @override
   void initState() {
     super.initState();
-    //监听登出
-    Bus.getEventBus()
+    //如果登出的话，删除http的cookies
+    _subscription = Bus.getEventBus()
         .streamController
         .stream
         .where((event) => event is Logout)
@@ -39,6 +45,12 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
           .delete(Uri.parse(Config.ENV.baseUrl), true);
     });
 
+  }
+
+
+  @override
+  void dispose() {
+    _subscription.cancel();
   }
 
   @override
@@ -89,7 +101,7 @@ class _FlutterReduxAppState extends State<FlutterReduxApp> {
             return RegistPage();
           }
         },
-        navigatorObservers: [routeObserver],
+        navigatorObservers: [defaultLifecycleObserver,routeObserver],
       ),
     );
   }
